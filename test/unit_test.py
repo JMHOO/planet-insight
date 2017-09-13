@@ -1,0 +1,27 @@
+import os
+import json
+from insight.translate import Convert
+from keras.models import model_from_json
+
+
+def TestMain():
+    keras_json = test_json_translate()
+    test_keras_model_build(keras_json)
+
+
+def test_json_translate():
+    c = Convert(target="keras")
+    json_file = os.path.join(os.getcwd(), 'test/example.json')
+    with open(json_file, 'r') as fp:
+        keras_json = c.parser(fp)
+    print(json.dumps(json.loads(keras_json), sort_keys=True, indent=4))
+    return keras_json
+
+
+def test_keras_model_build(keras_json):
+    model = model_from_json(keras_json)
+    print(model.summary())
+
+
+if __name__ == "__main__":
+    TestMain()

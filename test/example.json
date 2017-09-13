@@ -1,0 +1,17 @@
+[{
+        "Convolution2D": {
+            "inputs": [null, 32, 32, 3],
+            "filters": 32,
+            "kernel_size": [3, 3],
+            "activation": "relu",
+            "padding": "valid"
+        }
+    },
+    {
+        "MaxPooling2D": {
+            "pool_size": [2, 2],
+            "strides": [2, 2],
+            "padding": "valid"
+        }
+    }
+]

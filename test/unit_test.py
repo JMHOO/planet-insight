@@ -21,6 +21,9 @@ def test_json_translate():
 def test_keras_model_build(keras_json):
     model = model_from_json(keras_json)
     print(model.summary())
+    model_json = model.to_json()
+    with open("model_rebuild.json", "w") as json_file:
+        json_file.write(model_json)
 
 
 if __name__ == "__main__":

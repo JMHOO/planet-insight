@@ -27,6 +27,10 @@ class KerasObject(object):
     CLASS_NAME_TABLE = {
         'Convolution2D': 'Conv2D',
         'MaxPooling2D': 'MaxPooling2D',
+        'Dropout': 'Dropout',
+        'Flatten': 'Flatten',
+        'Dense': 'Dense',
+        'VarianceScaling': 'VarianceScaling',
     }
     ALIAS_TABLE = {
         'inputs': 'batch_input_shape'
@@ -42,7 +46,7 @@ class KerasObject(object):
                 elif key in KerasObject.ALIAS_TABLE:
                     self.config[KerasObject.ALIAS_TABLE[key]] = config[key]
                 else:
-                    self.config[key] = config[key]
+                    self.config[key] = KerasObject.Translate(config[key])[0]
         
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
@@ -53,11 +57,14 @@ class KerasObject(object):
     @staticmethod
     def Translate(json_obj):
         configs = []
-        for key in json_obj:
-            if key in KerasObject.CLASS_NAME_TABLE:
-                configs.append(KerasObject(KerasObject.CLASS_NAME_TABLE[key], json_obj[key]).toDict())
-            else:
-                configs.append(json_obj)
+        if isinstance(json_obj, dict):
+            for key in json_obj:
+                if key in KerasObject.CLASS_NAME_TABLE:
+                    configs.append(KerasObject(KerasObject.CLASS_NAME_TABLE[key], json_obj[key]).toDict())
+                else:
+                    configs.append(json_obj)
+        else:
+            configs.append(json_obj)
         return configs
 
 

@@ -42,22 +42,22 @@ class Convert(object):
         return seq.toJSON()
 
     def _merge_json(self, original, divergence):
-        for layer in divergence:
-            if isinstance(layer, dict) and 'From' in layer:
+        for new_layer in divergence:
+            if isinstance(new_layer, dict) and 'From' in new_layer:
                 continue
 
-            for key in layer:
-                layer_config = layer[key]
+            for key in new_layer:
+                new_layer_config = new_layer[key]
                 # no name property in layer, ignore change
-                if 'name' in layer_config:
-                    target_name = layer_config['name']
-                    for ol in original:
-                        for ol_key in ol:
-                            if 'name' in ol[ol_key] and ol[ol_key]['name'] == target_name:
-                                ol[ol_key] = layer_config
-                                ol[ol_key]['trainable'] = True
+                if 'name' in new_layer_config:
+                    target_name = new_layer_config['name']
+                    for layer in original:
+                        for kk in layer:
+                            if 'name' in layer[kk] and layer[kk]['name'] == target_name:
+                                layer[kk] = new_layer_config
+                                layer[kk]['trainable'] = True
                             else:
-                                ol[ol_key]['trainable'] = False
+                                layer[kk]['trainable'] = False
 
         return original
 

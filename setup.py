@@ -8,5 +8,5 @@ setup(name='insight',
       author_email='huj22@uw.edu',
       license='MIT',
       packages=['insight'],
-      install_requires=[],
+      install_requires=['tornado', 'keras'],
       zip_safe=False)

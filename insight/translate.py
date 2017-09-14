@@ -1,19 +1,38 @@
-#from keras import *
 import json
+import os
 
 
 class Convert(object):
     def __init__(self, target="keras"):
         self._target = target
+        self._json_file = None
+        self._inherit_from = None
 
     def parser(self, json_file):
         parsed_json = None
-        j = json.load(json_file)
-        if self._target == 'keras':
-            parsed_json = self._parser_keras(j)
+        with open(json_file, 'r') as fp:
+            self._json_file = json_file
+            j = json.load(fp)
+            if self._target == 'keras':
+                parsed_json = self._parser_keras(j)
         return parsed_json
 
     def _parser_keras(self, j):
+        # inherit json
+        if isinstance(j, list) and isinstance(j[0], dict) and 'From' in j[0]:
+            print(self._json_file)
+            json_from_file = os.path.join(os.path.dirname(self._json_file), j[0]['From'] + '.json')
+            if not os.path.exists(json_from_file):
+                print('{} file doesn\'t exist'.format(json_from_file))
+                return None
+            
+            with open(json_from_file, 'r') as fp:
+                self._inherit_from = json.load(fp)
+
+        if self._inherit_from is not None:
+            # merge two json files
+            j = self._merge_json(self._inherit_from, j)
+
         seq = KerasSequential()
         if isinstance(j, list):
             for sub_json in j:
@@ -21,6 +40,26 @@ class Convert(object):
         elif isinstance(j, dict):
             seq.config += KerasObject.Translate(j)
         return seq.toJSON()
+
+    def _merge_json(self, original, divergence):
+        for layer in divergence:
+            if isinstance(layer, dict) and 'From' in layer:
+                continue
+
+            for key in layer:
+                layer_config = layer[key]
+                # no name property in layer, ignore change
+                if 'name' in layer_config:
+                    target_name = layer_config['name']
+                    for ol in original:
+                        for ol_key in ol:
+                            if 'name' in ol[ol_key] and ol[ol_key]['name'] == target_name:
+                                ol[ol_key] = layer_config
+                                ol[ol_key]['trainable'] = True
+                            else:
+                                ol[ol_key]['trainable'] = False
+
+        return original
 
 
 class KerasObject(object):

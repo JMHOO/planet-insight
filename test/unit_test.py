@@ -11,9 +11,8 @@ def TestMain():
 
 def test_json_translate():
     c = Convert(target="keras")
-    json_file = os.path.join(os.getcwd(), 'test/example.json')
-    with open(json_file, 'r') as fp:
-        keras_json = c.parser(fp)
+    json_file = os.path.join(os.getcwd(), 'test/example2.json')
+    keras_json = c.parser(json_file)
     print(json.dumps(json.loads(keras_json), sort_keys=True, indent=4))
     return keras_json
 

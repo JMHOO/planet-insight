@@ -8,11 +8,20 @@ class Convert(object):
         self._json_file = None
         self._inherit_from = None
 
-    def parser(self, json_file):
+    def parser(self, json_or_file):
         parsed_json = None
-        with open(json_file, 'r') as fp:
-            self._json_file = json_file
-            j = json.load(fp)
+        j = None
+        if os.path.exists(json_or_file):
+            with open(json_or_file, 'r') as fp:
+                self._json_file = json_or_file
+                j = json.load(fp)
+        else:
+            try:
+                j = json.loads(json_or_file)
+            except:
+                j = None
+
+        if j:    
             if self._target == 'keras':
                 parsed_json = self._parser_keras(j)
         return parsed_json
@@ -20,7 +29,6 @@ class Convert(object):
     def _parser_keras(self, j):
         # inherit json
         if isinstance(j, list) and isinstance(j[0], dict) and 'From' in j[0]:
-            print(self._json_file)
             json_from_file = os.path.join(os.path.dirname(self._json_file), j[0]['From'] + '.json')
             if not os.path.exists(json_from_file):
                 print('{} file doesn\'t exist'.format(json_from_file))

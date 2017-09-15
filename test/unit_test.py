@@ -1,16 +1,16 @@
 import os
 import json
-from insight.translate import Convert
+from insight.builder import Convert
 from keras.models import model_from_json
 
 
 def TestMain():
-    keras_model = test_json_translate_from_string() #test_json_translate_from_file()
+    keras_model = test_json_build_from_string() # test_json_build_from_file()
     #test_keras_model_build(keras_json)
     print(keras_model.summary())
 
 
-def test_json_translate_from_file():
+def test_json_build_from_file():
     c = Convert()
     json_file = os.path.join(os.getcwd(), 'test/example2.json')
     keras_json = c.parser(json_file)
@@ -18,7 +18,7 @@ def test_json_translate_from_file():
     return keras_json
 
 
-def test_json_translate_from_string():
+def test_json_build_from_string():
     example_json = '''[{
         "Convolution2D": {"inputs": [null, 32, 32, 3],"filters": 32, "kernel_size": [3, 3],"strides": [1, 1],"activation": "relu","padding": "valid",
             "kernel_initializer": {

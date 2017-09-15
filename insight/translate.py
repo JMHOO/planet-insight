@@ -1,15 +1,16 @@
 import json
 import os
+from keras.models import model_from_json, Model
+from keras.layers import *
 
 
 class Convert(object):
-    def __init__(self, target="keras"):
-        self._target = target
+    def __init__(self):
         self._json_file = None
         self._inherit_from = None
 
-    def parser(self, json_or_file):
-        parsed_json = None
+    def parser(self, json_or_file, inherit_from=None):
+        keras_model = None
         j = None
         if os.path.exists(json_or_file):
             with open(json_or_file, 'r') as fp:
@@ -21,35 +22,78 @@ class Convert(object):
             except:
                 j = None
 
-        if j:    
-            if self._target == 'keras':
-                parsed_json = self._parser_keras(j)
-        return parsed_json
+        if j:
+            keras_model = self._parser_keras(j, inherit_from)
+        return keras_model
 
-    def _parser_keras(self, j):
+    def _parser_keras(self, j, inherit_from=None):
+        model = None
         # inherit json
+        cut_from = ""
         if isinstance(j, list) and isinstance(j[0], dict) and 'From' in j[0]:
-            json_from_file = os.path.join(os.path.dirname(self._json_file), j[0]['From'] + '.json')
-            if not os.path.exists(json_from_file):
-                print('{} file doesn\'t exist'.format(json_from_file))
-                return None
-            
-            with open(json_from_file, 'r') as fp:
-                self._inherit_from = json.load(fp)
+            if self._json_file is not None:
+                if not os.path.exists(inherit_from):
+                    print('{} file doesn\'t exist'.format(inherit_from))
+                    return None
+
+                with open(inherit_from, 'r') as fp:
+                    self._inherit_from = json.load(fp)
+            else:
+                self._inherit_from = json.loads(inherit_from)
+
+            if j[1] is not None and isinstance(j[1], dict):
+                for key in j[1]:
+                    if key == "input":  # cut_from
+                        cut_from = j[1][key]
+                        break
 
         if self._inherit_from is not None:
-            # merge two json files
-            j = self._merge_json(self._inherit_from, j)
+            # determine cut parent network or just override
+            if cut_from:
+                # initialize parent model first, then load weights, then cut network
+                model_parent = model_from_json(self._to_keras_json_model(self._inherit_from))
+                for layer in model_parent.layers:
+                    layer.trainable = False     # freeze all layers in parent model
 
+                point_layer = model_parent.get_layer(cut_from)
+                model = self._join_model(model_parent, point_layer, j)
+            else:
+                # merge two json files, then create model from json directly
+                j = self._merge_keras_json(self._inherit_from, j)
+                model = model_from_json(j)
+        else:
+            model = self._to_keras_json_model(j)
+        return model
+
+    def _join_model(self, model_parent, point_layer, additional_json):
+        module_objects = globals()
+        tensor_start = point_layer.output
+        end_layer = None
+        for layer in additional_json:
+            if isinstance(layer, dict) and 'From' in layer:
+                continue
+            
+            layer_json = KerasObject.Translate(layer)[0]
+
+            keras_class = module_objects.get(layer_json['class_name'])
+            if keras_class is None:
+                raise ValueError('Unknown ' + layer_json['class_name'])
+
+            inputs = tensor_start if end_layer is None else end_layer
+            end_layer = keras_class.from_config(layer_json['config'])(inputs)
+
+        return Model(inputs=model_parent.input, outputs=end_layer)
+
+    def _to_keras_json_model(self, json_model):
         seq = KerasSequential()
-        if isinstance(j, list):
-            for sub_json in j:
+        if isinstance(json_model, list):
+            for sub_json in json_model:
                 seq.config += KerasObject.Translate(sub_json)
-        elif isinstance(j, dict):
-            seq.config += KerasObject.Translate(j)
+        elif isinstance(json_model, dict):
+            seq.config += KerasObject.Translate(json_model)
         return seq.toJSON()
-
-    def _merge_json(self, original, divergence):
+        
+    def _merge_keras_json(self, original, divergence):
         for new_layer in divergence:
             if isinstance(new_layer, dict) and 'From' in new_layer:
                 continue

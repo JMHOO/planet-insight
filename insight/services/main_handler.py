@@ -1,13 +1,22 @@
 
-import tornado.web
+from flask import Flask, abort, request
+import json
+
+app = Flask(__name__)
 
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write("Hello, world")
+@app.route('/')
+def show_info():
+    return 'Welcome to Insights!'
 
 
-class MonitorHandler(tornado.web.RequestHandler):
-    def post(self):
-        event_data = self.get_body_argument('data')
-        print(event_data)
+@app.route('/monitor/<modelname>', methods=['POST'])
+def accept_training_monitor(modelname):
+    if not request.json:
+        abort(400)
+
+    return 'model name {}, data: {}'.format(modelname, json.dumps(request.json))
+
+
+def start_service(port=9000):
+    app.run(port=port)

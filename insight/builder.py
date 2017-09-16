@@ -73,7 +73,7 @@ class Convert(object):
             if isinstance(layer, dict) and 'From' in layer:
                 continue
             
-            layer_json = KerasObject.Translate(layer)[0]
+            layer_json = KerasObject.Build(layer)[0]
 
             keras_class = module_objects.get(layer_json['class_name'])
             if keras_class is None:
@@ -88,9 +88,9 @@ class Convert(object):
         seq = KerasSequential()
         if isinstance(json_model, list):
             for sub_json in json_model:
-                seq.config += KerasObject.Translate(sub_json)
+                seq.config += KerasObject.Build(sub_json)
         elif isinstance(json_model, dict):
-            seq.config += KerasObject.Translate(json_model)
+            seq.config += KerasObject.Build(json_model)
         return seq.toJSON()
         
     def _merge_keras_json(self, original, divergence):
@@ -137,7 +137,7 @@ class KerasObject(object):
                 elif key in KerasObject.ALIAS_TABLE:
                     self.config[KerasObject.ALIAS_TABLE[key]] = config[key]
                 else:
-                    self.config[key] = KerasObject.Translate(config[key])[0]
+                    self.config[key] = KerasObject.Build(config[key])[0]
         
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
@@ -146,7 +146,7 @@ class KerasObject(object):
         return self.__dict__
 
     @staticmethod
-    def Translate(json_obj):
+    def Build(json_obj):
         configs = []
         if isinstance(json_obj, dict):
             for key in json_obj:

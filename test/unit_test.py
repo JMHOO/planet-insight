@@ -1,7 +1,7 @@
 import os
 import json
 from insight.builder import Convert
-from insight.storage import JsonModelDB
+from insight.storage import S3DB, DBInsightModels
 from keras.models import model_from_json
 
 
@@ -9,7 +9,8 @@ def TestMain():
     # keras_model = test_json_build_from_string() # test_json_build_from_file()
     # test_keras_model_build(keras_json)
     # print(keras_model.summary())
-    test_dynamodb()
+    # test_dynamodb()
+    test_s3()
 
 
 def test_json_build_from_file():
@@ -96,6 +97,13 @@ def test_dynamodb():
 
     #json_db.put('example', example_json)
     json_db.get('example')
+
+
+def test_s3():
+    s3 = S3DB('insight-results')
+    # s3.create_folder('abc')
+    s3.upload('abc/a.txt', '/Users/Jimmy/Developer/insight/planet-insight/model_rebuild.json')
+    s3.download('abc/a.txt', '/Users/Jimmy/Downloads/model1.json')
 
 
 if __name__ == "__main__":

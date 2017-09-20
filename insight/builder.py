@@ -9,7 +9,7 @@ class Convert(object):
         self._json_file = None
         self._inherit_from = None
 
-    def parser(self, json_or_file, inherit_from=None):
+    def parser(self, json_or_file, inherit_from=None, weights_file=None):
         keras_model = None
         j = None
         if os.path.exists(json_or_file):
@@ -24,9 +24,17 @@ class Convert(object):
 
         if j:
             keras_model = self._parser_keras(j, inherit_from)
+            # use adam for test now
+            keras_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         return keras_model
 
-    def _parser_keras(self, j, inherit_from=None):
+    def check_inheritance(self, json_content):
+        if isinstance(json_content, list) and isinstance(json_content[0], dict) and 'From' in json_content[0]:
+            return json_content[0]['From']
+
+        return None
+        
+    def _parser_keras(self, j, inherit_from=None, weights_file=None):
         model = None
         # inherit json
         cut_from = ""
@@ -52,6 +60,9 @@ class Convert(object):
             if cut_from:
                 # initialize parent model first, then load weights, then cut network
                 model_parent = model_from_json(self._to_keras_json_model(self._inherit_from))
+                if weights_file is not None:
+                    model_parent.load_weights(weights_file, by_name=True)
+
                 for layer in model_parent.layers:
                     layer.trainable = False     # freeze all layers in parent model
 

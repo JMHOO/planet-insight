@@ -13,3 +13,8 @@ AWS_ACCESSKEY = {
     'KEY': '',
     'SECRET': ''
 }
+
+DOCKER = {
+    'IMAGE': 'jmhoo/deeplearning',
+    'VERSION': 'latest'
+}

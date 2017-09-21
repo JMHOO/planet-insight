@@ -41,5 +41,3 @@ ENV AWS_SECRET_ACCESS_KEY ""
 
 ADD package /home/root/insight
 RUN pip install -e /home/root/insight/
-
-WORKDIR /home/root/

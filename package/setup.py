@@ -8,5 +8,5 @@ setup(name='insight',
       author_email='huj22@uw.edu',
       license='MIT',
       packages=['insight'],
-      install_requires=['Flask', 'keras', 'simple-settings'],
+      install_requires=['Flask', 'keras', 'simple-settings', 'PrettyTable'],
       zip_safe=False)

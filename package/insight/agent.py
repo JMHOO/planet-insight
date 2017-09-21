@@ -12,8 +12,9 @@ settings = LazySettings('insight.applications.settings')
 
 
 class LocalDockerRunner():
-    def __init__(self, cli, image_name, volumes, commands, environments=None):
+    def __init__(self, cli, gpu_count, image_name, volumes, commands, environments=None):
         self.docker = cli
+        self.gpu_count = gpu_count
         self.image_name = image_name
         self.volumes = volumes
         self.commands = commands
@@ -40,7 +41,12 @@ class LocalDockerRunner():
         if self.commands:
             commands = 'bash -c "' + self.commands + '"'
 
-        response = self.docker.create_container(image=self.image_name, command=commands, environment=self.environments)
+        devices = ["/dev/nvidiactl:/dev/nvidiactl", "/dev/nvidia-uvm:/dev/nvidia-uvm"]
+        for i in range(self.gpu_count):
+            devices.append("/dev/nvidia{}:/dev/nvidia{}".format(i, i))
+        host_config = self.docker.create_host_config(devices=devices)
+
+        response = self.docker.create_container(image=self.image_name, command=commands, environment=self.environments, host_config=host_config)
         if response['Warnings'] is None:
             self.containerId = response['Id']
         else:
@@ -60,9 +66,10 @@ class LocalDockerRunner():
 
 
 class AgentService(threading.Thread):
-    def __init__(self):
+    def __init__(self, gpu_count=1):
         super().__init__()
         self.stoprequest = threading.Event()
+        self.gpu_count = gpu_count
 
     def stop(self, timeout=None):
         self.stoprequest.set()
@@ -118,12 +125,14 @@ class AgentService(threading.Thread):
                     'AWS_ACCESS_KEY_ID': aws_key,
                     'AWS_SECRET_ACCESS_KEY': aws_access
                 }
+
                 # do job and waiting
                 runner = LocalDockerRunner(
                     self._docker,
+                    self.gpu_count,
                     settings.DOCKER['IMAGE'] + ':' + settings.DOCKER['VERSION'],
                     volumes=None,
-                    commands='echo ${AWS_ACCESS_KEY_ID}; echo ${AWS_SECRET_ACCESS_KEY}',
+                    commands=command,
                     environments=environment
                 )
                 # since we already in a thread, call block function instead of start another thread

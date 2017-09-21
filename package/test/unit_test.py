@@ -3,6 +3,7 @@ import json
 from insight.builder import Convert
 from insight.storage import S3DB, DBInsightModels, DBJobInstance, DBInstanceLog
 from insight.applications import settings
+from insight.agent import AgentService
 from keras.models import model_from_json
 from simple_settings import LazySettings
 
@@ -11,8 +12,9 @@ def TestMain():
     # keras_model = test_json_build_from_string() # test_json_build_from_file()
     # test_keras_model_build(keras_json)
     # print(keras_model.summary())
-    test_dynamodb()
+    # test_dynamodb()
     # test_s3()
+    test_agent()
 
 
 def test_json_build_from_file():
@@ -129,11 +131,22 @@ def test_dynamodb():
     print(log.fetch(fetch_all=True))
 
 def test_s3():
-    s3 = S3DB('insight-results')
+    #s3 = S3DB('insight-results')
     # s3.create_folder('abc')
-    s3.upload('abc/a.txt', '/Users/Jimmy/Developer/insight/planet-insight/model_rebuild.json')
-    s3.download('abc/a.txt', '/Users/Jimmy/Downloads/model1.json')
+    #s3.upload('abc/a.txt', '/Users/Jimmy/Developer/insight/planet-insight/model_rebuild.json')
+    #s3.download('abc/a.txt', '/Users/Jimmy/Downloads/model1.json')
+    jobInstances = DBJobInstance()
+    new_job = jobInstances.check_new_job()
+    if new_job:
+        print(new_job['dataset_name'])
 
+        s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
+        s3_dataset.download(new_job['dataset_name'], './{}.tar.gz'.format(new_job['instance_name']))
+
+def test_agent():
+    agent = AgentService()
+    agent.start()
+    agent.join()
 
 if __name__ == "__main__":
     TestMain()

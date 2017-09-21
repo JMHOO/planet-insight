@@ -40,7 +40,7 @@ def start_pipeline():
     if args.pretrained_model is not None:
         s3_results = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
         s3_results.download(args.pretrained_model, './{}.weights'.format(args.model_name))
-        
+
     keras_model = conv.parser(original_json, parent_json)
     print(keras_model.summary())
 

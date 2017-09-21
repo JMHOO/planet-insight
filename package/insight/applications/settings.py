@@ -9,12 +9,7 @@ DynamoDB_TABLE = {
     'InstanceLogs': 'instance-logs'
 }
 
-AWS_ACCESSKEY = {
-    'KEY': '',
-    'SECRET': ''
-}
-
 DOCKER = {
-    'IMAGE': 'jmhoo/deeplearning',
+    'IMAGE': 'hjiaming/insight-worker',
     'VERSION': 'latest'
 }

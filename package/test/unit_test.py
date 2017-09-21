@@ -12,9 +12,9 @@ def TestMain():
     # keras_model = test_json_build_from_string() # test_json_build_from_file()
     # test_keras_model_build(keras_json)
     # print(keras_model.summary())
-    # test_dynamodb()
+    test_dynamodb()
     # test_s3()
-    test_agent()
+    #test_agent()
 
 
 def test_json_build_from_file():
@@ -78,7 +78,7 @@ def test_keras_model_build(keras_json):
 
 def test_dynamodb():
     
-    #json_db = JsonModelDB()
+    db_model = DBInsightModels()
 
     example_json = '''[{
         "Convolution2D": {"inputs": [null, 32, 32, 3],"filters": 32, "kernel_size": [3, 3],"strides": [1, 1],"activation": "relu","padding": "valid",
@@ -101,7 +101,7 @@ def test_dynamodb():
     ]'''
 
     # json_db.put('example', example_json)
-    # json_db.get('example')
+    print(db_model.get('example'))
 
     #jobInstances = DBJobInstance()
     # jobInstances.new_job({
@@ -119,7 +119,7 @@ def test_dynamodb():
     #jobInstances.check_new_job()
 
     # log test
-    log = DBInstanceLog('cnn1-cifar-10-base')
+    # log = DBInstanceLog('cnn1-cifar-10-base')
     # log.append('info', 'abc')
     # log.append('training', '{"epoch": 0, "val_loss": 0.993394958114624, "val_acc": 0.6555, "loss": 1.0491512520599364, "acc": 0.6309600000190735}')
 
@@ -128,7 +128,7 @@ def test_dynamodb():
     #    log.append('info', 'msg.{}'.format(i + 1))
 
     # test fetch
-    print(log.fetch(fetch_all=True))
+    # print(log.fetch(fetch_all=True))
 
 def test_s3():
     #s3 = S3DB('insight-results')

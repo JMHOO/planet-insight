@@ -10,12 +10,12 @@ def show_info():
     return 'Welcome to Insights!'
 
 
-@app.route('/monitor/<modelname>', methods=['POST'])
-def accept_training_monitor(modelname):
+@app.route('/monitor/<instance_name>', methods=['POST'])
+def accept_training_monitor(instance_name):
     if not request.json:
         abort(400)
 
-    return 'model name {}, data: {}'.format(modelname, json.dumps(request.json))
+    return 'instance name {}, data: {}'.format(instance_name, json.dumps(request.json))
 
 
 def start_service(port=9000):

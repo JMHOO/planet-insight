@@ -1,11 +1,13 @@
 import boto3
 import botocore
 import json
+import os
 from boto3.dynamodb.conditions import Attr
 from simple_settings import LazySettings
 from datetime import datetime
 from decimal import Decimal
-
+import tarfile
+import shutil
 
 settings = LazySettings('insight.applications.settings')
 
@@ -189,6 +191,7 @@ class S3DB(object):
 
         try:
             self._bucket.download_file(obj_name, local_filename)
+            _extract_archive(local_filename)
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
                 print("The object does not exist.")
@@ -198,4 +201,19 @@ class S3DB(object):
             folder_path = folder_path + '/'
         self._bucket.put_object(Key=folder_path)
 
-    
+
+def _extract_archive(file_path, path='.'):
+    if tarfile.is_tarfile(file_path):
+        with tarfile.open(file_path) as archive:
+            try:
+                archive.extractall(path)
+            except (tarfile.TarError, RuntimeError,
+                    KeyboardInterrupt):
+                if os.path.exists(path):
+                    if os.path.isfile(path):
+                        os.remove(path)
+                    else:
+                        shutil.rmtree(path)
+                raise
+        return True
+    return False

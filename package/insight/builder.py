@@ -2,6 +2,7 @@ import json
 import os
 from keras.models import model_from_json, Model
 from keras.layers import *
+from keras.optimizers import Adam
 
 
 class Convert(object):
@@ -25,7 +26,7 @@ class Convert(object):
         if j:
             keras_model = self._parser_keras(j, inherit_from)
             # use adam for test now
-            keras_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+            keras_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0001, decay=1e-6), metrics=['accuracy'])
         return keras_model
 
     def check_inheritance(self, json_content):
@@ -74,6 +75,7 @@ class Convert(object):
                 model = model_from_json(j)
         else:
             model = self._to_keras_json_model(j)
+            model = model_from_json(model)
         return model
 
     def _join_model(self, model_parent, point_layer, additional_json):

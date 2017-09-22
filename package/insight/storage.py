@@ -40,8 +40,11 @@ class DynamoDB(object):
         response = self._model_table.query(KeyConditionExpression=key_condition_exp)
         return response['Items']
 
-    def _scan(self, filter):
-        response = self._model_table.scan(FilterExpression=filter)
+    def _scan(self, filter=None):
+        if filter is not None:
+            response = self._model_table.scan(FilterExpression=filter)
+        else:
+            response = self._model_table.scan()
         return response['Items']
 
 
@@ -56,7 +59,11 @@ class DBInsightModels(DynamoDB):
 
     def get(self, key):
         item = self._get({'model_name': key})
-        return item['model_defination']
+        return item['model_defination'] if item else '{}'
+
+    def list(self):
+        items = self._scan(filter=None)
+        return items
 
 
 class DBInstanceLog(DynamoDB):
@@ -112,8 +119,8 @@ class DBJobInstance(DynamoDB):
         pass
 
     def get(self, instance_name):
-        item = self._get({'instance_name': instance_name})
-        return {'name': item['instance_name'], 'dataset': item['dataset_name'], 'pretrain': item['pretrain'], 'status': item['job_status']}
+        return self._get({'instance_name': instance_name})
+        # return {'name': item['instance_name'], 'dataset': item['dataset_name'], 'pretrain': item['pretrain'], 'status': item['job_status']}
 
     def update_status(self, instance_name, from_, to_):
         self._update(
@@ -146,8 +153,9 @@ class DBJobInstance(DynamoDB):
             # print(datetime.now().timestamp())
 
             self._put({
-                'instance_name': entity['name'], 'created': created, 'timestamp': time_stamp,
-                'dataset_name': entity['dataset'], 'pretrain': entity['pretrain'], 'job_status': entity['status']
+                'instance_name': entity['name'], 'created': created, #'timestamp': time_stamp,
+                'dataset_name': entity['dataset'], 'pretrain': entity['pretrain'], 'job_status': entity['status'],
+                'epochs': entity['epochs'], 'model_name': entity['model']
             })
 
     def check_new_job(self):
@@ -163,6 +171,10 @@ class DBJobInstance(DynamoDB):
             return new_job
 
         return None
+
+    def list(self):
+        items = self._scan(filter=None)
+        return items
 
 
 class S3DB(object):

@@ -34,7 +34,7 @@ class Convert(object):
             return json_content[0]['From']
 
         return None
-        
+
     def _parser_keras(self, j, inherit_from=None, weights_file=None):
         model = None
         # inherit json

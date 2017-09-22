@@ -88,13 +88,13 @@ class AgentService(threading.Thread):
         super().join(timeout)
 
     def run(self):
-        print('Agent service running...')
+        print('INFO::Agent service started.')
         try:
             aws_key = os.environ['AWS_ACCESS_KEY_ID']
             aws_access = os.environ['AWS_SECRET_ACCESS_KEY']
             aws_region = os.environ['AWS_DEFAULT_REGION']
         except KeyError:
-            print('AWS credential not configed, exit.')
+            print('ERROR::AWS credential not configed, exit.')
             return
 
         # docker instance
@@ -108,10 +108,10 @@ class AgentService(threading.Thread):
             self._docker = None
 
         if self._docker is None:
-            print('No docker engine installed, abort!')
+            print('ERROR::No docker engine installed, abort!')
             return
 
-        print('connected to docker engine.')
+        print('INFO::Connected to docker engine.')
 
         self._jobs = DBJobInstance()
 
@@ -155,6 +155,6 @@ class AgentService(threading.Thread):
                 runner.run_container()
 
             # sleep random seconds between 5 ~ 30
-            print('No job, random waiting {} seconds'.format(random_sleep))
+            print('INFO::No job, waiting {} seconds'.format(random_sleep))
             sleep(random_sleep)
 

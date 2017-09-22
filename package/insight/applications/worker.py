@@ -32,6 +32,11 @@ def start_pipeline():
         exit()
 
     remote_log = DBInstanceLog(args.instance_name)
+    job_instance = DBJobInstance()
+    instance = job_instance.get(args.instance_name)
+    if instance is None:
+        print("Instance doesn't exist, abort!")
+
     weights_file = args.pretrained_model
 
     print(args.monitor_service)
@@ -43,7 +48,7 @@ def start_pipeline():
     monitor_host = parsed.scheme + "://" + parsed.netloc
     monitor_path = parsed.path + "/" + args.instance_name
 
-    log = 'Job: {}, using model: {}, dataset: {}, using weights: {}, monitor by: {}'.format(
+    log = 'Job: {}, model: {}, dataset: {}, pre-train: {}, monitor: {}'.format(
         args.instance_name, args.model_name, args.training_dataset, weights_file, args.monitor_service
     )
     print(log)
@@ -102,7 +107,7 @@ def start_pipeline():
     #model_file = './' + args.instance_name + '-{epoch:02d}.h5df'
     model_file = './' + args.instance_name + '.h5df'
 
-    cbMonitor = RemoteMonitor(root=monitor_host, path=monitor_path)
+    cbMonitor = RemoteMonitor(root=monitor_host, path=monitor_path, field='data', headers=None)
     cbEarlyStop = EarlyStopping(min_delta=0.001, patience=3)
     cbModelsCheckpoint = ModelCheckpoint(
         model_file,
@@ -113,19 +118,24 @@ def start_pipeline():
         mode='auto',
         period=1
     )
+
     history = keras_model.fit(
         x_train / 255.0, to_categorical(y_train),
         validation_data=(x_test / 255.0, to_categorical(y_test)),
         shuffle=True,
         batch_size=128,
         verbose=1,
-        epochs=250,
+        epochs=int(instance['epochs']),
         callbacks=[cbEarlyStop, cbMonitor, cbModelsCheckpoint]
     )
+    
     # upload models
     s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
     s3_models.upload(args.instance_name, model_file)
+
     
+    job_instance.update_status(args.instance_name, from_='training', to_='completed')
+
 
 if __name__ == "__main__":
     start_pipeline()

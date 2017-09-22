@@ -34,7 +34,8 @@ RUN pip3 --no-cache-dir install --upgrade \
         docker \
         Flask \
         boto3 \
-        awscli
+        awscli \
+        pygments
 
 ENV AWS_ACCESS_KEY_ID ""
 ENV AWS_SECRET_ACCESS_KEY ""

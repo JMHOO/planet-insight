@@ -213,6 +213,12 @@ class S3DB(object):
             folder_path = folder_path + '/'
         self._bucket.put_object(Key=folder_path)
 
+    def list(self):
+        objs = []
+        for obj in self._bucket.objects.all():
+            objs.append({"name": obj.key, "size": humanable_size(obj.size)})
+        return objs
+
 
 def _extract_archive(file_path, path='.'):
     if tarfile.is_tarfile(file_path):
@@ -229,3 +235,11 @@ def _extract_archive(file_path, path='.'):
                 raise
         return True
     return False
+
+
+def humanable_size(num, suffix='B'):
+    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)

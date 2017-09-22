@@ -68,7 +68,7 @@ def start_pipeline():
 
     conv = Convert()
     parent_json = conv.check_inheritance(original_json)
-    if parent_json is not None:
+    if parent_json:
         remote_log.append('info', 'create parent')
         parent_json = db_model.get(parent_json)
 

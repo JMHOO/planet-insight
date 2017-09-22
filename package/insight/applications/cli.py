@@ -1,12 +1,15 @@
 import cmd
 from datetime import datetime
 from prettytable import PrettyTable
-from insight.storage import DBJobInstance, DBInstanceLog, DBInsightModels
+from insight.storage import DBJobInstance, DBInstanceLog, DBInsightModels, S3DB
+from simple_settings import LazySettings
 from decimal import Decimal
 import json
 import os
 from pygments import highlight, lexers, formatters
 
+
+settings = LazySettings('insight.applications.settings')
 
 class InsightCLI(cmd.Cmd):
     def __init__(self):
@@ -77,6 +80,18 @@ class InsightCLI(cmd.Cmd):
                     db_model = DBInsightModels()
                     db_model.put(params['name'], json.dumps(json_content))
 
+    def do_results(self, args):
+        resTable = PrettyTable(["#", "Name", "Size"])
+        resTable.align["Name"] = "l"
+        resTable.align["Size"] = "l"
+        resTable.padding_width = 1
+
+        s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
+        all_file = s3_models.list()
+        for index, f in enumerate(all_file):
+            resTable.add_row([index + 1, f['name'], f['size']])
+        print(resTable)
+
     def do_logs(self, args):
         instance_name = args
         resTable = PrettyTable(["#", "Message"])
@@ -105,7 +120,7 @@ class InsightCLI(cmd.Cmd):
                     message = 'Epoch-{:02d} '.format(message['epoch']) + acc + val_acc + loss + val_loss
 
             if message:
-                message = message[:80]
+                message = message[:80] + '...'
                 resTable.add_row([index + 1, message])
 
         print(resTable)

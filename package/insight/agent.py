@@ -21,6 +21,7 @@ class LocalDockerRunner():
         self.environments = environments
         self.containerId = ""
         self._t = None
+        self.volumes = {"nvidia_driver_375.82": "/usr/local/nvidia"}
 
     def start(self):
         self._t = threading.Thread(target=self.run_container)
@@ -41,12 +42,23 @@ class LocalDockerRunner():
         if self.commands:
             commands = 'bash -c "' + self.commands + '"'
 
+        binds = []
+        for s, d in self.volumes.items():
+            binds.append(s + ":" + d)
+        volumes = list(self.volumes.values())
+        
         devices = ["/dev/nvidiactl:/dev/nvidiactl", "/dev/nvidia-uvm:/dev/nvidia-uvm"]
         for i in range(self.gpu_count):
             devices.append("/dev/nvidia{}:/dev/nvidia{}".format(i, i))
-        host_config = self.docker.create_host_config(devices=devices)
+        host_config = self.docker.create_host_config(devices=devices, binds=binds)
 
-        response = self.docker.create_container(image=self.image_name, command=commands, environment=self.environments, host_config=host_config)
+        response = self.docker.create_container(
+            image=self.image_name, 
+            volumes=volumes, 
+            command=commands, 
+            environment=self.environments, 
+            host_config=host_config)
+
         if response['Warnings'] is None:
             self.containerId = response['Id']
         else:
@@ -111,13 +123,15 @@ class AgentService(threading.Thread):
             if new_job is not None:
                 print('Got new jog: {}'.format(new_job))
                 pretrain_weights = new_job['pretrain']
-                if pretrain_weights != 'NONE':
-                    pretrain_weights = '-w ' + pretrain_weights
-                else:
-                    pretrain_weights = ''
+                #if pretrain_weights != 'NONE':
+                #    pretrain_weights = '-w ' + pretrain_weights
+                #else:
+                #    pretrain_weights = ''
 
-                command = '/home/root/insight/run_worker.sh -i {} -m {} {} -d {}'.format(
-                    new_job['instance_name'], new_job['model_name'], pretrain_weights, new_job['dataset_name']
+                monitor_service = settings.MONITOR['HOST'] + settings.MONITOR['PATH']
+
+                command = '/home/root/insight/run_worker.sh -i {} -m {} {} -d {} -s {}'.format(
+                    new_job['instance_name'], new_job['model_name'], pretrain_weights, new_job['dataset_name'], monitor_service
                 )
 
                 print(command)
@@ -141,6 +155,6 @@ class AgentService(threading.Thread):
                 runner.run_container()
 
             # sleep random seconds between 5 ~ 30
-            print('random waiting {} seconds'.format(random_sleep))
+            print('No job, random waiting {} seconds'.format(random_sleep))
             sleep(random_sleep)
 

@@ -13,3 +13,8 @@ DOCKER = {
     'IMAGE': 'hjiaming/insight-worker',
     'VERSION': 'latest'
 }
+
+MONITOR = {
+    'HOST': 'http://insight.umx.io:9000',
+    'PATH': '/monitor'
+}

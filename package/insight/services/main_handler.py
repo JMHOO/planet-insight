@@ -22,4 +22,4 @@ def accept_training_monitor(instance_name):
 
 
 def start_agent_service(port=9000):
-    app.run(port=port)
+    app.run(host='0.0.0.0', port=port)

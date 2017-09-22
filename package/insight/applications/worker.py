@@ -70,7 +70,7 @@ def start_pipeline():
     parent_json = conv.check_inheritance(original_json)
     if parent_json is not None:
         remote_log.append('info', 'create parent')
-        parent_json = db_model.get({'model_name': parent_json})
+        parent_json = db_model.get(parent_json)
 
     if weights_file != 'NONE':
         keras_model = conv.parser(original_json, parent_json, weights_file=weights_file)
@@ -128,7 +128,7 @@ def start_pipeline():
         epochs=int(instance['epochs']),
         callbacks=[cbEarlyStop, cbMonitor, cbModelsCheckpoint]
     )
-    
+
     # upload models
     s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
     s3_models.upload(args.instance_name, model_file)

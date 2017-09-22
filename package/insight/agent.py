@@ -122,7 +122,7 @@ class AgentService(threading.Thread):
             new_job = self._jobs.check_new_job()
             if new_job is not None:
                 print('Got new jog: {}'.format(new_job))
-                pretrain_weights = new_job['pretrain']
+                pretrain_weights = '-w ' + new_job['pretrain']
                 #if pretrain_weights != 'NONE':
                 #    pretrain_weights = '-w ' + pretrain_weights
                 #else:

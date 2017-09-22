@@ -35,7 +35,10 @@ def start_pipeline():
     weights_file = args.pretrained_model
 
     print(args.monitor_service)
-    print(args.pretrained_model)
+    if not args.monitor_service:
+        print('monitor service error')
+        return
+
     parsed = urlparse(args.monitor_service)
     monitor_host = parsed.scheme + "://" + parsed.netloc
     monitor_path = parsed.path + "/" + args.instance_name
@@ -96,7 +99,8 @@ def start_pipeline():
         x_test = x_test.transpose(0, 2, 3, 1)
 
     # training
-    model_file = './' + args.instance_name + '-{epoch:02d}.h5df'
+    #model_file = './' + args.instance_name + '-{epoch:02d}.h5df'
+    model_file = './' + args.instance_name + '.h5df'
 
     cbMonitor = RemoteMonitor(root=monitor_host, path=monitor_path)
     cbEarlyStop = EarlyStopping(min_delta=0.001, patience=3)
@@ -118,7 +122,9 @@ def start_pipeline():
         epochs=250,
         callbacks=[cbEarlyStop, cbMonitor, cbModelsCheckpoint]
     )
-
+    # upload models
+    s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
+    s3_models.upload(args.instance_name, model_file)
     
 
 if __name__ == "__main__":

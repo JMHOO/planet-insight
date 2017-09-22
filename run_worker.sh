@@ -5,7 +5,7 @@ WEIGHTS_FILE=""
 DATASET_FILE=""
 MONITOR_SERVICE=""
 # processing command options
-while getopts ":i:m:w:d:s" opt; do
+while getopts ":i:m:w:d:s:" opt; do
   case $opt in
 	i)
 	INSTANCE_NAME=$OPTARG

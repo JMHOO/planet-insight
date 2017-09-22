@@ -80,6 +80,7 @@ class AgentService(threading.Thread):
         try:
             aws_key = os.environ['AWS_ACCESS_KEY_ID']
             aws_access = os.environ['AWS_SECRET_ACCESS_KEY']
+            aws_region = os.environ['AWS_DEFAULT_REGION']
         except KeyError:
             print('AWS credential not configed, exit.')
             return
@@ -123,7 +124,8 @@ class AgentService(threading.Thread):
 
                 environment = {
                     'AWS_ACCESS_KEY_ID': aws_key,
-                    'AWS_SECRET_ACCESS_KEY': aws_access
+                    'AWS_SECRET_ACCESS_KEY': aws_access,
+                    'AWS_DEFAULT_REGION': aws_region
                 }
 
                 # do job and waiting

@@ -40,5 +40,7 @@ RUN pip3 --no-cache-dir install --upgrade \
 ENV AWS_ACCESS_KEY_ID ""
 ENV AWS_SECRET_ACCESS_KEY ""
 
-ADD package /home/root/insight
-RUN pip install -e /home/root/insight/
+ADD . /home/root/insight
+RUN pip install -e /home/root/insight/package/
+
+WORKDIR /home/root/insight/

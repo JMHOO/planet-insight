@@ -47,6 +47,9 @@ class DynamoDB(object):
             response = self._model_table.scan()
         return response['Items']
 
+    def _delete(self, key):
+        self._model_table.delete_item(Key=key)
+
 
 class DBInsightModels(DynamoDB):
     def __init__(self):
@@ -56,6 +59,15 @@ class DBInsightModels(DynamoDB):
         self._put({
             'model_name': key, 'model_defination': json_str
         })
+
+    def update(self, model_name, json_context):
+        self._update(
+            key={'model_name': model_name},
+            update_exp='SET model_defination = :md1',
+            attr_values={':md1': json_context})
+
+    def delete(self, model_name):
+        self._delete({"model_name": model_name})
 
     def get(self, key):
         item = self._get({'model_name': key})
@@ -101,6 +113,12 @@ class DBInstanceLog(DynamoDB):
             message += json_messge
         return message
 
+    def clear(self):
+        start_block = 1
+        for i in range(start_block, self._msg_block + 1):
+            key = self._instance_name + '.' + str(i)
+            self._delete({'log_id': key})
+
     def _next_block(self, block_index):
         key = self._instance_name + '.' + str(block_index)
         item = self._get({'log_id': key})
@@ -132,31 +150,29 @@ class DBJobInstance(DynamoDB):
     '''
         entity is a dictionary, e.g.:
         {
-            name = cnn1-cifar-10,    # instance name
-            dataset = cifar-10,      # object name of S3
+            instance_name = cnn1-cifar-10,    # instance name
+            dataset_name = cifar-10,      # object name of S3
             pretrain = cnn1-cifar-10, # pre-trained weight, set to None if train from scratch
-            status  = initial / training / completed
+            job_status  = initial / training / completed,
+            epochs = 10,
+            model_name = cnn1
         }
     '''
     def new_job(self, entity):
         if not isinstance(entity, dict):
             return None
 
-        if entity['name'] is not None:
+        if entity['instance_name'] is not None:
             # check the unique of instance name
-            if self._get({'instance_name': entity['name']}) is not None:
+            if self._get({'instance_name': entity['instance_name']}) is not None:
                 print('instance-name already existed!')
                 return
 
-            time_stamp = datetime.now().isoformat()
+            # time_stamp = datetime.now().isoformat()
             created = Decimal(str(datetime.now().timestamp()))
             # print(datetime.now().timestamp())
-
-            self._put({
-                'instance_name': entity['name'], 'created': created, #'timestamp': time_stamp,
-                'dataset_name': entity['dataset'], 'pretrain': entity['pretrain'], 'job_status': entity['status'],
-                'epochs': entity['epochs'], 'model_name': entity['model']
-            })
+            entity['created'] = created
+            self._put(entity)
 
     def check_new_job(self):
         items = self._scan(filter=Attr('job_status').eq('initial'))
@@ -175,6 +191,9 @@ class DBJobInstance(DynamoDB):
     def list(self):
         items = self._scan(filter=None)
         return items
+
+    def delete(self, instance_name):
+        self._delete({"instance_name": instance_name})
 
 
 class S3DB(object):
@@ -218,6 +237,25 @@ class S3DB(object):
         for obj in self._bucket.objects.all():
             objs.append({"name": obj.key, "size": humanable_size(obj.size)})
         return objs
+
+    def delete(self, obj_name):
+        self._bucket.delete_objects(
+            Delete={
+                'Objects': [{
+                    'Key': obj_name
+                }],
+                'Quiet': True
+        })
+
+
+class S3DBDataset(S3DB):
+    def __init__(self):
+        super().__init__(bucket_name=settings.S3_BUCKET['DATASET'])
+
+
+class S3DBResults(S3DB):
+    def __init__(self):
+        super().__init__(bucket_name=settings.S3_BUCKET['RESULTS'])
 
 
 def _extract_archive(file_path, path='.'):

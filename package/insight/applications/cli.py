@@ -30,10 +30,10 @@ class InsightCLI(cmd.Cmd):
                 weights = "NONE"
 
             self._jobs.new_job({
-                "status": "initial",
-                "name": params["name"],
-                "model": params["model"],
-                "dataset": params["data"],
+                "job_status": "initial",
+                "instance_name": params["name"],
+                "model_name": params["model"],
+                "dataset_name": params["data"],
                 "pretrain": weights,
                 "epochs": params["epochs"]
             })

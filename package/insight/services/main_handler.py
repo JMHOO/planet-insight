@@ -223,18 +223,22 @@ def upload_weights():
     return _upload_to_s3(request.files, s3_results)
 
 
-@app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["DELETE"])
+@app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["GET", "DELETE"])
 def delete_dataset(dataset_name):
     if request.method == "DELETE":
         s3_dataset.delete(dataset_name)
         return {"result": True}
+    elif request.method == "GET":
+        return {"file": dataset_name}
 
 
-@app.route('/insight/api/v1.0/weights/<weights_file>', methods=["DELETE"])
-def delete_dataset(weights_file):
+@app.route('/insight/api/v1.0/weights/<weights_file>', methods=["GET", "DELETE"])
+def delete_weights_file(weights_file):
     if request.method == "DELETE":
         s3_results.delete(weights_file)
         return {"result": True}
+    elif request.method == "GET":
+        return {"file": weights_file}
 
 
 def start_agent_service(port=9000):

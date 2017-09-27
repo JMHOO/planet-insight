@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python3 ./package/insight/applications/RESTservice.py
+python3 ./package/insight/web/REST_server.py

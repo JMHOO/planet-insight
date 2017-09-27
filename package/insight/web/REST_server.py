@@ -1,12 +1,12 @@
 import json
 import os
 from datetime import datetime
-from flask import abort, request
+from flask import abort, request, send_from_directory, url_for
 from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
 from insight.storage import DBInstanceLog, DBInsightModels, DBJobInstance, S3DBDataset, S3DBResults
 
-app = FlaskAPI(__name__)
+app = FlaskAPI(__name__, static_folder='static')
 auth = HTTPBasicAuth()
 db_model = DBInsightModels()
 db_jobs = DBJobInstance()
@@ -14,9 +14,38 @@ s3_dataset = S3DBDataset()
 s3_results = S3DBResults()
 
 
+@app.context_processor
+def override_url_for():
+    """
+    Generate a new token on every request to prevent the browser from
+    caching static files.
+    """
+    return dict(url_for=dated_url_for)
+
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                     endpoint, filename)
+            values['q'] = int(os.stat(file_path).st_mtime)
+    return url_for(endpoint, **values)
+
+
 @app.route('/')
-def show_info():
-    return {'Welcome': 'to Insights!'}
+def root():
+    return app.send_static_file('index.html')
+
+
+@app.route('/js/<path:path>')
+def send_js(path):
+    return send_from_directory('static/js', path)
+
+
+@app.route('/css/<path:path>')
+def send_css(path):
+    return send_from_directory('static/css', path)
 
 
 @app.route('/monitor/<instance_name>', methods=['GET', 'POST'])
@@ -49,7 +78,7 @@ def list_models():
     all_models = db_model.list()
     for item in all_models:
         models.append({"model_name": item["model_name"], "model_defination": item["model_defination"]})
-    return {"models": models}
+    return models #{"models": models}
 
 
 @app.route('/insight/api/v1.0/models/<model_name>', methods=["GET", "PUT", "DELETE"])
@@ -243,3 +272,7 @@ def delete_weights_file(weights_file):
 
 def start_agent_service(port=9000):
     app.run(host='0.0.0.0', port=port)
+
+
+if __name__ == "__main__":
+    start_agent_service(port=9000)

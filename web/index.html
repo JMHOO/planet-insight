@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-framework="backbonejs">
+
+<head>
+    <meta charset="utf-8">
+    <title>Planet Insight</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="/css/index.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid display-table">
+        <div class="row display-table-row">
+            <!-- left nav bar -->
+            <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
+                <div class="logo">
+                    <a hef="index.html"><img src="https://daks2k3a4ib2z.cloudfront.net/57c954d37d70832a623199f5/57c954d37d70832a62319a5b_insight_logo.png" /></a>
+                </div>
+                <div class="navi">
+                    <ul>
+                        <li class="active"><a href="#tab-01"><span class="hidden-xs hidden-sm">JSON Models</span></a></li>
+                        <li><a href="#tab-02"><span class="hidden-xs hidden-sm">Tasks</span></a></li>
+                        <li><a href="#tab-03"><span class="hidden-xs hidden-sm">Instances</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- right container -->
+            <div class="col-md-10 col-sm-11 display-table-cell v-align">
+                <div class="row">
+                    <header>
+                        <div class="col-md-7">
+                        </div>
+                        <div class="col-md-5">
+                            <div class="header-rightside">
+                                <ul class="list-inline header-top pull-right">
+                                    <li class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Add</a></li>
+                                    <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-01">
+                        <section id="json_models">
+                            <!-- JSON model container -->
+                            <div>
+                                <h1>JSON Models</h1>
+
+                                <div class="row">
+                                    <div id="list_json_models">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- json models -->
+                        </section>
+                    </div>
+                    <div class="tab-pane" id="tab-02">
+                        content of tab 2
+                    </div>
+                    <div class="tab-pane" id="tab-03">
+                        content of tab 3
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- Modal -->
+    <div id="add_project" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header login-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add Project</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="text" placeholder="Project Title" name="name">
+                    <input type="text" placeholder="Post of Post" name="mail">
+                    <input type="text" placeholder="Author" name="passsword">
+                    <textarea placeholder="Desicrption"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel" data-dismiss="modal">Close</button>
+                    <button type="button" class="add-project" data-dismiss="modal">Save</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script id="model-template" type="text/template">
+        <ul>
+            <li>
+                <%= name %>
+            </li>
+            <li>
+                <%= defination %>
+            </li>
+        </ul>
+        <button type="button" class="btn btn-danger btn-sm">Remove</button>
+    </script>
+
+
+    <script src="js/lib/jquery.min.js"></script>
+    <script src="js/lib/underscore-min.js"></script>
+    <script src="js/lib/backbone-min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/models/json_model.js"></script>
+    <script src="js/collections/JSONCollection.js"></script>
+    <script src="js/views/JSONModelListView.js"></script>
+    <script src="js/views/JSONModelView.js"></script>
+    <script src="js/views/app-view.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+        $(document).ready(function() {
+            $(".navi a").click(function() {
+                $(this).tab('show');
+            });
+        });
+    </script>
+</body>
+
+</html>

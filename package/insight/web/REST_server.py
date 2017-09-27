@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from flask import abort, request, send_from_directory, url_for
+from flask import abort, request, send_from_directory, url_for, render_template
 from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
 from insight.storage import DBInstanceLog, DBInsightModels, DBJobInstance, S3DBDataset, S3DBResults
@@ -36,6 +36,11 @@ def dated_url_for(endpoint, **values):
 @app.route('/')
 def root():
     return app.send_static_file('index.html')
+
+
+@app.route('/base')
+def base_root():
+    return app.send_static_file('base.html')
 
 
 @app.route('/js/<path:path>')
@@ -78,7 +83,7 @@ def list_models():
     all_models = db_model.list()
     for item in all_models:
         models.append({"model_name": item["model_name"], "model_defination": item["model_defination"]})
-    return models #{"models": models}
+    return models  #{"models": models}
 
 
 @app.route('/insight/api/v1.0/models/<model_name>', methods=["GET", "PUT", "DELETE"])
@@ -127,7 +132,7 @@ def list_jobs():
         timestamp = timestamp.strftime('%Y-%m-%d %H:%m')
         item['created'] = timestamp
         jobs.append(item)
-    return {"jobs": jobs}
+    return jobs  # {"jobs": jobs}
 
 
 @app.route('/insight/api/v1.0/jobs/<instance_name>', methods=["GET", "PUT", "DELETE"])
@@ -184,7 +189,7 @@ def create_job():
 def fetch_job_logs(instance_name):
     db_log = DBInstanceLog(instance_name)
     logs = db_log.fetch()
-    return {"logs": logs}
+    return logs  # {"logs": logs}
 
 
 '''

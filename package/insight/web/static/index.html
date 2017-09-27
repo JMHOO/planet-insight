@@ -6,64 +6,70 @@
     <title>Planet Insight</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="css/index.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container-fluid display-table">
+    <!-- NAV BAR -->
+    <div class="navbar navbar-nokia navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Insight</a>
+            </div>
+            <p class="navbar-text">Planet Insight</p>
+        </div>
+    </div>
+    <!-- NAV BAR -->
+
+    <div class="container display-table">
         <div class="row display-table-row">
             <!-- left nav bar -->
-            <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
-                <div class="logo">
-                    <a hef="index.html"><img src="https://daks2k3a4ib2z.cloudfront.net/57c954d37d70832a623199f5/57c954d37d70832a62319a5b_insight_logo.png" /></a>
-                </div>
+            <div class="col-md-2 display-table-cell" id="navigation">
                 <div class="navi">
                     <ul>
-                        <li class="active"><a href="#tab-01"><span class="hidden-xs hidden-sm">JSON Models</span></a></li>
-                        <li><a href="#tab-02"><span class="hidden-xs hidden-sm">Tasks</span></a></li>
-                        <li><a href="#tab-03"><span class="hidden-xs hidden-sm">Instances</span></a></li>
+                        <li class="active"><a href="#tab-json">JSON Models</a></li>
+                        <li><a href="#tab-task">Tasks</a></li>
+                        <li><a href="#tab-instance">Instances</a></li>
                     </ul>
                 </div>
             </div>
             <!-- right container -->
-            <div class="col-md-10 col-sm-11 display-table-cell v-align">
-                <div class="row">
-                    <header>
-                        <div class="col-md-7">
-                        </div>
-                        <div class="col-md-5">
-                            <div class="header-rightside">
-                                <ul class="list-inline header-top pull-right">
-                                    <li class="hidden-xs"><a href="#" class="add-project" data-toggle="modal" data-target="#add_project">Add</a></li>
-                                    <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
-
-                                </ul>
-                            </div>
-                        </div>
-                    </header>
-                </div>
+            <div class="col-md-10 display-table-cell">
                 <div class="tab-content">
-                    <div class="tab-pane active" id="tab-01">
+                    <div class="tab-pane active" id="tab-json">
+                        <h1>JSON Models</h1>
                         <section id="json_models">
-                            <!-- JSON model container -->
-                            <div>
-                                <h1>JSON Models</h1>
-
-                                <div class="row">
-                                    <div id="list_json_models">
-
-                                    </div>
-
-                                </div>
-
+                            <div id="list_json_models">
                             </div>
-                            <!-- json models -->
                         </section>
                     </div>
-                    <div class="tab-pane" id="tab-02">
-                        content of tab 2
+                    <div class="tab-pane" id="tab-task">
+                        <h1>Tasks</h1>
+                        <section id="job_instances">
+                            <div id="list_job_instances">
+                                <div class="col-sm-12">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width=6%>#</th>
+                                                <th width=20%>Name</th>
+                                                <th width=20%>Ref Model</th>
+                                                <th width=25%>Dataset</th>
+                                                <th width=8% align="center">Epochs</th>
+                                                <th width=10%>Status</th>
+                                                <th width=12%>Created</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tasks-table-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                    <div class="tab-pane" id="tab-03">
+                    <div class="tab-pane" id="tab-instance">
+                        <h1>Instances</h1>
                         content of tab 3
                     </div>
                 </div>
@@ -93,7 +99,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="cancel" data-dismiss="modal">Close</button>
-                    <button type="button" class="add-project" data-dismiss="modal">Save</button>
                 </div>
             </div>
 
@@ -101,26 +106,90 @@
     </div>
 
     <script id="model-template" type="text/template">
-        <ul>
-            <li>
-                <%= model_name %>
-            </li>
-            <li>
-                <%= model_defination %>
-            </li>
-        </ul>
-        <button type="button" class="btn btn-danger btn-sm">Remove</button>
+        <div class="col-md-6">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h3>
+                        <%= model_name %>
+                    </h3>
+                    <p>
+                        <%= model_defination %>
+                    </p>
+                    <p><a href="#" class="btn btn-danger" role="button">Remove</a></p>
+                </div>
+            </div>
+        </div>
     </script>
 
+    <script id="task-template" type="text/template">
+        <td>
+            <a class="btn btn-danger remove-task" href="javascript:void(0)" instance-name="<%= instance_name %>">
+                            <i class="fa fa-trash" aria-hidden="true" instance-name="<%= instance_name %>"></i></a>
+        </td>
+        <td>
+            <a class="viewtask" href="javascript:void(0)" instance-name="<%= instance_name %>">
+                <%= instance_name %>
+            </a>
+        </td>
+        <td>
+            <%= model_name %>
+        </td>
+        <td>
+            <%= dataset_name %>
+        </td>
+        <td>
+            <%= epochs %>
+        </td>
+        <td>
+            <%= job_status %>
+        </td>
+        <td>
+            <%= created %>
+        </td>
+    </script>
+
+    <!-- Modal -->
+    <div id="view-task-dialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header login-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Task Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <ul id="task-body">
+                    </ul>
+                    <hr>
+                    <h5>Logs</h5>
+                    <div id="task-logs">
+                        <ul class="list-group">
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/underscore-min.js"></script>
     <script src="js/lib/backbone-min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/renderjson.js"></script>
     <script src="js/models/json_model.js"></script>
+    <script src="js/models/task.js"></script>
+    <script src="js/models/log.js"></script>
     <script src="js/collections/JSONCollection.js"></script>
+    <script src="js/collections/TaskCollection.js"></script>
+    <script src="js/collections/TaskLogs.js"></script>
     <script src="js/views/JSONModelListView.js"></script>
     <script src="js/views/JSONModelView.js"></script>
+    <script src="js/views/task-view.js"></script>
+    <script src="js/views/TaskListView.js"></script>
     <script src="js/views/app-view.js"></script>
     <script src="js/app.js"></script>
 

@@ -1,9 +1,4 @@
-    /*Main CSS*/
-
-
-/*Login Signup Page*/
-
-a:focus,
+    a:focus,
 a:hover,
 a {
     outline: none;
@@ -394,6 +389,16 @@ header {
     padding-left: 15px;
 }
 
+.navbar-nokia {
+    background-color: #D8DFEC;
+    border: #000
+}
+
+.navbar-brand:focus,
+.navbar-brand:hover {
+    color: #ffffff
+}
+
 .navbar-default {
     background-color: #ffffff;
     border-color: #ffffff;
@@ -610,6 +615,47 @@ header {
 .modelContainer button {
     float: right;
     margin: 10px;
+}
+
+.renderjson a {
+    text-decoration: none;
+}
+
+.renderjson .disclosure {
+    color: crimson;
+    font-size: 150%;
+}
+
+.renderjson .syntax {
+    color: grey;
+}
+
+.renderjson .string {
+    color: #558b2f;
+}
+
+.renderjson .number {
+    color: red;
+}
+
+.renderjson .boolean {
+    color: purple;
+}
+
+.renderjson .key {
+    color: #0451a5;
+}
+
+.renderjson .keyword {
+    color: #af00db;
+}
+
+.renderjson .object.syntax {
+    color: teal;
+}
+
+.renderjson .array.syntax {
+    color: #252525;
 }
 
 .modal-header.login-header {

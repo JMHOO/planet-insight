@@ -5,15 +5,12 @@ var app = app || {};
 
 
     app.JSONModel = Backbone.Model.extend({
-        // Default attributes for the todo
-        // and ensure that each todo created has `title` and `completed` keys.
+
+        urlRoot: '/insight/api/v1.0/models',
+        idAttribute: 'model_name',
         defaults: {
             model_name: '',
             model_defination: ''
         },
-
-        save: function() {
-
-        }
     });
 })();

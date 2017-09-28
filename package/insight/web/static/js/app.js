@@ -7,6 +7,6 @@ $(function() {
 
     // kick things off by creating the `App`
     //new app.AppView();
-    new app.JSONModelsListView();
-    new app.TaskListView();
+    app.jsonlist = new app.JSONModelsListView();
+    app.tasklist = new app.TaskListView();
 });

@@ -6,6 +6,7 @@ app.TaskView = Backbone.View.extend({
 
     events: {
         'click .viewtask': 'viewTask',
+        'click .remove-task': 'removeTask'
     },
 
     initialize: function() {
@@ -17,8 +18,13 @@ app.TaskView = Backbone.View.extend({
         return this
     },
 
+    removeTask: function() {
+        console.log(this.model.get("model_name"));
+        this.model.destroy();
+    },
+
     viewTask: function(e) {
-        var instance_name = $(e.currentTarget).attr('instance-name');
+        var instance_name = this.model.get('instance_name');
         var task_body = $('#task-body').html('');
         task_body.append($('<h4/>').text(this.model.get('instance_name')))
             .append($('<li/>').text('Use model: ' + this.model.get('model_name')))

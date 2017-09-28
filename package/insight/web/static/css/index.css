@@ -1,27 +1,116 @@
-    a:focus,
-a:hover,
-a {
-    outline: none;
-    text-decoration: none;
+body {
+    background: #fafafa;
 }
 
-li,
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+p {
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.navbar {
+    padding: 15px 5px;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+.wrapper {
+    display: flex;
+}
+
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: #7386D5;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #6d7fcc;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+    display: block;
+}
+
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: calc(100% - 250px);
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
 }
 
 .header-top i {
     font-size: 18px;
-}
-
-.bg-image {
-    background: url(../images/background-login.jpg) no-repeat 0 0 / cover;
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    display: table;
 }
 
 .login-header {
@@ -136,14 +225,6 @@ ul {
     background: rgba(0, 0, 0, 0) url("../images/mail.png") no-repeat scroll 4px 12px;
 }
 
-.login-signup .tab-content {
-    background: #ffffff none repeat scroll 0 0;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
-    display: inline-block;
-    margin-top: -8px;
-    width: 100%;
-}
-
 .form-btn {
     background: #5584ff none repeat scroll 0 0;
     border: medium none;
@@ -170,10 +251,6 @@ ul {
 
 .form-details {
     padding: 35px 0;
-}
-
-.tab-content .tab-pane {
-    padding: 70px 0;
 }
 
 
@@ -210,58 +287,6 @@ ul {
     display: table-cell;
     float: none;
     height: 100%;
-}
-
-.v-align {
-    vertical-align: top;
-}
-
-.logo img {
-    max-width: 180px;
-    padding: 16px 0 17px;
-    width: 100%;
-}
-
-.header-top {
-    margin: 0;
-    padding-top: 2px;
-}
-
-.header-top img {
-    border-radius: 50%;
-    max-width: 48px !important;
-    width: 100%;
-}
-
-.add-project {
-    background: #5584ff none repeat scroll 0 0;
-    border-radius: 100px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 27px 10px 45px;
-    position: relative;
-}
-
-.header-rightside .nav>li>a:focus,
-.header-rightside .nav>li>a:hover {
-    background: none;
-    text-decoration: none;
-}
-
-.add-project::before {
-    background: rgba(0, 0, 0, 0) url("../images/plus.png") no-repeat scroll 0 0;
-    content: "";
-    ;
-    height: 12px;
-    left: 17px;
-    position: absolute;
-    top: 12px;
-    width: 12px;
-}
-
-.add-project:hover {
-    color: #ffffff;
 }
 
 .header-top i {
@@ -333,15 +358,6 @@ ul {
     transition: all 0.5s ease;
 }
 
-.search input {
-    border: none;
-    font-size: 15px;
-    padding: 15px 9px;
-    width: 100%;
-    background: rgba(0, 0, 0, 0) url("../images/search.png") no-repeat scroll 99% 12px;
-    color: #8492af;
-}
-
 header {
     background: #ffffff none repeat scroll 0 0;
     box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
@@ -394,11 +410,6 @@ header {
     border: #000
 }
 
-.navbar-brand:focus,
-.navbar-brand:hover {
-    color: #ffffff
-}
-
 .navbar-default {
     background-color: #ffffff;
     border-color: #ffffff;
@@ -430,95 +441,6 @@ header {
     transition: all 0.5s ease;
 }
 
-.user-dashboard {
-    padding: 0 20px;
-}
-
-.user-dashboard h1 {
-    color: #0e1a35;
-    font-size: 30px;
-    font-weight: 500;
-    margin: 0;
-    padding: 21px 0;
-}
-
-.sales {
-    background: #ffffff none repeat scroll 0 0;
-    border: 1px solid #d4d9e3;
-    display: inline-block;
-    padding: 15px;
-    width: 100%;
-}
-
-.sales button {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border: 1px solid #dadee7;
-    border-radius: 100px;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    padding-right: 32px;
-    color: #0e1a35;
-}
-
-.sales button::before {
-    content: "";
-    font-family: FontAwesome;
-    position: absolute;
-    right: 12px;
-    top: 11px;
-}
-
-.sales .btn-group {
-    float: right;
-}
-
-.sales h2 {
-    color: #8492af;
-    float: left;
-    font-size: 21px;
-    font-weight: 600;
-    margin: 0;
-    padding: 9px 0 0;
-}
-
-.btn.btn-secondary.btn-lg.dropdown-toggle>span {
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.sales .dropdown-menu {
-    margin: 0px;
-    padding: 0px;
-    border: 0px;
-    border-radius: 8px;
-    width: 100%;
-    color: #0e1a35;
-}
-
-.sales .btn-group.open .dropdown-toggle,
-.btn.active,
-.btn:active {
-    box-shadow: none;
-}
-
-.sales .dropdown-menu>a {
-    color: #0e1a35;
-    display: inline-block;
-    font-weight: 800;
-    padding: 9px 0;
-    text-align: center;
-    width: 100%;
-}
-
-#my-cool-chart svg {
-    width: 100%;
-}
-
-.sales .dropdown-menu>a:hover {
-    color: #5584FF;
-}
-
 .shield-buttons {
     display: none;
 }
@@ -526,8 +448,6 @@ header {
 .close,
 .close:focus,
 .close:hover {
-    color: #fff;
-    ;
     opacity: 1;
     text-shadow: none;
 }
@@ -617,13 +537,17 @@ header {
     margin: 10px;
 }
 
+.renderjson {
+    font-size: 80%;
+}
+
 .renderjson a {
     text-decoration: none;
 }
 
 .renderjson .disclosure {
     color: crimson;
-    font-size: 150%;
+    font-size: 120%;
 }
 
 .renderjson .syntax {
@@ -657,140 +581,3 @@ header {
 .renderjson .array.syntax {
     color: #252525;
 }
-
-.modal-header.login-header {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    /*Main CSS*/
-    @media only screen and (max-device-width: 767px) {
-        .login-logo img {
-            margin: 0 auto;
-        }
-        .login-details .nav-tabs>li {
-            text-align: center;
-            width: 50%;
-        }
-        .login-signup .login-inner h1 {
-            font-size: 26px;
-            margin-bottom: 0;
-            margin-top: 10px;
-        }
-        .login-inner .login-form input {
-            font-size: 15px;
-            max-width: 100%;
-            padding: 15px 45px;
-        }
-        .login-inner .form-details {
-            padding: 25px;
-        }
-        .login-inner .login-form label {
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        .login-inner .form-btn {
-            margin: 0;
-            max-width: 180px;
-        }
-        .tab-content .tab-pane {
-            padding: 20px 0;
-        }
-        #navigation .navi a {
-            font-size: 14px;
-            padding: 20px;
-            text-align: center;
-        }
-        #navigation .navi i {
-            margin-right: 0px;
-        }
-        #navigation .navi a:hover,
-        #navigation .navi .active a {
-            background: #122143 none repeat scroll 0 0;
-            border-left: none;
-            display: block;
-            padding-left: 20px;
-        }
-        header .header-top img {
-            max-width: 38px !important;
-        }
-        .v-align header {
-            padding: 12px 15px;
-        }
-        header .header-top li {
-            padding-left: 13px;
-            padding-right: 6px;
-        }
-        .navbar-default .navbar-toggle {
-            border-color: rgba(0, 0, 0, 0);
-        }
-        .navbar-header .navbar-toggle {
-            float: left;
-            margin: 0;
-            padding: 0;
-            top: 12px;
-        }
-        button,
-        html [type="button"],
-        [type="reset"],
-        [type="submit"] {
-            outline: medium none;
-        }
-        .user-dashboard .sales h2 {
-            color: #8492af;
-            float: left;
-            font-size: 14px;
-            font-weight: 600;
-            margin: 0;
-            padding: 13px 0 0;
-        }
-        .user-dashboard .btn.btn-secondary.btn-lg.dropdown-toggle>span {
-            font-size: 11px;
-        }
-        .user-dashboard .sales button {
-            font-size: 11px;
-            padding-right: 23px;
-        }
-        .user-dashboard .sales h2 {
-            font-size: 12px;
-        }
-        .gutter {
-            padding: 0;
-        }
-    }
-    @media only screen and (max-device-width: 992px) {
-        header .header-top li {
-            padding-left: 20px !important;
-            padding-right: 0;
-        }
-        header .logo img {
-            max-width: 125px !important;
-        }
-    }
-    @media only screen and (min-device-width: 767px) and (max-device-width: 998px) {
-        .user-dashboard .header-top {
-            padding-top: 5px;
-        }
-        .user-dashboard .header-rightside {
-            display: inline-block;
-            float: left;
-            width: 100%;
-        }
-        .user-dashboard .header-rightside .header-top img {
-            max-width: 41px !important;
-        }
-        .user-dashboard .sales button {
-            font-size: 10px;
-        }
-        .user-dashboard .btn.btn-secondary.btn-lg.dropdown-toggle>span {
-            font-size: 12px;
-        }
-        .user-dashboard .sales h2 {
-            font-size: 15px;
-        }
-    }
-    @media only screen and (min-device-width:998px) and (max-device-width: 1350px) {
-        #navigation .logo img {
-            max-width: 130px;
-            padding: 16px 0 17px;
-            width: 100%;
-        }
-    }

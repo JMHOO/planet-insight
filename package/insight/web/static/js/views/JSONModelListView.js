@@ -8,29 +8,47 @@ var app = app || {};
     app.JSONModelsListView = Backbone.View.extend({
         el: '#list_json_models',
 
+
         initialize: function() {
             this.collection = new app.JSONCollection();
+
             this.collection.fetch({ reset: true });
-            console.log(this.collection);
             this.render();
 
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'add', this.render);
+            this.listenTo(this.collection, 'remove', this.render);
+            //this.model.on('change', this.render, this);
         },
 
-        // render library by rendering each book in its collection
+        reload: function() {
+            this.collection.reset();
+            this.collection.fetch({ reset: true });
+            this.render();
+        },
+
         render: function() {
+            this.$el.html('');
+            var count = 0;
+            var row;
             this.collection.each(function(item) {
-                this.renderModel(item);
+                if (count % 2 == 0) {
+                    row = $('<div/>').addClass("row");
+                    this.$el.append(row)
+                    row.append(this.renderModel(item));
+                } else {
+                    row.append(this.renderModel(item));
+                }
+                count++;
             }, this);
         },
 
-        // render a book by creating a BookView and appending the
-        // element it renders to the library's element
         renderModel: function(item) {
             var modelView = new app.JSONModelView({
                 model: item
             });
-            this.$el.append(modelView.render().el);
-        }
+            return modelView.render().el;
+        },
+
     });
 })(jQuery);

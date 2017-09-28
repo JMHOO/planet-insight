@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from datetime import datetime
 from flask import abort, request, send_from_directory, url_for, render_template
 from flask_api import FlaskAPI
@@ -101,7 +102,7 @@ def retrieve_model(model_name):
         return {"model": json_model}
         
 
-@app.route('/insight/api/v1.0/models/', methods=['POST'])
+@app.route('/insight/api/v1.0/models', methods=['POST'])
 def create_model():
     if not request.json or 'name' not in request.json:
         abort(400)
@@ -109,7 +110,7 @@ def create_model():
     model_name = request.json['name']
     model_defination = request.json['defination']
     db_model.put(model_name, model_defination)
-    return {"model": model_defination}, 201
+    return {"model_name": model_name, "model_defination": model_defination}, 201
 
 
 '''
@@ -210,8 +211,43 @@ def list_datasets():
     files = []
     all_file = s3_dataset.list()
     for f in all_file:
-        files.append(f)
-    return {"objects": files}
+        if not f['name'].endswith('/'):
+            files.append(f)
+    return files
+
+
+@app.route('/insight/api/v1.0/dataset-paired', methods=["GET"])
+#@auth.login_required
+def list_paired_datasets():
+    files = []
+    all_file = s3_dataset.list()
+    for f in all_file:
+        if not f['name'].endswith('/'):
+            files.append(f)
+
+    train, test = [], []
+    pattern = re.compile('(?:^|[a-zA-Z0-9\/-]*)([-]train|[-]test)')
+    for obj in files:
+        match = pattern.search(obj['name'])
+        if not match:
+            continue
+        elif '-train' in match.group():
+            train.append(obj)
+        elif '-test' in match.group():
+            test.append(obj)
+
+    if len(train) != len(test) or len(train) == 0:
+        return files
+
+    files = []
+    for i in range(len(train)):
+        files.append({
+            'name': train[i]['name'].split("-train")[0],
+            'train_size': train[i]['size'],
+            'test_size': test[i]['size']
+        })
+
+    return files
 
 
 @app.route('/insight/api/v1.0/weights', methods=["GET"])
@@ -220,8 +256,9 @@ def list_results():
     files = []
     all_file = s3_results.list()
     for f in all_file:
-        files.append(f)
-    return {"objects": files}
+        if not f['name'].endswith('/'):
+            files.append(f)
+    return files
 
 
 def _upload_to_s3(files, s3_obj):

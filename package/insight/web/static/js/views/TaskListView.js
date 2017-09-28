@@ -5,14 +5,14 @@ var app = app || {};
     app.TaskListView = Backbone.View.extend({
         el: '#tasks-table-body',
 
-
         initialize: function() {
             this.collection = new app.TaskCollection();
             this.collection.fetch({ reset: true });
-            //console.log(this.collection);
+
             this.render();
             this.listenTo(this.collection, 'reset', this.render);
-
+            this.listenTo(this.collection, 'add', this.render);
+            this.listenTo(this.collection, 'remove', this.render);
         },
 
         // render library by rendering each book in its collection

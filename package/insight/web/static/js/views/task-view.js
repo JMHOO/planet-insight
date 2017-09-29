@@ -28,12 +28,17 @@ app.TaskView = Backbone.View.extend({
         var task_body = $('#task-body').html('');
         task_body.append($('<h3/>').addClass("text-primary").text(this.model.get('instance_name')))
             .append($('<p/>').addClass("card-text")
-                .append($('<p/>').text('Use model: ' + this.model.get('model_name')))
-                .append($('<p/>').text('Dataset: ' + this.model.get('dataset_name')))
-                .append($('<p/>').text('Epochs: ' + this.model.get('epochs')))
-                .append($('<p/>').text('Status: ' + this.model.get('job_status'))));
+                .append($('<p/>').html(
+                    'Use model: ' + this.model.get('model_name') +
+                    ' ----- Max Epochs: ' + this.model.get('epochs') +
+                    '<br/>' + 'Dataset: ' + this.model.get('dataset_name') +
+                    '<br/>' + 'Status: ' + this.model.get('job_status')
+                )));
+        //.append($('<p/>').text('Dataset: ' + this.model.get('dataset_name')))
+        //.append($('<p/>').text('Status: ' + this.model.get('job_status'))));
         var task_logs = $('#task-logs').html('');
-        var task_logs_group = $('<ul/>').addClass('list-group');
+        //var task_logs_group = $('<ul/>').addClass('list-group');
+        var task_logs_group = $('<pre/>'); //.addClass('list-group');
         task_logs.append(task_logs_group);
 
         this.log_collection = new app.TaskLogs(this.model.get('instance_name'));
@@ -41,8 +46,9 @@ app.TaskView = Backbone.View.extend({
         var that = this;
         this.log_collection.fetch({
             success: function() {
+                var output = '';
                 that.log_collection.each(function(log) {
-                    var item = $('<li/>').addClass('list-group-item');
+                    //var item = $('<li/>').addClass('list-group-item');
                     if (log.get('train')) {
                         var train_log = log.get('train');
                         var loss = '';
@@ -55,14 +61,17 @@ app.TaskView = Backbone.View.extend({
                         if (train_log.val_acc) { val_acc = ', VAL ACC: ' + train_log.val_acc.toFixed(5); }
                         var epoch = 'Epoch-' + String(train_log.epoch + 1);
                         message = epoch + acc + val_acc + loss + val_loss;
-                        item.text(message);
-                        item.addClass('list-group-item-light');
+                        output += message;
+                        //item.text(message);
+                        //item.addClass('list-group-item-light');
                     } else if (log.get('info')) {
-                        item.text(log.get('info'));
-                        item.addClass('list-group-item-info');
+                        output += log.get('info');
+                        //item.text(log.get('info'));
+                        //item.addClass('list-group-item-info');
                     }
-                    task_logs_group.append(item);
+                    output += '\n';
                 }, that);
+                task_logs_group.append(output);
             }
         });
         $('#view-task-dialog').modal();

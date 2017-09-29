@@ -142,6 +142,7 @@ def start_pipeline():
 
     
     job_instance.update_status(args.instance_name, from_='training', to_='completed')
+    remote_log.append('info', 'done')
 
 
 if __name__ == "__main__":

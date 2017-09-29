@@ -26,11 +26,12 @@ app.TaskView = Backbone.View.extend({
     viewTask: function(e) {
         var instance_name = this.model.get('instance_name');
         var task_body = $('#task-body').html('');
-        task_body.append($('<h4/>').text(this.model.get('instance_name')))
-            .append($('<li/>').text('Use model: ' + this.model.get('model_name')))
-            .append($('<li/>').text('Dataset: ' + this.model.get('dataset_name')))
-            .append($('<li/>').text('Epochs: ' + this.model.get('epochs')))
-            .append($('<li/>').text('Status: ' + this.model.get('job_status')));
+        task_body.append($('<h3/>').addClass("text-primary").text(this.model.get('instance_name')))
+            .append($('<p/>').addClass("card-text")
+                .append($('<p/>').text('Use model: ' + this.model.get('model_name')))
+                .append($('<p/>').text('Dataset: ' + this.model.get('dataset_name')))
+                .append($('<p/>').text('Epochs: ' + this.model.get('epochs')))
+                .append($('<p/>').text('Status: ' + this.model.get('job_status'))));
         var task_logs = $('#task-logs').html('');
         var task_logs_group = $('<ul/>').addClass('list-group');
         task_logs.append(task_logs_group);

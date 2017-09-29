@@ -196,6 +196,27 @@ class DBJobInstance(DynamoDB):
         self._delete({"instance_name": instance_name})
 
 
+class DBWorker(DynamoDB):
+    def __init__(self):
+        super().__init__(table_name=settings.DynamoDB_TABLE['Worker'])
+
+    def list(self):
+        items = self._scan(filter=None)
+        return items
+
+    def report(self, worker_name, system_info, status):
+        w = self._get({'worker_name': worker_name})
+        timestamp = Decimal(str(datetime.now().timestamp()))
+        if w:
+            self._update(
+                key={'worker_name': worker_name},
+                update_exp='SET last_seen = :ls1, current_status = :cs1',
+                attr_values={':ls1': timestamp, ':cs1': status})
+        else:
+            w = {'worker_name': worker_name, 'current_status': status, 'last_seen': timestamp, 'system_info': system_info}
+            self._put(w)
+
+
 class S3DB(object):
     def __init__(self, bucket_name):
         s3_client = boto3.client('s3')
@@ -245,7 +266,7 @@ class S3DB(object):
                     'Key': obj_name
                 }],
                 'Quiet': True
-        })
+            })
 
 
 class S3DBDataset(S3DB):

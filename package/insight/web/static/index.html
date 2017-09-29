@@ -13,33 +13,36 @@
 <body>
     <!-- NAV BAR -->
     <div class="flex-column">
+
         <nav id="sidebar">
-            <!-- Sidebar Header -->
             <div class="sidebar-header">
                 <h3>Planet Insight</h3>
             </div>
-            <!-- Sidebar Links -->
-            <ul class="list-unstyled components nav " id="navTab">
+
+            <ul class="list-unstyled components">
                 <p>Hyper-parameter searching</p>
-                <li><a class="active" href="#tab-json">JSON Models</a></li>
-                <li><a href="#tab-task">Tasks</a></li>
+                <li class="active"><a href="#tab-json">JSON Models</a></li>
+
                 <li>
-                    <a href="#StorageSubmenu" data-toggle="collapse" aria-expanded="true" data-target="#StorageSubmenu" aria-controls="StorageSubmenu">Storage</a>
+                    <a href="#tab-task">Tasks</a>
+                    <a href="#StorageSubmenu" data-toggle="collapse" aria-expanded="false">Storage</a>
                     <ul class="collapse list-unstyled" id="StorageSubmenu">
-                        <a href="#tab-storage-dataset">Dataset</a>
-                        <a href="#tab-storage-weights">Weights</a>
+                        <li><a href="#tab-storage-dataset">Dataset</a></li>
+                        <li><a href="#tab-storage-weights">Weights</a></li>
                     </ul>
+                    <a href="#tab-cluster">Cluster</a>
                 </li>
             </ul>
         </nav>
+
 
         <div id="content" class="tab-content">
             <div class="tab-pane fade show active" id="tab-json">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">JSON Models</h1>
-                    <button class="navbar-text btn btn-outline-success" id="btnNewModel"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
                 </nav>
                 <div class="col-sm-12">
+                    <button class="navbar-text btn btn-outline-success" id="btnNewModel"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
                     <section id="json_models">
                         <div id="list_json_models">
                         </div>
@@ -49,9 +52,9 @@
             <div class="tab-pane fade" id="tab-task">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Tasks</h1>
-                    <button class="navbar-text btn btn-outline-success" id="btnNewTask"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
                 </nav>
                 <div class="col-sm-12">
+                    <button class="navbar-text btn btn-outline-success" id="btnNewTask"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
                     <section id="job_instances">
                         <div id="list_job_instances">
                             <table class="table table-striped table-hover">
@@ -100,7 +103,7 @@
             </div>
             <div class="tab-pane fade" id="tab-storage-weights">
                 <nav class="navbar navbar-light bg-light justify-content-between">
-                    <h1 class="navbar-text">Weights</h1>
+                    <h1 class="navbar-text">Trained model(weights)</h1>
                 </nav>
                 <div class="col-sm-10">
                     <div class="btn-group" data-toggle="buttons">
@@ -122,33 +125,31 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
-    </div>
-
-
-    <!-- Modal -->
-    <div id="add_project" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header login-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Project</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="text" placeholder="Project Title" name="name">
-                    <input type="text" placeholder="Post of Post" name="mail">
-                    <input type="text" placeholder="Author" name="passsword">
-                    <textarea placeholder="Desicrption"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="cancel" data-dismiss="modal">Close</button>
+            <div class="tab-pane fade" id="tab-cluster">
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <h1 class="navbar-text">Cluster(Workers)</h1>
+                </nav>
+                <div class="col-sm-10">
+                    <button class="btn btn-outline-primary" id="btnRefreshCluster"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    <div id="list-cluster">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th width=40%>Name</th>
+                                    <th width=20%>Status</th>
+                                    <th width=20%>Last seen</th>
+                                    <th width=20%>Server Info</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cluster-table-body">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
         </div>
+
+
     </div>
 
     <script id="task-template" type="text/template">
@@ -189,13 +190,28 @@
         </td>
     </script>
 
+    <script id="worker-template" type="text/template">
+        <td>
+            <%= worker_name %>
+        </td>
+        <td>
+            <%= current_status %>
+        </td>
+        <td>
+            <%= last_seen %>
+        </td>
+        <td>
+            <%= system_info %>
+        </td>
+    </script>
+
     <!-- Add JSON Modal -->
     <div id="add-json-model" class="modal fade" rold="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add new model</h4>
+                <div class="modal-header login-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add new model</h4>
                 </div>
 
                 <div class="modal-body">
@@ -222,9 +238,9 @@
     <div id="add-task-model" class="modal fade" rold="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add new task</h4>
+                <div class="modal-header login-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add new task</h4>
                 </div>
 
                 <div class="modal-body">
@@ -276,8 +292,8 @@
                     <h4 class="modal-title">Task Detail</h4>
                 </div>
                 <div class="modal-body">
-                    <ul id="task-body">
-                    </ul>
+                    <div class="card-body" id="task-body">
+                    </div>
                     <hr>
                     <h5>Logs</h5>
                     <div id="task-logs">
@@ -297,9 +313,9 @@
     <div id="file-upload-dialog" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Upload file</h4>
+                <div class="modal-header login-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Upload file</h4>
                 </div>
                 <div class="modal-body">
                     <!-- <div id="fileDropzone" class="dropzone"></div> -->
@@ -374,11 +390,13 @@
     <script src="js/models/log.js"></script>
     <script src="js/models/dataset.js"></script>
     <script src="js/models/weights.js"></script>
+    <script src="js/models/worker.js"></script>
     <script src="js/collections/JSONCollection.js"></script>
     <script src="js/collections/TaskCollection.js"></script>
     <script src="js/collections/TaskLogs.js"></script>
     <script src="js/collections/DatasetCollection.js"></script>
     <script src="js/collections/WeightsCollection.js"></script>
+    <script src="js/collections/WorkerCollection.js"></script>
     <script src="js/views/JSONModelListView.js"></script>
     <script src="js/views/JSONModelView.js"></script>
     <script src="js/views/task-view.js"></script>
@@ -387,6 +405,8 @@
     <script src="js/views/dataset-listview.js"></script>
     <script src="js/views/weights-view.js"></script>
     <script src="js/views/weights-listview.js"></script>
+    <script src="js/views/worker-view.js"></script>
+    <script src="js/views/worker-listview.js"></script>
     <script src="js/views/app-view.js"></script>
     <script src="js/app.js"></script>
     <script src="js/lib/dropzone.js"></script>

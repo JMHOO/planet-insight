@@ -1,16 +1,17 @@
 import json
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import abort, request, send_from_directory, url_for, render_template
 from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
-from insight.storage import DBInstanceLog, DBInsightModels, DBJobInstance, S3DBDataset, S3DBResults
+from insight.storage import DBInstanceLog, DBInsightModels, DBJobInstance, DBWorker, S3DBDataset, S3DBResults
 
 app = FlaskAPI(__name__, static_folder='static')
 auth = HTTPBasicAuth()
 db_model = DBInsightModels()
 db_jobs = DBJobInstance()
+db_workers = DBWorker()
 s3_dataset = S3DBDataset()
 s3_results = S3DBResults()
 
@@ -130,7 +131,7 @@ def list_jobs():
     all_jobs = db_jobs.list()
     for item in all_jobs:
         timestamp = datetime.fromtimestamp(float(item['created']))
-        timestamp = timestamp.strftime('%Y-%m-%d %H:%m')
+        timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
         item['created'] = timestamp
         jobs.append(item)
     return jobs  # {"jobs": jobs}
@@ -152,7 +153,7 @@ def retrieve_job(instance_name):
         job = db_jobs.get(instance_name)
         if job:
             timestamp = datetime.fromtimestamp(float(job['created']))
-            timestamp = timestamp.strftime('%Y-%m-%d %H:%m')
+            timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
             job['created'] = timestamp
         return {"job": job}
 
@@ -181,7 +182,7 @@ def create_job():
     }
     db_jobs.new_job(internal_json)
     timestamp = datetime.fromtimestamp(float(internal_json['created']))
-    timestamp = timestamp.strftime('%Y-%m-%d %H:%m')
+    timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
     internal_json['created'] = timestamp
     return internal_json, 201
 
@@ -310,6 +311,53 @@ def delete_weights_file(weights_file):
         return {"result": True}
     elif request.method == "GET":
         return {"file": weights_file}
+
+
+'''
+GET	    /insight/api/v1.0/workers             Retrieve list of active instances
+POST    /insight/api/v1.0/workers/report      report a worker's status
+'''
+
+
+@app.route('/insight/api/v1.0/workers', methods=["GET"])
+def list_workers():
+    workers = []
+    dtNow = datetime.now()
+    max_idle_minutes = timedelta(minutes=3)
+    all_workers = db_workers.list()
+    for item in all_workers:
+        timestamp = datetime.fromtimestamp(float(item['last_seen']))
+        idle_span = dtNow - timestamp
+        timestamp = timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        item['last_seen'] = timestamp
+
+        item['idle'] = str(idle_span)
+        if idle_span > max_idle_minutes:
+            item['current_status'] = 'offline'
+
+        workers.append(item)
+    return workers
+
+
+@app.route('/insight/api/v1.0/workers/report', methods=["POST"])
+def report_worker():
+    if not request.json or \
+       'name' not in request.json or \
+       'status' not in request.json:
+        abort(400)
+
+    if 'system_info' in request.json:
+        system_info = request.json["system_info"]
+    else:
+        system_info = '{}'
+
+    internal_json = {
+        "name": request.json["name"],
+        "status": request.json["status"],
+        "info": system_info
+    }
+    db_workers.report(internal_json['name'], system_info, internal_json['status'])
+    return {"result": True}
 
 
 def start_agent_service(port=9000):

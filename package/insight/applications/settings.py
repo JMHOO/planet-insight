@@ -6,7 +6,8 @@ S3_BUCKET = {
 DynamoDB_TABLE = {
     'JSONModel': 'insight-models',
     'JobInstance': 'job-instance',
-    'InstanceLogs': 'instance-logs'
+    'InstanceLogs': 'instance-logs',
+    'Worker': 'workers'
 }
 
 DOCKER = {
@@ -15,6 +16,6 @@ DOCKER = {
 }
 
 MONITOR = {
-    'HOST': 'http://insight.umx.io:9000',
+    'HOST': 'http://demo.umx.io:9000',
     'PATH': '/monitor'
 }

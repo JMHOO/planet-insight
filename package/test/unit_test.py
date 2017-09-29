@@ -1,7 +1,8 @@
 import os
 import json
+import platform
 from insight.builder import Convert
-from insight.storage import S3DB, DBInsightModels, DBJobInstance, DBInstanceLog
+from insight.storage import S3DB, DBInsightModels, DBJobInstance, DBInstanceLog, DBWorker
 from insight.applications import settings
 from insight.agent import AgentService
 from keras.models import model_from_json
@@ -12,9 +13,10 @@ def TestMain():
     # keras_model = test_json_build_from_string() # test_json_build_from_file()
     # test_keras_model_build(keras_json)
     # print(keras_model.summary())
-    test_dynamodb()
+    # test_dynamodb()
     # test_s3()
-    #test_agent()
+    # test_agent()
+    test_worker_report()
 
 
 def test_json_build_from_file():
@@ -147,6 +149,11 @@ def test_agent():
     agent = AgentService()
     agent.start()
     agent.join()
+
+def test_worker_report():
+    db_w = DBWorker()
+    db_w.report(platform.node(), system_info={'cpu': 4, 'memory': 16}, status='idle')
+
 
 if __name__ == "__main__":
     TestMain()

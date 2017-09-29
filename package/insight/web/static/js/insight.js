@@ -1,8 +1,11 @@
 $(document).ready(function() {
 
-    $("#navTab a").click(function(e) {
+    $("#sidebar a").on("click", function() {
+        $("#sidebar").find(".active").removeClass("active");
+        $(this).parent().addClass("active");
         $(this).tab('show');
     });
+
 
     $("#btnNewModel").click(function() {
         $('#add-json-model').modal();
@@ -98,6 +101,10 @@ $(document).ready(function() {
 
     $("#btnRefreshDatasets").click(function(e) {
         app.datasetlist.refresh();
+    });
+
+    $("#btnRefreshCluster").click(function(e) {
+        app.clusterlist.refresh();
     });
 
     myDropzone = initialize_dropzone();

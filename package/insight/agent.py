@@ -53,10 +53,10 @@ class LocalDockerRunner():
         host_config = self.docker.create_host_config(devices=devices, binds=binds)
 
         response = self.docker.create_container(
-            image=self.image_name, 
-            volumes=volumes, 
-            command=commands, 
-            environment=self.environments, 
+            image=self.image_name,
+            volumes=volumes,
+            command=commands,
+            environment=self.environments,
             host_config=host_config)
 
         if response['Warnings'] is None:
@@ -82,6 +82,7 @@ class AgentService(threading.Thread):
         super().__init__()
         self.stoprequest = threading.Event()
         self.gpu_count = gpu_count
+        self.worker_name = platform.node()
 
     def stop(self, timeout=None):
         self.stoprequest.set()

@@ -29,3 +29,5 @@ ADD . /home/root/insight
 RUN pip install -e /home/root/insight/package/
 
 WORKDIR /home/root/insight/
+
+CMD ./run_agentservice.sh

@@ -1,4 +1,4 @@
-from .storage import DBJobInstance
+from .storage import DBJobInstance, DBWorker
 import docker
 import platform
 import threading
@@ -22,6 +22,7 @@ class LocalDockerRunner():
         self.containerId = ""
         self._t = None
         self.volumes = {"nvidia_driver_375.82": "/usr/local/nvidia"}
+        self._reportor = DBWorker()
 
     def start(self):
         self._t = threading.Thread(target=self.run_container)
@@ -71,6 +72,7 @@ class LocalDockerRunner():
         # Keep running until container is exited
         while self.is_container_running():
             sleep(1)
+            self._reportor.report(platform.node(), status='training')
 
         # Remove the container when it is finished
         self.docker.remove_container(self.containerId)
@@ -115,6 +117,7 @@ class AgentService(threading.Thread):
         print('INFO::Connected to docker engine.')
 
         self._jobs = DBJobInstance()
+        self._reportor = DBWorker()
 
         while not self.stoprequest.is_set():
             random_sleep = randint(3, 10)
@@ -143,6 +146,8 @@ class AgentService(threading.Thread):
                     'AWS_DEFAULT_REGION': aws_region
                 }
 
+                self._reportor.report(platform.node(), status='preparing')
+
                 # do job and waiting
                 runner = LocalDockerRunner(
                     self._docker,
@@ -157,5 +162,7 @@ class AgentService(threading.Thread):
 
             # sleep random seconds between 5 ~ 30
             print('INFO::No job, waiting {} seconds'.format(random_sleep))
+            self._reportor.report(platform.node(), status='idle')
+
             sleep(random_sleep)
 

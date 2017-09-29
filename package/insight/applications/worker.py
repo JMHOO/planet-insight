@@ -63,8 +63,10 @@ def start_pipeline():
     if args.pretrained_model != "NONE":
         s3_results = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
         weights_file = './{}.weights'.format(args.model_name)
-        remote_log.append('info', 'downloading weights [{}] to [{}]'.format(args.pretrained_model, weights_file))
+        remote_log.append('info', 'downloading pretrained weights: {}'.format(args.pretrained_model))
         s3_results.download(args.pretrained_model, weights_file)
+
+    remote_log.append('info', 'compiling keras model: {}'.format(args.model_name))
 
     conv = Convert()
     parent_json = conv.check_inheritance(original_json)
@@ -80,6 +82,7 @@ def start_pipeline():
     remote_log.append('info', keras_model.summary())
 
     # download dataset
+    remote_log.append('info', 'downloading dataset: {}*'.format(args.training_dataset))
     s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
 
     s3_train_file = args.training_dataset + '-train.tar.gz'
@@ -90,7 +93,9 @@ def start_pipeline():
     
     s3_dataset.download(s3_train_file, './{}.tar.gz'.format(train_file))
     s3_dataset.download(s3_test_file, './{}.tar.gz'.format(test_file))
+
     # load dataset
+    remote_log.append('info', 'loading dataset...')
     with open(train_file, 'rb') as f:
         train_frame = pickle.load(f)
     with open(test_file, 'rb') as f:
@@ -119,6 +124,7 @@ def start_pipeline():
         period=1
     )
 
+    remote_log.append('info', 'training...')
     history = keras_model.fit(
         x_train / 255.0, to_categorical(y_train),
         validation_data=(x_test / 255.0, to_categorical(y_test)),
@@ -130,6 +136,7 @@ def start_pipeline():
     )
 
     # upload models
+    remote_log.append('info', 'uploading trained model to s3')
     s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
     s3_models.upload(args.instance_name, model_file)
 

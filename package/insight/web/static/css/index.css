@@ -49,7 +49,7 @@ a:focus {
     left: 0;
     height: 100vh;
     z-index: 999;
-    background: #7386D5;
+    background: #563f7a;
     color: #fff;
     transition: all 0.3s;
 }
@@ -60,7 +60,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #6d7fcc;
+    background: #7758A8;
 }
 
 #sidebar ul.components {
@@ -85,10 +85,34 @@ a:focus {
     background: #fff;
 }
 
+#sidebar ul li.active>a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #674C92;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+a[aria-expanded="false"]::before,
+a[aria-expanded="true"]::before {
+    content: '\e259';
+    display: block;
+    position: absolute;
+    right: 20px;
+    font-family: 'Glyphicons Halflings';
+    font-size: 0.6em;
+}
+
+a[aria-expanded="true"]::before {
+    content: '\e260';
+}
+
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #6d7fcc;
+    background: #674C92;
 }
 
 
@@ -116,7 +140,7 @@ ul ul a {
 .login-header {
     display: inline-block;
     width: 100%;
-    background: #0e1a35;
+    background: #563f7a;
 }
 
 .login-signup {
@@ -498,7 +522,8 @@ header {
     text-align: right;
 }
 
-.cancel {
+
+/* .cancel {
     background: #0E1A35;
     border: medium none;
     border-radius: 100px;
@@ -507,7 +532,7 @@ header {
     font-weight: 600;
     padding: 10px 30px;
     position: relative;
-}
+} */
 
 .modal {
     top: 20%;
@@ -580,4 +605,58 @@ header {
 
 .renderjson .array.syntax {
     color: #252525;
+}
+
+div.table {
+    display: table;
+}
+
+div.table .file-row {
+    display: table-row;
+}
+
+div.table .file-row>div {
+    display: table-cell;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+    padding: 8px;
+}
+
+div.table .file-row:nth-child(odd) {
+    background: #f9f9f9;
+}
+
+
+/* The total progress gets shown by event listeners */
+
+#total-progress {
+    opacity: 0;
+    transition: opacity 0.3s linear;
+}
+
+
+/* Hide the progress bar when finished */
+
+#previews .file-row.dz-success .progress {
+    opacity: 0;
+    transition: opacity 0.3s linear;
+}
+
+
+/* Hide the delete button initially */
+
+#previews .file-row .delete {
+    display: none;
+}
+
+
+/* Hide the start and cancel buttons and show the delete button */
+
+#previews .file-row.dz-success .start,
+#previews .file-row.dz-success .cancel {
+    display: none;
+}
+
+#previews .file-row.dz-success .delete {
+    display: block;
 }

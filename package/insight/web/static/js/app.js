@@ -9,4 +9,6 @@ $(function() {
     //new app.AppView();
     app.jsonlist = new app.JSONModelsListView();
     app.tasklist = new app.TaskListView();
+    app.datasetlist = new app.DatasetListView();
+    app.weightslist = new app.WeightsListView();
 });

@@ -183,14 +183,14 @@ def create_job():
     timestamp = datetime.fromtimestamp(float(internal_json['created']))
     timestamp = timestamp.strftime('%Y-%m-%d %H:%m')
     internal_json['created'] = timestamp
-    return {"job": internal_json}, 201
+    return internal_json, 201
 
 
 @app.route('/insight/api/v1.0/jobs/<instance_name>/logs', methods=["GET"])
 def fetch_job_logs(instance_name):
     db_log = DBInstanceLog(instance_name)
     logs = db_log.fetch()
-    return logs  # {"logs": logs}
+    return logs
 
 
 '''

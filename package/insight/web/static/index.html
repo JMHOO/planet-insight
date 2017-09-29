@@ -23,7 +23,13 @@
                 <p>Hyper-parameter searching</p>
                 <li><a class="active" href="#tab-json">JSON Models</a></li>
                 <li><a href="#tab-task">Tasks</a></li>
-                <li><a href="#tab-instance">Instances</a></li>
+                <li>
+                    <a href="#StorageSubmenu" data-toggle="collapse" aria-expanded="true" data-target="#StorageSubmenu" aria-controls="StorageSubmenu">Storage</a>
+                    <ul class="collapse list-unstyled" id="StorageSubmenu">
+                        <a href="#tab-storage-dataset">Dataset</a>
+                        <a href="#tab-storage-weights">Weights</a>
+                    </ul>
+                </li>
             </ul>
         </nav>
 
@@ -67,10 +73,53 @@
                     </section>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-instance">
-                <div class="col-sm-12">
-                    <h1>Instances</h1>
-                    content of tab 3
+            <div class="tab-pane fade" id="tab-storage-dataset">
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <h1 class="navbar-text">Datasets</h1>
+                </nav>
+                <div class="col-sm-10">
+                    <div class="btn-group" data-toggle="buttons">
+                        <button class="btn btn-outline-primary" id="btnUploadDatasets"><i class="fa fa-upload"></i>Upload</button>
+                        <button class="btn btn-primary" id="btnRefreshDatasets"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    </div>
+                    <div id="storage-dataset">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th width=6%>#</th>
+                                    <th width=60%>Name</th>
+                                    <th width=40%>Size</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataset-table-body">
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-storage-weights">
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <h1 class="navbar-text">Weights</h1>
+                </nav>
+                <div class="col-sm-10">
+                    <div class="btn-group" data-toggle="buttons">
+                        <button class="btn btn-outline-primary" id="btnUploadWeights"><i class="fa fa-upload"></i>Upload</button>
+                        <button class="btn btn-primary" id="btnRefreshWeights"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    </div>
+                    <div id="storage-weights">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th width=6%>#</th>
+                                    <th width=60%>Name</th>
+                                    <th width=40%>Size</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weights-table-body">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,6 +174,18 @@
         </td>
         <td>
             <%= created %>
+        </td>
+    </script>
+
+    <script id="dataset-template" type="text/template">
+        <td>
+            <a class="btn btn-danger remove-dataset" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
+        </td>
+        <td>
+            <%= name %>
+        </td>
+        <td>
+            <%= size %>
         </td>
     </script>
 
@@ -225,10 +286,79 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="cancel" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- File upload Modal -->
+    <div id="file-upload-dialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload file</h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <!-- <div id="fileDropzone" class="dropzone"></div> -->
+                    <div id="actions" class="row">
+                        <div class="col-md-7">
+                            <!-- The fileinput-button span is used to style the file input field as button -->
+                            <span class="btn btn-success fileinput-button"><i class="fa fa-plus"></i><span>Add files...</span></span>
+                            <button type="submit" class="btn btn-primary start">
+                                <i class="fa fa-upload"></i>
+                                <span>Start upload</span>
+                            </button>
+                            <button type="reset" class="btn btn-warning cancel">
+                                <i class="glyphicon glyphicon-ban-circle"></i>
+                                <span>Cancel upload</span>
+                            </button>
+                        </div>
+                        <div class="col-md-5">
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process">
+                                <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="table table-striped files" id="previews">
+                        <div id="template" class="file-row">
+                            <!-- This is used as the file preview template -->
+                            <div><span class="preview"><img data-dz-thumbnail /></span></div>
+                            <div>
+                                <p class="name" data-dz-name></p>
+                                <strong class="error text-danger" data-dz-errormessage></strong>
+                            </div>
+                            <div>
+                                <p class="size" data-dz-size></p>
+                                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary start">
+                                    <i class="fa fa-upload"></i><span>Start</span>
+                                </button>
+                                <button data-dz-remove class="btn btn-warning cancel">
+                                    <span>Cancel</span>
+                                </button>
+                                <button data-dz-remove class="btn btn-danger delete">
+                                    <i class="fa fa-trash"></i><span>Delete</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -242,128 +372,29 @@
     <script src="js/models/json_model.js"></script>
     <script src="js/models/task.js"></script>
     <script src="js/models/log.js"></script>
+    <script src="js/models/dataset.js"></script>
+    <script src="js/models/weights.js"></script>
     <script src="js/collections/JSONCollection.js"></script>
     <script src="js/collections/TaskCollection.js"></script>
     <script src="js/collections/TaskLogs.js"></script>
+    <script src="js/collections/DatasetCollection.js"></script>
+    <script src="js/collections/WeightsCollection.js"></script>
     <script src="js/views/JSONModelListView.js"></script>
     <script src="js/views/JSONModelView.js"></script>
     <script src="js/views/task-view.js"></script>
     <script src="js/views/TaskListView.js"></script>
+    <script src="js/views/dataset-view.js"></script>
+    <script src="js/views/dataset-listview.js"></script>
+    <script src="js/views/weights-view.js"></script>
+    <script src="js/views/weights-listview.js"></script>
     <script src="js/views/app-view.js"></script>
     <script src="js/app.js"></script>
-
-    <!-- Menu Toggle Script -->
+    <script src="js/lib/dropzone.js"></script>
     <script>
-        $(document).ready(function() {
-            $("#navTab a").click(function(e) {
-                $(this).tab('show');
-            });
-
-            $("#btnNewModel").click(function() {
-                $('#add-json-model').modal();
-            });
-
-            $("#btnNewTask").click(function() {
-                // load dataset list
-                $('#selectDataset').html('');
-                $.ajax({
-                        url: '/insight/api/v1.0/dataset-paired',
-                        type: 'GET',
-                        dataType: 'json',
-                    })
-                    .done(function(data) {
-                        var output = '';
-                        $.each(data, function(index, el) {
-                            output += '<option value="' + el.name + '">' + el.name + '</option>';
-                        });
-                        $('#selectDataset').append(output)
-                    });
-                // load json model list
-                $('#selectJsonModel').html('');
-                $.ajax({
-                        url: '/insight/api/v1.0/models',
-                        type: 'GET',
-                        dataType: 'json',
-                    })
-                    .done(function(data) {
-                        var output = '';
-                        $.each(data, function(index, el) {
-                            output += '<option value="' + el.model_name + '">' + el.model_name + '</option>';
-                        });
-                        $('#selectJsonModel').append(output)
-                    });
-                // load weights list
-                $('#selectWeights').html('');
-                $('#selectWeights').append('<option value="NONE">NONE</option>');
-                $.ajax({
-                        url: '/insight/api/v1.0/weights',
-                        type: 'GET',
-                        dataType: 'json',
-                    })
-                    .done(function(data) {
-                        var output = '';
-                        $.each(data, function(index, el) {
-                            output += '<option value="' + el.name + '">' + el.name + '</option>';
-                        });
-                        $('#selectWeights').append(output)
-                    });
-                $('#add-task-model').modal();
-            });
-
-            $("#addNewModel").click(function(e) {
-                e.preventDefault();
-                var formData = {};
-                formData['name'] = $('#model-name').val();
-                formData['defination'] = $('#model-json').val();
-
-                ajax_new_model(formData);
-            });
-
-            $('#addNewTask').click(function(e) {
-                e.preventDefault();
-                var formData = {};
-                formData['instance_name'] = $('#instance-name').val();
-                formData['model_name'] = $('#selectJsonModel').val();
-                formData['dataset_name'] = $('#selectDataset').val();
-                formData['pretrain'] = $('#selectWeights').val();
-                formData['epochs'] = $('#maximum-epoch').val();
-
-                ajax_new_task(formData);
-            });
-        });
-
-        function ajax_new_model(options) {
-            $.ajax({
-                type: "POST",
-                url: "/insight/api/v1.0/models",
-                data: JSON.stringify(options),
-                contentType: "application/json;",
-                dataType: "json",
-                success: function(data, status, jqXHR) {
-                    app.jsonlist.collection.add(data);
-                },
-                error: function(jqXHR, status) {
-                    console.log(jqXHR);
-                }
-            });
-        };
-
-        function ajax_new_task(options) {
-            $.ajax({
-                type: "POST",
-                url: "/insight/api/v1.0/jobs",
-                data: JSON.stringify(options),
-                contentType: "application/json;",
-                dataType: "json",
-                success: function(data, status, jqXHR) {
-                    app.tasklist.collection.add(data);
-                },
-                error: function(jqXHR, status) {
-                    console.log(jqXHR);
-                }
-            });
-        };
+        Dropzone.autoDiscover = false;
     </script>
+    <script src="js/insight.js"></script>
+
 </body>
 
 </html>

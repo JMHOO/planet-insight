@@ -32,4 +32,4 @@ WORKDIR /home/root/insight/
 
 EXPOSE 9000
 
-CMD ./runrestservice.sh
+CMD ./run_restservice.sh

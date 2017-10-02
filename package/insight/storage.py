@@ -229,7 +229,13 @@ class S3DB(object):
             self._bucket = self._s3.Bucket(bucket_name)
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == "404":
-                print('bucket not exist')
+                print('bucket [{}] not exist, creating...'.format(bucket_name))
+                self._initialize_bucket(bucket_name)
+
+    def _initialize_bucket(self, bucket_name):
+        current_region = boto3.session.Session().region_name
+        self._s3.create_bucket(Bucket=bucket_name, CreateBucketConfiguration={'LocationConstraint': current_region})
+        self._bucket = self._s3.Bucket(bucket_name)
 
     def upload(self, obj_name, local_file_name):
         if not self._bucket:
@@ -302,3 +308,47 @@ def humanable_size(num, suffix='B'):
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Yi', suffix)
+
+
+class AWSResource():
+    def __init__(self, access_key=None, secret_key=None, region=None):
+        # start a new session
+        if access_key is not None and secret_key is not None and region is not None:
+            boto3.setup_default_session(aws_access_key_id=access_key, aws_secret_access_key=secret_key, region_name=region)
+
+        # check aws credentials
+        self.has_credential = False
+        self.datasets = None
+        self.results = None
+        self.models = None
+        self.tasks = None
+        self.workers = None
+        self.load_objects()
+
+    def load_objects(self):
+        try:
+            if self.datasets:
+                del self.datasets
+            self.datasets = S3DBDataset()
+
+            if self.results:
+                del self.results
+            self.results = S3DBResults()
+
+            if self.models:
+                del self.models
+            self.models = DBInsightModels()
+
+            if self.tasks:
+                del self.tasks
+            self.tasks = DBJobInstance()
+
+            if self.workers:
+                del self.workers
+            self.workers = DBWorker()
+
+            self.has_credential = True
+        except botocore.exceptions.NoCredentialsError:
+            self.has_credential = False
+        except botocore.exceptions.EndpointConnectionError:
+            self.has_credential = False

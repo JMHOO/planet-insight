@@ -1,38 +1,30 @@
 import json
 import os
 import re
+import argparse
 from datetime import datetime, timedelta
-from flask import abort, request, send_from_directory, url_for, render_template
+from functools import wraps
+from flask import abort, request, send_from_directory
 from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
-from insight.storage import DBInstanceLog, DBInsightModels, DBJobInstance, DBWorker, S3DBDataset, S3DBResults
+from insight.storage import AWSResource, DBInstanceLog
 
+
+# global AWS resource
+aws = AWSResource()
+
+# flask application
 app = FlaskAPI(__name__, static_folder='static')
 auth = HTTPBasicAuth()
-db_model = DBInsightModels()
-db_jobs = DBJobInstance()
-db_workers = DBWorker()
-s3_dataset = S3DBDataset()
-s3_results = S3DBResults()
 
 
-@app.context_processor
-def override_url_for():
-    """
-    Generate a new token on every request to prevent the browser from
-    caching static files.
-    """
-    return dict(url_for=dated_url_for)
-
-
-def dated_url_for(endpoint, **values):
-    if endpoint == 'static':
-        filename = values.get('filename', None)
-        if filename:
-            file_path = os.path.join(app.root_path,
-                                     endpoint, filename)
-            values['q'] = int(os.stat(file_path).st_mtime)
-    return url_for(endpoint, **values)
+def checkAWS(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not aws.has_credential:
+            abort(400)
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/')
@@ -70,65 +62,69 @@ def accept_training_monitor(instance_name):
 
 
 '''
-GET	    http://insight-rest.umx.io/insight/api/v1.0/models	            Retrieve list of models
-GET	    http://insight-rest.umx.io/insight/api/v1.0/models/[model_name]	Retrieve a model
-POST    http://insight-rest.umx.io/insight/api/v1.0/models              Create a new model
-PUT	    http://insight-rest.umx.io/insight/api/v1.0/models/[model_name]	Update an existing model
-DELETE  http://insight-rest.umx.io/insight/api/v1.0/models/[model_name]	Delete a model
+GET	    /insight/api/v1.0/models	            Retrieve list of models
+GET	    /insight/api/v1.0/models/[model_name]	Retrieve a model
+POST    /insight/api/v1.0/models                Create a new model
+PUT	    /insight/api/v1.0/models/[model_name]	Update an existing model
+DELETE  /insight/api/v1.0/models/[model_name]	Delete a model
 '''
 
 
 @app.route('/insight/api/v1.0/models', methods=["GET"])
 #@auth.login_required
+@checkAWS
 def list_models():
     models = []
-    all_models = db_model.list()
+    all_models = aws.models.list()
     for item in all_models:
         models.append({"model_name": item["model_name"], "model_defination": item["model_defination"]})
     return models  #{"models": models}
 
 
 @app.route('/insight/api/v1.0/models/<model_name>', methods=["GET", "PUT", "DELETE"])
+@checkAWS
 def retrieve_model(model_name):
     if request.method == 'PUT':
         if not request.json:
             abort(400)
-        db_model.update(model_name, request.json['defination'])
+        aws.models.update(model_name, request.json['defination'])
         return {"model": request.json['defination']}
     elif request.method == "DELETE":
-        db_model.delete(model_name)
+        aws.models.delete(model_name)
         return {"result": True}
     else:
-        json_model = db_model.get(model_name)
+        json_model = aws.models.get(model_name)
         return {"model": json_model}
         
 
 @app.route('/insight/api/v1.0/models', methods=['POST'])
+@checkAWS
 def create_model():
     if not request.json or 'name' not in request.json:
         abort(400)
 
     model_name = request.json['name']
     model_defination = request.json['defination']
-    db_model.put(model_name, model_defination)
+    aws.models.put(model_name, model_defination)
     return {"model_name": model_name, "model_defination": model_defination}, 201
 
 
 '''
-GET	    http://insight-rest.umx.io/insight/api/v1.0/jobs	                    Retrieve list of jobs
-GET	    http://insight-rest.umx.io/insight/api/v1.0/jobs/[instance_name]	    Retrieve a job instance
-POST    http://insight-rest.umx.io/insight/api/v1.0/jobs                        Create a new job
-PUT	    http://insight-rest.umx.io/insight/api/v1.0/jobs/[instance_name]	    Update an existing job
-DELETE  http://insight-rest.umx.io/insight/api/v1.0/jobs/[instance_name]	    Delete a job
-GET	    http://insight-rest.umx.io/insight/api/v1.0/jobs/[instance_name]/logs   Retrieve the logs of a job
+GET	    /insight/api/v1.0/jobs	                    Retrieve list of jobs
+GET	    /insight/api/v1.0/jobs/[instance_name]	    Retrieve a job instance
+POST    /insight/api/v1.0/jobs                        Create a new job
+PUT	    /insight/api/v1.0/jobs/[instance_name]	    Update an existing job
+DELETE  /insight/api/v1.0/jobs/[instance_name]	    Delete a job
+GET	    /insight/api/v1.0/jobs/[instance_name]/logs   Retrieve the logs of a job
 '''
 
 
 @app.route('/insight/api/v1.0/jobs', methods=["GET"])
 #@auth.login_required
+@checkAWS
 def list_jobs():
     jobs = []
-    all_jobs = db_jobs.list()
+    all_jobs = aws.tasks.list()
     for item in all_jobs:
         timestamp = datetime.fromtimestamp(float(item['created']))
         timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
@@ -138,19 +134,20 @@ def list_jobs():
 
 
 @app.route('/insight/api/v1.0/jobs/<instance_name>', methods=["GET", "PUT", "DELETE"])
+@checkAWS
 def retrieve_job(instance_name):
     if request.method == 'PUT':
         if not request.json:
             abort(400)
-        db_jobs.update(instance_name, request.json['defination'])
+        aws.tasks.update(instance_name, request.json['defination'])
         return {"model": request.json['defination']}
     elif request.method == "DELETE":
         db_log = DBInstanceLog(instance_name)
         db_log.clear()
-        db_jobs.delete(instance_name)
+        aws.tasks.delete(instance_name)
         return {"result": True}
     else:
-        job = db_jobs.get(instance_name)
+        job = aws.tasks.get(instance_name)
         if job:
             timestamp = datetime.fromtimestamp(float(job['created']))
             timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
@@ -159,6 +156,7 @@ def retrieve_job(instance_name):
 
 
 @app.route('/insight/api/v1.0/jobs', methods=['POST'])
+@checkAWS
 def create_job():
     if not request.json or \
        'instance_name' not in request.json or \
@@ -180,7 +178,7 @@ def create_job():
         "pretrain": weights,
         "epochs": request.json["epochs"]
     }
-    db_jobs.new_job(internal_json)
+    aws.tasks.new_job(internal_json)
     timestamp = datetime.fromtimestamp(float(internal_json['created']))
     timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
     internal_json['created'] = timestamp
@@ -188,6 +186,7 @@ def create_job():
 
 
 @app.route('/insight/api/v1.0/jobs/<instance_name>/logs', methods=["GET"])
+@checkAWS
 def fetch_job_logs(instance_name):
     db_log = DBInstanceLog(instance_name)
     logs = db_log.fetch()
@@ -195,22 +194,23 @@ def fetch_job_logs(instance_name):
 
 
 '''
-GET	    http://insight-rest.umx.io/insight/api/v1.0/datasets	                    Retrieve list of datasets
-POST    http://insight-rest.umx.io/insight/api/v1.0/datasets/upload                 Upload a dataset
-DELETE  http://insight-rest.umx.io/insight/api/v1.0/datasets/[dataset_name]	        Delete a dataset
+GET	    /insight/api/v1.0/datasets	                    Retrieve list of datasets
+POST    /insight/api/v1.0/datasets/upload                 Upload a dataset
+DELETE  /insight/api/v1.0/datasets/[dataset_name]	        Delete a dataset
 
-GET	    http://insight-rest.umx.io/insight/api/v1.0/weights                         Retrieve list of trained models
-POST    http://insight-rest.umx.io/insight/api/v1.0/weights/upload                  Upload a dataset
-DELETE  http://insight-rest.umx.io/insight/api/v1.0/weights/[weights_file]          Delete a trained models
+GET	    /insight/api/v1.0/weights                         Retrieve list of trained models
+POST    /insight/api/v1.0/weights/upload                  Upload a dataset
+DELETE  /insight/api/v1.0/weights/[weights_file]          Delete a trained models
 '''
 
 
 
 @app.route('/insight/api/v1.0/datasets', methods=["GET"])
 #@auth.login_required
+@checkAWS
 def list_datasets():
     files = []
-    all_file = s3_dataset.list()
+    all_file = aws.datasets.list()
     for f in all_file:
         if not f['name'].endswith('/'):
             files.append(f)
@@ -219,9 +219,10 @@ def list_datasets():
 
 @app.route('/insight/api/v1.0/dataset-paired', methods=["GET"])
 #@auth.login_required
+@checkAWS
 def list_paired_datasets():
     files = []
-    all_file = s3_dataset.list()
+    all_file = aws.datasets.list()
     for f in all_file:
         if not f['name'].endswith('/'):
             files.append(f)
@@ -253,9 +254,10 @@ def list_paired_datasets():
 
 @app.route('/insight/api/v1.0/weights', methods=["GET"])
 #@auth.login_required
+@checkAWS
 def list_results():
     files = []
-    all_file = s3_results.list()
+    all_file = aws.results.list()
     for f in all_file:
         if not f['name'].endswith('/'):
             files.append(f)
@@ -286,28 +288,32 @@ def _upload_to_s3(files, s3_obj):
 
 
 @app.route('/insight/api/v1.0/datasets/upload', methods=['POST'])
+@checkAWS
 def upload_dataset():
-    return _upload_to_s3(request.files, s3_dataset)
+    return _upload_to_s3(request.files, aws.datasets)
 
 
 @app.route('/insight/api/v1.0/weights/upload', methods=['POST'])
+@checkAWS
 def upload_weights():
-    return _upload_to_s3(request.files, s3_results)
+    return _upload_to_s3(request.files, aws.results)
 
 
 @app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["GET", "DELETE"])
+@checkAWS
 def delete_dataset(dataset_name):
     if request.method == "DELETE":
-        s3_dataset.delete(dataset_name)
+        aws.datasets.delete(dataset_name)
         return {"result": True}
     elif request.method == "GET":
         return {"file": dataset_name}
 
 
 @app.route('/insight/api/v1.0/weights/<weights_file>', methods=["GET", "DELETE"])
+@checkAWS
 def delete_weights_file(weights_file):
     if request.method == "DELETE":
-        s3_results.delete(weights_file)
+        aws.results.delete(weights_file)
         return {"result": True}
     elif request.method == "GET":
         return {"file": weights_file}
@@ -320,11 +326,12 @@ POST    /insight/api/v1.0/workers/report      report a worker's status
 
 
 @app.route('/insight/api/v1.0/workers', methods=["GET"])
+@checkAWS
 def list_workers():
     workers = []
     dtNow = datetime.now()
     max_idle_minutes = timedelta(minutes=3)
-    all_workers = db_workers.list()
+    all_workers = aws.workers.list()
     for item in all_workers:
         timestamp = datetime.fromtimestamp(float(item['last_seen']))
         idle_span = dtNow - timestamp
@@ -340,6 +347,7 @@ def list_workers():
 
 
 @app.route('/insight/api/v1.0/workers/report', methods=["POST"])
+@checkAWS
 def report_worker():
     if not request.json or \
        'name' not in request.json or \
@@ -356,13 +364,44 @@ def report_worker():
         "status": request.json["status"],
         "info": system_info
     }
-    db_workers.report(internal_json['name'], system_info, internal_json['status'])
+    aws.workers.report(internal_json['name'], system_info, internal_json['status'])
     return {"result": True}
 
 
-def start_agent_service(port=9000):
+'''
+POST    /insight/api/v1.0/credentials              Store AWS credential
+'''
+
+
+@app.route('/insight/api/v1.0/credentials', methods=["POST"])
+def write_credentials():
+    if not request.json or \
+       'access_key' not in request.json or \
+       'secret_key' not in request.json or \
+       'region' not in request.json:
+        abort(400)
+
+    default_config = os.path.expanduser("~/.aws/credentials")
+    with open(default_config, "w") as fp:
+        fp.write('[default]\n')
+        fp.write('aws_access_key_id = {}\n'.format(request.json['access_key']))
+        fp.write('aws_secret_access_key = {}\n'.format(request.json['secret_key']))
+        fp.write('region = {}\n'.format(request.json['region']))
+
+    # recreate aws resource
+    global aws
+    aws = AWSResource(access_key=request.json['access_key'], secret_key=request.json['secret_key'], region=request.json['region'])
+
+    return {"result": True}
+
+
+def start_agent_service():
+    cmdParser = argparse.ArgumentParser(description='')
+    cmdParser.add_argument('-p', '--port', dest='port', help="RESTful server port")
+    args = cmdParser.parse_args()
+    port = 9000 if not args.port else args.port
     app.run(host='0.0.0.0', port=port)
 
 
 if __name__ == "__main__":
-    start_agent_service(port=9000)
+    start_agent_service()

@@ -65,7 +65,7 @@ a:focus {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b;
+    border-bottom: 1px solid #9F78DD;
     display: block;
 }
 
@@ -113,6 +113,24 @@ ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: #674C92;
+}
+
+ul.additional {
+    padding: 20px;
+}
+
+ul.additional a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+a.settings,
+a.settings:hover {
+    background: #5c4387 !important;
+    color: #fff !important;
 }
 
 
@@ -272,7 +290,7 @@ ul ul a {
     border: 1px solid #d4d9e3;
     font-size: 14px;
     font-weight: 300;
-    height: 200px;
+    height: 300px;
     margin-top: 5px;
     padding: 9px 10px;
     width: 100%;
@@ -406,4 +424,48 @@ div.table .file-row:nth-child(odd) {
 
 #previews .file-row.dz-success .delete {
     display: block;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputfile+label {
+    max-width: 80%;
+    font-size: 0.8rem;
+    /* 20px */
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.625rem 0.8rem;
+    /* 10px 20px */
+    color: #f1e5e6;
+    background-color: #d3394c;
+}
+
+.inputfile:focus+label,
+.inputfile.has-focus+label,
+.inputfile+label:hover {
+    outline: 1px dotted #000;
+    outline: -webkit-focus-ring-color auto 5px;
+    background-color: #722040;
+}
+
+.inputfile+label svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    margin-top: -0.25em;
+    /* 4px */
+    margin-right: 0.25em;
+    /* 4px */
 }

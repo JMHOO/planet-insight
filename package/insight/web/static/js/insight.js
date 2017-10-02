@@ -79,6 +79,10 @@ $(document).ready(function() {
         ajax_new_task(formData);
     });
 
+    $('#btnSettings').click(function(e) {
+        $('#add-aws-configure').modal();
+    });
+
     $('#btnUploadWeights').click(function(e) {
         $('#file-upload-dialog').on('show.bs.modal', function(e) {
             myDropzone.options.url = "/insight/api/v1.0/weights/upload";
@@ -105,6 +109,27 @@ $(document).ready(function() {
 
     $("#btnRefreshCluster").click(function(e) {
         app.clusterlist.refresh();
+    });
+
+    // load local json file
+    $("#fileLocalJSON").on('change', function(e) {
+        var filename = e.target.files[0];
+        console.log(filename);
+        var fileReader = new FileReader();
+        fileReader.onload = function(fileLoadedEvent) {
+            var textFromFileLoaded = fileLoadedEvent.target.result;
+            $("#model-json").text(textFromFileLoaded);
+        };
+        fileReader.readAsText(filename, "UTF-8");
+    });
+
+    $("#saveAWSConfig").click(function(e) {
+        var formData = {};
+        formData['access_key'] = $('#aws-access-key').val();
+        formData['secret_key'] = $('#aws-secret-key').val();
+        formData['region'] = $('#aws-default-region').val();
+
+        ajax_save_aws_configure(formData)
     });
 
     myDropzone = initialize_dropzone();
@@ -136,6 +161,22 @@ function ajax_new_task(options) {
         dataType: "json",
         success: function(data, status, jqXHR) {
             app.tasklist.collection.add(data);
+        },
+        error: function(jqXHR, status) {
+            console.log(jqXHR);
+        }
+    });
+};
+
+function ajax_save_aws_configure(options) {
+    $.ajax({
+        type: "POST",
+        url: "/insight/api/v1.0/credentials",
+        data: JSON.stringify(options),
+        contentType: "application/json;",
+        dataType: "json",
+        success: function(data, status, jqXHR) {
+            location.reload();
         },
         error: function(jqXHR, status) {
             console.log(jqXHR);

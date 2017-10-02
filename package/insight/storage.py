@@ -13,9 +13,26 @@ settings = LazySettings('insight.applications.settings')
 
 
 class DynamoDB(object):
-    def __init__(self, table_name):
+    def __init__(self, table_name, key_name):
         self._dynamodb = boto3.resource('dynamodb')
+        self._keyname = key_name
         self._model_table = self._dynamodb.Table(table_name)
+        try:
+            self._model_table.attribute_definitions
+        except botocore.exceptions.ClientError as e:
+            if e.response['Error']['Code'] == 'ResourceNotFoundException':
+                # table doesn't exist
+                self._create(
+                    table_name,
+                    key_schema=[{
+                        'AttributeName': key_name,
+                        'KeyType': 'HASH'
+                    }],
+                    attributes=[{
+                        'AttributeName': key_name,
+                        'AttributeType': 'S'
+                    }]
+                )
 
     def _put(self, item_dict):
         self._model_table.put_item(Item=item_dict)
@@ -50,10 +67,23 @@ class DynamoDB(object):
     def _delete(self, key):
         self._model_table.delete_item(Key=key)
 
+    def _create(self, table_name, key_schema, attributes=None):
+        provisioned_throughput = {
+            'ReadCapacityUnits': 5,
+            'WriteCapacityUnits': 5
+        }
+            
+        self._dynamodb.create_table(
+            TableName=table_name,
+            KeySchema=key_schema,
+            AttributeDefinitions=attributes,
+            ProvisionedThroughput=provisioned_throughput
+        )
+
 
 class DBInsightModels(DynamoDB):
     def __init__(self):
-        super().__init__(table_name=settings.DynamoDB_TABLE['JSONModel'])
+        super().__init__(table_name=settings.DynamoDB_TABLE['JSONModel'], key_name='model_name')
 
     def put(self, key, json_str):
         self._put({
@@ -82,7 +112,7 @@ class DBInstanceLog(DynamoDB):
     MAX_LOG_PER_BLOCK = 200
 
     def __init__(self, instance_name):
-        super().__init__(table_name=settings.DynamoDB_TABLE['InstanceLogs'])
+        super().__init__(table_name=settings.DynamoDB_TABLE['InstanceLogs'], key_name='log_id')
         self._instance_name = instance_name
         self._msg_block = self._next_block(1)
 
@@ -131,7 +161,7 @@ class DBInstanceLog(DynamoDB):
 
 class DBJobInstance(DynamoDB):
     def __init__(self):
-        super().__init__(table_name=settings.DynamoDB_TABLE['JobInstance'])
+        super().__init__(table_name=settings.DynamoDB_TABLE['JobInstance'], key_name='instance_name')
 
     def put(self):
         pass
@@ -198,7 +228,7 @@ class DBJobInstance(DynamoDB):
 
 class DBWorker(DynamoDB):
     def __init__(self):
-        super().__init__(table_name=settings.DynamoDB_TABLE['Worker'])
+        super().__init__(table_name=settings.DynamoDB_TABLE['Worker'], key_name='worker_name')
 
     def list(self):
         items = self._scan(filter=None)

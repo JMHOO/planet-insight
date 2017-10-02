@@ -98,6 +98,10 @@ class Convert(object):
         return Model(inputs=model_parent.input, outputs=end_layer)
 
     def _to_keras_json_model(self, json_model):
+        # check if already keras json
+        if isinstance(json_model, dict) and 'keras_version' in json_model:
+            return json.dumps(json_model)   # keras json, no need for conversion
+
         seq = KerasSequential()
         if isinstance(json_model, list):
             for sub_json in json_model:

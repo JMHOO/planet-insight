@@ -12,20 +12,28 @@ from simple_settings import LazySettings
 def TestMain():
     # keras_model = test_json_build_from_string() # test_json_build_from_file()
     # test_keras_model_build(keras_json)
+
+    test_json_build_from_file()
+    # test_keras_json_from_file()
     # print(keras_model.summary())
     # test_dynamodb()
     # test_s3()
     # test_agent()
-    test_worker_report()
+    # test_worker_report()
 
 
 def test_json_build_from_file():
     c = Convert()
-    json_file = os.path.join(os.getcwd(), 'test/example2.json')
-    keras_json = c.parser(json_file)
-    print(json.dumps(json.loads(keras_json), sort_keys=True, indent=4))
-    return keras_json
+    json_file = os.path.join(os.getcwd(), 'package/test/example.json')
+    keras_model = c.parser(json_file)
+    print(keras_model.summary())
 
+
+def test_keras_json_from_file():
+    c = Convert()
+    json_file = os.path.join(os.getcwd(), 'package/test/keras_model.json')
+    keras_model = c.parser(json_file)
+    print(keras_model.summary())
 
 def test_json_build_from_string():
     example_json = '''[{

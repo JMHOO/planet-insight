@@ -382,3 +382,5 @@ class AWSResource():
             self.has_credential = False
         except botocore.exceptions.EndpointConnectionError:
             self.has_credential = False
+        except botocore.exceptions.NoRegionError:
+            self.has_credential = False

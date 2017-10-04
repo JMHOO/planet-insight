@@ -28,9 +28,9 @@ app.JSONModelView = Backbone.View.extend({
 
         this.$el.append(thumbnail);
 
-        $('pre code').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
+        // $('pre code').each(function(i, block) {
+        //     hljs.highlightBlock(block);
+        // });
 
         return this;
     },

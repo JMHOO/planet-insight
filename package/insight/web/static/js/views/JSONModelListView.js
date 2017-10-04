@@ -41,6 +41,10 @@ var app = app || {};
                 }
                 count++;
             }, this);
+
+            $('pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
         },
 
         renderModel: function(item) {

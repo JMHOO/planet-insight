@@ -57,7 +57,10 @@
                     <h1 class="navbar-text">Tasks</h1>
                 </nav>
                 <div class="col-sm-12">
-                    <button class="navbar-text btn btn-outline-success" id="btnNewTask"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
+                    <div class="btn-group" data-toggle="buttons">
+                        <button class="navbar-text btn btn-outline-success" id="btnNewTask"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
+                        <button class="btn btn-success" id="btnRefreshTask"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    </div>
                     <section id="job_instances">
                         <div id="list_job_instances">
                             <table class="table table-striped table-hover">
@@ -276,7 +279,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="selectWeights" class="col-form-label">Weights</label>
+                                <label for="selectWeights" class="col-form-label">Weights(Pretrained model)</label>
                                 <select class="form-control" id="selectWeights">Choose weights</select>
                             </div>
 

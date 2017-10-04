@@ -15,6 +15,10 @@ var app = app || {};
             this.listenTo(this.collection, 'remove', this.render);
         },
 
+        refresh: function() {
+            this.collection.fetch({ reset: true });
+        },
+
         // render library by rendering each book in its collection
         render: function() {
             this.$el.html('');

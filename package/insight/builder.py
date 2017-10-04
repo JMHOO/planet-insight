@@ -32,7 +32,7 @@ class Convert(object):
             layers = []
             for layer in j['config']:
                 layers.append(self._convert_keras_layer(layer))
-            converted_json = json.loads(json.dumps(layers))
+            converted_json = json.dumps(layers)
         return converted_json
         
     def _load_json(self, json_or_file):

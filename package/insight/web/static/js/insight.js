@@ -111,6 +111,10 @@ $(document).ready(function() {
         app.clusterlist.refresh();
     });
 
+    $("#btnRefreshTask").click(function(e) {
+        app.tasklist.refresh();
+    });
+
     // load local json file
     $("#fileLocalJSON").on('change', function(e) {
         var filename = e.target.files[0];

@@ -8,6 +8,7 @@ from flask import abort, request, send_from_directory
 from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
 from insight.storage import AWSResource, DBInstanceLog
+from insight.builder import Convert
 
 
 # global AWS resource
@@ -95,7 +96,7 @@ def retrieve_model(model_name):
     else:
         json_model = aws.models.get(model_name)
         return {"model": json_model}
-        
+
 
 @app.route('/insight/api/v1.0/models', methods=['POST'])
 @checkAWS
@@ -105,6 +106,11 @@ def create_model():
 
     model_name = request.json['name']
     model_defination = request.json['defination']
+
+    # convert keras json to our json format if necessary
+    c = Convert()
+    model_defination = c.toInsightJson(model_defination)
+
     aws.models.put(model_name, model_defination)
     return {"model_name": model_name, "model_defination": model_defination}, 201
 

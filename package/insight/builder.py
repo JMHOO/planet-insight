@@ -12,17 +12,7 @@ class Convert(object):
 
     def parser(self, json_or_file, inherit_from=None, weights_file=None):
         keras_model = None
-        j = None
-        if os.path.exists(json_or_file):
-            with open(json_or_file, 'r') as fp:
-                self._json_file = json_or_file
-                j = json.load(fp)
-        else:
-            try:
-                j = json.loads(json_or_file)
-            except:
-                j = None
-
+        j = self._load_json(json_or_file)
         if j:
             keras_model = self._parser_keras(j, inherit_from)
             # use adam for test now
@@ -34,6 +24,58 @@ class Convert(object):
             return json_content[0]['From']
 
         return None
+
+    def toInsightJson(self, json_or_file):
+        converted_json = json_or_file
+        j = self._load_json(json_or_file)
+        if j and self._is_keras_json(json_or_file):
+            layers = []
+            for layer in j['config']:
+                layers.append(self._convert_keras_layer(layer))
+            converted_json = json.loads(json.dumps(layers))
+        return converted_json
+        
+    def _load_json(self, json_or_file):
+        j = None
+        if os.path.exists(json_or_file):
+            with open(json_or_file, 'r') as fp:
+                self._json_file = json_or_file
+                j = json.load(fp)
+        else:
+            try:
+                j = json.loads(json_or_file)
+            except:
+                j = None
+        return j
+
+    def _convert_keras_layer(self, layer):
+        layer_json = []
+        if not isinstance(layer, dict):
+            return layer
+
+        if 'class_name' in layer:
+            config = layer['config']
+            if isinstance(config, dict):
+                sub_json = self._convert_keras_layer(config)
+                if sub_json:
+                    layer_json.append({layer['class_name']: sub_json})
+        else:
+            keys_to_be_removed = []
+            for k, v in layer.items():
+                if isinstance(v, dict):
+                    sub_json = self._convert_keras_layer(v)
+                    if not sub_json:
+                        keys_to_be_removed.append(k)
+                    else:
+                        layer[k] = self._convert_keras_layer(v)
+            for k in keys_to_be_removed:
+                layer.pop(k, None)
+            return layer
+
+        if len(layer_json) == 1:
+            return layer_json[0]
+
+        return layer_json
 
     def _parser_keras(self, j, inherit_from=None, weights_file=None):
         model = None
@@ -75,6 +117,7 @@ class Convert(object):
                 model = model_from_json(j)
         else:
             model = self._to_keras_json_model(j)
+            print(model)
             model = model_from_json(model)
         return model
 
@@ -99,7 +142,7 @@ class Convert(object):
 
     def _to_keras_json_model(self, json_model):
         # check if already keras json
-        if isinstance(json_model, dict) and 'keras_version' in json_model:
+        if isinstance(json_model, dict) and self._is_keras_json(json_model):
             return json.dumps(json_model)   # keras json, no need for conversion
 
         seq = KerasSequential()
@@ -130,6 +173,9 @@ class Convert(object):
 
         return original
 
+    def _is_keras_json(self, json_model):
+        return 'keras_version' in json_model and 'backend' in json_model
+
 
 class KerasObject(object):
     CLASS_NAME_TABLE = {
@@ -155,7 +201,7 @@ class KerasObject(object):
                     self.config[KerasObject.ALIAS_TABLE[key]] = config[key]
                 else:
                     self.config[key] = KerasObject.Build(config[key])[0]
-        
+
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 

@@ -9,6 +9,7 @@ from decimal import Decimal
 import tarfile
 import shutil
 
+
 settings = LazySettings('insight.applications.settings')
 
 
@@ -72,7 +73,7 @@ class DynamoDB(object):
             'ReadCapacityUnits': 5,
             'WriteCapacityUnits': 5
         }
-            
+
         self._dynamodb.create_table(
             TableName=table_name,
             KeySchema=key_schema,

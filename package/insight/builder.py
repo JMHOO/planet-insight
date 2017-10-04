@@ -49,6 +49,11 @@ class Convert(object):
         return j
 
     def _convert_keras_layer(self, layer):
+        ALIAS_TABLE = {
+            'batch_input_shape': 'inputs',
+            'Conv2D': 'Convolution2D'
+        }
+
         layer_json = []
         if not isinstance(layer, dict):
             return layer
@@ -58,7 +63,9 @@ class Convert(object):
             if isinstance(config, dict):
                 sub_json = self._convert_keras_layer(config)
                 if sub_json:
-                    layer_json.append({layer['class_name']: sub_json})
+                    class_name = layer['class_name']
+                    class_name = ALIAS_TABLE[class_name] if class_name in ALIAS_TABLE else class_name
+                    layer_json.append({class_name: sub_json})
         else:
             keys_to_be_removed = []
             for k, v in layer.items():
@@ -67,7 +74,11 @@ class Convert(object):
                     if not sub_json:
                         keys_to_be_removed.append(k)
                     else:
-                        layer[k] = self._convert_keras_layer(v)
+                        if k in ALIAS_TABLE:
+                            layer[ALIAS_TABLE[k]] = sub_json
+                            keys_to_be_removed.append(k)
+                        else:
+                            layer[k] = sub_json
             for k in keys_to_be_removed:
                 layer.pop(k, None)
             return layer

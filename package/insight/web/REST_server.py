@@ -4,7 +4,7 @@ import re
 import argparse
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import abort, request, send_from_directory
+from flask import abort, request, send_from_directory, redirect
 from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
 from insight.storage import AWSResource, DBInstanceLog
@@ -207,6 +207,7 @@ DELETE  /insight/api/v1.0/datasets/[dataset_name]	        Delete a dataset
 GET	    /insight/api/v1.0/weights                         Retrieve list of trained models
 POST    /insight/api/v1.0/weights/upload                  Upload a dataset
 DELETE  /insight/api/v1.0/weights/[weights_file]          Delete a trained models
+GET     /insight/api/v1.0/weights/[weights_file]          Download a trained models
 '''
 
 
@@ -322,7 +323,8 @@ def delete_weights_file(weights_file):
         aws.results.delete(weights_file)
         return {"result": True}
     elif request.method == "GET":
-        return {"file": weights_file}
+        url = aws.results.presigned_url(weights_file)
+        return redirect(url)
 
 
 '''

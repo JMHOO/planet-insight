@@ -166,9 +166,9 @@
         <td>
             <a class="btn btn-danger remove-task" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
-        <td>
+        <td class="align-middle">
             <h5>
-                <a class="viewtask badge badge-info" href="javascript:void(0)">
+                <a class="viewtask btn btn-outline-primary list-group-item-primary" href="javascript:void(0)">
                     <%= instance_name %>
                 </a>
             </h5>
@@ -204,12 +204,28 @@
         </td>
     </script>
 
-    <script id="worker-template" type="text/template">
+    <script id="weights-template" type="text/template">
+        <td>
+            <a class="btn btn-danger remove-dataset" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
+        </td>
+        <td>
+            <h5>
+                <a href="/insight/api/v1.0/weights/<%= name%>" class="badge badge-info">
+                    <%= name %>
+                </a>
+            </h5>
+        </td>
+        <td>
+            <%= size %>
+        </td>
+    </script>
+
+    <script id=" worker-template " type="text/template ">
         <td>
             <%= worker_name %>
         </td>
         <td>
-            <div class="<%= status_color%>">
+            <div class="<%=s tatus_color%>">
                 <%= current_status %>
             </div>
         </td>

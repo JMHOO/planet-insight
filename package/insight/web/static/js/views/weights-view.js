@@ -2,7 +2,7 @@ var app = app || {};
 
 app.WeightsView = Backbone.View.extend({
     tagName: 'tr',
-    template: _.template($('#dataset-template').html()),
+    template: _.template($('#weights-template').html()),
 
     events: {
         'click .remove-dataset': 'removeWeights'

@@ -309,6 +309,19 @@ class S3DB(object):
                 'Quiet': True
             })
 
+    def presigned_url(self, obj_name):
+        # Get the service client.
+        s3 = boto3.client('s3')
+        # Generate the URL to get 'key-name' from 'bucket-name'
+        url = s3.generate_presigned_url(
+            ClientMethod='get_object',
+            Params={
+                'Bucket': self._bucket.name,
+                'Key': obj_name
+            }
+        )
+        return url
+
 
 class S3DBDataset(S3DB):
     def __init__(self):

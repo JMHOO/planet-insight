@@ -437,7 +437,7 @@ div.table .file-row:nth-child(odd) {
 
 .inputfile+label {
     max-width: 80%;
-    font-size: 0.8rem;
+    font-size: 1.0rem;
     /* 20px */
     font-weight: 400;
     text-overflow: ellipsis;
@@ -445,10 +445,10 @@ div.table .file-row:nth-child(odd) {
     cursor: pointer;
     display: inline-block;
     overflow: hidden;
-    padding: 0.625rem 0.8rem;
+    padding: 0.625rem 1.0rem;
     /* 10px 20px */
     color: #f1e5e6;
-    background-color: #d3394c;
+    background-color: #30a54a;
 }
 
 .inputfile:focus+label,
@@ -456,7 +456,7 @@ div.table .file-row:nth-child(odd) {
 .inputfile+label:hover {
     outline: 1px dotted #000;
     outline: -webkit-focus-ring-color auto 5px;
-    background-color: #722040;
+    background-color: #28873c;
 }
 
 .inputfile+label svg {

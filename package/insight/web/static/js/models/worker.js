@@ -9,7 +9,8 @@ var app = app || {};
             current_status: '',
             last_seen: '',
             system_info: '',
-            idle: ''
+            idle: '',
+            status_color: ''
         },
     });
 })();

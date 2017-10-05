@@ -14,7 +14,8 @@ var app = app || {};
             dataset_name: '',
             epochs: '',
             job_status: '',
-            created: ''
+            created: '',
+            status_color: ''
         },
 
         save: function() {

@@ -14,6 +14,18 @@ app.TaskView = Backbone.View.extend({
     },
 
     render: function() {
+        var status_val = this.model.get("job_status");
+        console.log(status_val);
+        var status = "";
+        if (status_val == "training") {
+            status = "badge badge-pill badge-warning";
+        } else if (status_val == "completed") {
+            status = "badge badge-pill badge-success";
+        } else if (status_val == "preparing") {
+            status = "badge badge-pill badge-secondary";
+        }
+        this.model.set("status_color", status);
+
         this.$el.html(this.template(this.model.attributes));
         return this
     },

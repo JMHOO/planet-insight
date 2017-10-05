@@ -72,11 +72,11 @@
                                     <tr>
                                         <th width=6%>#</th>
                                         <th width=20%>Name</th>
-                                        <th width=20%>JSON Model</th>
+                                        <th width=18%>JSON Model</th>
                                         <th width=25%>Dataset</th>
                                         <th width=8% align="center">Epochs</th>
                                         <th width=10%>Status</th>
-                                        <th width=12%>Created</th>
+                                        <th width=15%>Created</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tasks-table-body">
@@ -167,9 +167,11 @@
             <a class="btn btn-danger remove-task" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         <td>
-            <a class="viewtask badge badge-info" href="javascript:void(0)">
-                <%= instance_name %>
-            </a>
+            <h5>
+                <a class="viewtask badge badge-info" href="javascript:void(0)">
+                    <%= instance_name %>
+                </a>
+            </h5>
         </td>
         <td>
             <%= model_name %>
@@ -181,7 +183,9 @@
             <%= epochs %>
         </td>
         <td>
-            <%= job_status %>
+            <div class="<%= status_color%>">
+                <%= job_status %>
+            </div>
         </td>
         <td>
             <%= created %>
@@ -205,7 +209,9 @@
             <%= worker_name %>
         </td>
         <td>
-            <%= current_status %>
+            <div class="<%= status_color%>">
+                <%= current_status %>
+            </div>
         </td>
         <td>
             <%= last_seen %>

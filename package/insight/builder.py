@@ -14,7 +14,7 @@ class Convert(object):
         keras_model = None
         j = self._load_json(json_or_file)
         if j:
-            keras_model = self._parser_keras(j, inherit_from)
+            keras_model = self._parser_keras(j, inherit_from, weights_file=weights_file)
             # use adam for test now
             keras_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0001, decay=1e-6), metrics=['accuracy'])
         return keras_model
@@ -116,9 +116,9 @@ class Convert(object):
                 model_parent = model_from_json(self._to_keras_json_model(self._inherit_from))
                 if weights_file is not None:
                     model_parent.load_weights(weights_file, by_name=True)
-
-                for layer in model_parent.layers:
-                    layer.trainable = False     # freeze all layers in parent model
+                    print('Loaded pretrained model: {}, all layer from parent model will be frozen.'.format(weights_file))
+                    for layer in model_parent.layers:
+                        layer.trainable = False     # freeze all layers in parent model
 
                 point_layer = model_parent.get_layer(cut_from)
                 model = self._join_model(model_parent, point_layer, j)
@@ -128,8 +128,10 @@ class Convert(object):
                 model = model_from_json(j)
         else:
             model = self._to_keras_json_model(j)
-            print(model)
             model = model_from_json(model)
+            if weights_file is not None:
+                model.load_weights(weights_file, by_name=True)
+                print('Loaded pretrained model: {}'.format(weights_file))
         return model
 
     def _join_model(self, model_parent, point_layer, additional_json):

@@ -10,7 +10,6 @@ app.WorkerView = Backbone.View.extend({
 
     render: function() {
         var status_val = this.model.get("current_status");
-        console.log(status_val);
         var status = "";
         if (status_val == "training") {
             status = "badge badge-pill badge-warning";

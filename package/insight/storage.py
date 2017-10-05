@@ -50,7 +50,11 @@ class DynamoDB(object):
 
     def _update(self, key, update_exp, attr_values, condition_exp=None):
         if condition_exp is None:
-            self._model_table.update_item(Key=key, UpdateExpression=update_exp, ExpressionAttributeValues=attr_values)
+            try:
+                self._model_table.update_item(Key=key, UpdateExpression=update_exp, ExpressionAttributeValues=attr_values)
+            except botocore.exceptions.ClientError as e:
+                if e.response['Error']['Code'] != 'ConditionalCheckFailedException':
+                    print('Check condition failed, not updated')
         else:
             self._model_table.update_item(Key=key, UpdateExpression=update_exp, ConditionExpression=condition_exp, ExpressionAttributeValues=attr_values)
            

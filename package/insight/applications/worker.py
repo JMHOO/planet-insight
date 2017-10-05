@@ -71,7 +71,7 @@ def start_pipeline():
     conv = Convert()
     parent_json = conv.check_inheritance(original_json)
     if parent_json:
-        remote_log.append('info', 'create parent')
+        remote_log.append('info', 'retrieving parent model: {}'.format(parent_json))
         parent_json = db_model.get(parent_json)
 
     if weights_file != 'NONE':

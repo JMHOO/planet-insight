@@ -20,6 +20,7 @@ class Convert(object):
         return keras_model
 
     def check_inheritance(self, json_content):
+        json_content = json.loads(json_content)
         if isinstance(json_content, list) and isinstance(json_content[0], dict) and 'From' in json_content[0]:
             return json_content[0]['From']
 
@@ -142,8 +143,14 @@ class Convert(object):
             if isinstance(layer, dict) and 'From' in layer:
                 continue
             
-            layer_json = KerasObject.Build(layer)[0]
+            layer_json = KerasObject.Build(layer)
+            for l in layer_json:
+                if 'class_name' in l and 'config' in l:
+                    layer_json = l
+                    break
+            # print(layer_json)
 
+            layer_json = layer_json[0]
             keras_class = module_objects.get(layer_json['class_name'])
             if keras_class is None:
                 raise ValueError('Unknown ' + layer_json['class_name'])

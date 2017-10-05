@@ -148,9 +148,7 @@ class Convert(object):
                 if 'class_name' in l and 'config' in l:
                     layer_json = l
                     break
-            # print(layer_json)
 
-            layer_json = layer_json[0]
             keras_class = module_objects.get(layer_json['class_name'])
             if keras_class is None:
                 raise ValueError('Unknown ' + layer_json['class_name'])

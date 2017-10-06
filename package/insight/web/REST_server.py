@@ -47,6 +47,10 @@ def send_js(path):
 def send_css(path):
     return send_from_directory('static/css', path)
 
+@app.route('/images/<path:path>')
+def send_images(path):
+    return send_from_directory('static/images', path)
+
 
 @app.route('/monitor/<instance_name>', methods=['GET', 'POST'])
 def accept_training_monitor(instance_name):

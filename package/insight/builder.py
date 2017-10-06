@@ -2,7 +2,7 @@ import json
 import os
 from keras.models import model_from_json, Model
 from keras.layers import *
-from keras.optimizers import Adam
+from keras.optimizers import *
 
 
 class Convert(object):
@@ -16,7 +16,7 @@ class Convert(object):
         if j:
             keras_model = self._parser_keras(j, inherit_from, weights_file=weights_file)
             # use adam for test now
-            keras_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0001, decay=1e-6), metrics=['accuracy'])
+            #keras_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0001, decay=1e-6), metrics=['accuracy'])
         return keras_model
 
     def check_inheritance(self, json_content):
@@ -91,6 +91,7 @@ class Convert(object):
 
     def _parser_keras(self, j, inherit_from=None, weights_file=None):
         model = None
+        optimizer = None
         # inherit json
         cut_from = ""
         if isinstance(j, list) and isinstance(j[0], dict) and 'From' in j[0]:
@@ -114,7 +115,8 @@ class Convert(object):
             # determine cut parent network or just override
             if cut_from:
                 # initialize parent model first, then load weights, then cut network
-                model_parent = model_from_json(self._to_keras_json_model(self._inherit_from))
+                model_parent, parent_compiler = self._to_keras_json_model(self._inherit_from)
+                model_parent = model_from_json(model_parent)
                 if weights_file is not None:
                     model_parent.load_weights(weights_file, by_name=True)
                     print('Loaded pretrained model: {}, all layer from parent model will be frozen.'.format(weights_file))
@@ -122,25 +124,35 @@ class Convert(object):
                         layer.trainable = False     # freeze all layers in parent model
 
                 point_layer = model_parent.get_layer(cut_from)
-                model = self._join_model(model_parent, point_layer, j)
+                model, sub_compiler = self._join_model(model_parent, point_layer, j)
+                compiler = sub_compiler if sub_compiler else parent_compiler
+                model = self._compile_model(model, compiler)
             else:
                 # merge two json files, then create model from json directly
                 j = self._merge_keras_json(self._inherit_from, j)
+                model, compiler = self._to_keras_json_model(j)
                 model = model_from_json(j)
+                model = self._compile_model(model, compiler)
         else:
-            model = self._to_keras_json_model(j)
+            model, compiler = self._to_keras_json_model(j)
             model = model_from_json(model)
             if weights_file is not None:
                 model.load_weights(weights_file, by_name=True)
                 print('Loaded pretrained model: {}'.format(weights_file))
+            model = self._compile_model(model, compiler)
         return model
 
     def _join_model(self, model_parent, point_layer, additional_json):
+        compiler = None
         module_objects = globals()
         tensor_start = point_layer.output
         end_layer = None
         for layer in additional_json:
             if isinstance(layer, dict) and 'From' in layer:
+                continue
+
+            if isinstance(layer, dict) and 'Compiler' in layer:
+                compiler = layer
                 continue
             
             layer_json = KerasObject.Build(layer)
@@ -156,20 +168,24 @@ class Convert(object):
             inputs = tensor_start if end_layer is None else end_layer
             end_layer = keras_class.from_config(layer_json['config'])(inputs)
 
-        return Model(inputs=model_parent.input, outputs=end_layer)
+        return Model(inputs=model_parent.input, outputs=end_layer), compiler
 
     def _to_keras_json_model(self, json_model):
         # check if already keras json
         if isinstance(json_model, dict) and self._is_keras_json(json_model):
             return json.dumps(json_model)   # keras json, no need for conversion
 
+        compiler = None
         seq = KerasSequential()
         if isinstance(json_model, list):
             for sub_json in json_model:
-                seq.config += KerasObject.Build(sub_json)
+                if 'Compiler' in sub_json:
+                    compiler = sub_json
+                else:
+                    seq.config += KerasObject.Build(sub_json)
         elif isinstance(json_model, dict):
             seq.config += KerasObject.Build(json_model)
-        return seq.toJSON()
+        return seq.toJSON(), compiler
         
     def _merge_keras_json(self, original, divergence):
         for new_layer in divergence:
@@ -194,6 +210,32 @@ class Convert(object):
     def _is_keras_json(self, json_model):
         return 'keras_version' in json_model and 'backend' in json_model
 
+    '''
+    "optimizer": "adam"
+    "optimizer": { "adam": {"lr": 0.001, "decay": 1e-6}}
+    "metrics": ["accuracy"]
+    '''
+    def _compile_model(self, model, compiler):
+        optimizer = 'adam'
+        loss = 'categorical_crossentropy'
+        metrics = ['accuracy']
+        if 'Compiler' in compiler:
+            compiler = compiler['Compiler']
+
+        if 'optimizer' in compiler:
+            optimizer = compiler['optimizer']
+            if isinstance(optimizer, dict):
+                name, config = optimizer.popitem()
+                config = {'class_name': name, 'config': config}
+                optimizer = deserialize(config)
+        if 'loss' in compiler:
+            loss = compiler['loss']
+        if 'metrics' in compiler:
+            metrics = compiler['metrics']
+
+        model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
+        return model
+        
 
 class KerasObject(object):
     CLASS_NAME_TABLE = {

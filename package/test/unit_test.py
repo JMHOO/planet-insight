@@ -7,6 +7,7 @@ from insight.applications import settings
 from insight.agent import AgentService
 from keras.models import model_from_json
 from simple_settings import LazySettings
+from keras.optimizers import *
 
 
 def TestMain():
@@ -21,6 +22,7 @@ def TestMain():
     # test_agent()
     # test_worker_report()
     #test_save_keras_model()
+    # test_optimizer_serizal()
 
 
 def test_json_build_from_file():
@@ -54,7 +56,8 @@ def test_json_build_from_string():
         { "Flatten": {} },
         { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
         { "Dropout": { "rate": 0.5, "name": "dropout3" } },
-        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
+        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } },
+        { "Compiler": { "optimizer": "adam", "loss": "categorical_crossentropy", "metrics": ["accuracy"] } }
     ]'''
 
     inherit_json = '''[
@@ -70,7 +73,8 @@ def test_json_build_from_string():
         { "Flatten": {} },
         { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
         { "Dropout": { "rate": 0.5, "name": "dropout3" } },
-        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
+        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } },
+        { "Compiler": { "optimizer": { "adam": {"lr": 0.001, "decay": 1e-6} }, "loss": "binary_crossentropy", "metrics": ["accuracy"] } } 
     ]
     '''
 
@@ -78,7 +82,9 @@ def test_json_build_from_string():
 
     c = Convert()
     #keras_model = c.parser(cut_json, example_json)
-    keras_model = c.parser(converted_from_keras)
+    keras_model = c.parser(cut_json, example_json)
+    print(keras_model)
+
     return keras_model
 
 
@@ -207,6 +213,12 @@ def _serizalize_layer(layer):
         return layer_json[0]
 
     return layer_json
+
+def test_optimizer_serizal():
+    a = Adam(lr=0.0001, decay=1e-6)
+    print(serialize(a))
+
+    print(serialize(Adam()))
 
 if __name__ == "__main__":
     TestMain()

@@ -469,3 +469,26 @@ div.table .file-row:nth-child(odd) {
     margin-right: 0.25em;
     /* 4px */
 }
+
+.layer-item {
+    padding: .4rem 1.25rem !important;
+    font-size: 90%;
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    overflow: hidden;
+    white-space: nowrap;
+    /* Don't forget this one */
+    text-overflow: ellipsis;
+}
+
+.layer-title {
+    /*background-color: #1063b6*/
+    background-color: #6b4e9e;
+}
+
+.layer-item-btn {
+    padding: .25rem .5rem !important;
+}
+
+.tooltip-inner {
+    min-width: 400px;
+}

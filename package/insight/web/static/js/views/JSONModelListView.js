@@ -42,9 +42,12 @@ var app = app || {};
                 count++;
             }, this);
 
-            $('pre code').each(function(i, block) {
-                hljs.highlightBlock(block);
-            });
+            //$('pre code').each(function(i, block) {
+            //    hljs.highlightBlock(block);
+            //});
+
+            //$('[data-toggle="popover"]').popover();
+            $('[data-toggle="tooltip"]').tooltip();
         },
 
         renderModel: function(item) {

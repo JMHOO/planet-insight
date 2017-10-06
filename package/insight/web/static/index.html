@@ -14,24 +14,23 @@
     <!-- NAV BAR -->
     <div class="flex-column">
 
-        <nav id="sidebar">
+        <nav id="sidebar" role="tablist">
             <div class="sidebar-header">
                 <image src="images/pi-logo.png" />
-                <h3>Planet Insight</h3>
             </div>
 
             <ul class="list-unstyled components">
                 <p>Automatic Training</p>
-                <li class="active"><a href="#tab-json"><i class="fa fa-file-code-o" aria-hidden="true"></i> JSON Models</a></li>
+                <li class="active"><a href="#tab-json" data-toggle="tab" role="tab"><i class="fa fa-file-code-o" aria-hidden="true"></i> JSON Models</a></li>
 
                 <li>
-                    <a href="#tab-task"><i class="fa fa-list" aria-hidden="true"></i> Tasks</a>
+                    <a href="#tab-task" data-toggle="tab" role="tab"><i class="fa fa-list" aria-hidden="true"></i> Tasks</a>
                     <a href="#StorageSubmenu" data-toggle="collapse" aria-expanded="false"><i class="fa fa-cloud" aria-hidden="true"></i> Storage</a>
                     <ul class="collapse list-unstyled" id="StorageSubmenu">
-                        <li><a href="#tab-storage-dataset">Dataset</a></li>
-                        <li><a href="#tab-storage-weights">Weights</a></li>
+                        <li><a href="#tab-storage-dataset" data-toggle="tab" role="tab">Dataset</a></li>
+                        <li><a href="#tab-storage-weights" data-toggle="tab" role="tab">Weights</a></li>
                     </ul>
-                    <a href="#tab-cluster"><i class="fa fa-server" aria-hidden="true"></i> Cluster</a>
+                    <a href="#tab-cluster" data-toggle="tab" role="tab"><i class="fa fa-server" aria-hidden="true"></i> Cluster</a>
                 </li>
             </ul>
             <ul class="list-unstyled additional">
@@ -45,7 +44,7 @@
 
 
         <div id="content" class="tab-content">
-            <div class="tab-pane fade show active" id="tab-json">
+            <div class="tab-pane fade show active" id="tab-json" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">JSON Models</h1>
                 </nav>
@@ -57,7 +56,7 @@
                     </section>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-task">
+            <div class="tab-pane fade" id="tab-task" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Tasks</h1>
                 </nav>
@@ -87,7 +86,7 @@
                     </section>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-storage-dataset">
+            <div class="tab-pane fade" id="tab-storage-dataset" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Datasets</h1>
                 </nav>
@@ -112,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-storage-weights">
+            <div class="tab-pane fade" id="tab-storage-weights" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Trained model(weights)</h1>
                 </nav>
@@ -136,7 +135,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-cluster">
+            <div class="tab-pane fade" id="tab-cluster" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Cluster(Workers)</h1>
                 </nav>

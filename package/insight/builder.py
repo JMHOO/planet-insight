@@ -219,19 +219,20 @@ class Convert(object):
         optimizer = 'adam'
         loss = 'categorical_crossentropy'
         metrics = ['accuracy']
-        if 'Compiler' in compiler:
-            compiler = compiler['Compiler']
+        if compiler:
+            if 'Compiler' in compiler:
+                compiler = compiler['Compiler']
 
-        if 'optimizer' in compiler:
-            optimizer = compiler['optimizer']
-            if isinstance(optimizer, dict):
-                name, config = optimizer.popitem()
-                config = {'class_name': name, 'config': config}
-                optimizer = deserialize(config)
-        if 'loss' in compiler:
-            loss = compiler['loss']
-        if 'metrics' in compiler:
-            metrics = compiler['metrics']
+            if 'optimizer' in compiler:
+                optimizer = compiler['optimizer']
+                if isinstance(optimizer, dict):
+                    name, config = optimizer.popitem()
+                    config = {'class_name': name, 'config': config}
+                    optimizer = deserialize(config)
+            if 'loss' in compiler:
+                loss = compiler['loss']
+            if 'metrics' in compiler:
+                metrics = compiler['metrics']
 
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         return model

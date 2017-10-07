@@ -168,6 +168,9 @@ class Convert(object):
             inputs = tensor_start if end_layer is None else end_layer
             end_layer = keras_class.from_config(layer_json['config'])(inputs)
 
+        if end_layer is None:
+            return model_parent, compiler
+        
         return Model(inputs=model_parent.input, outputs=end_layer), compiler
 
     def _to_keras_json_model(self, json_model):

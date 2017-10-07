@@ -6,5 +6,6 @@
     { "Flatten": {} },
     { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
     { "Dropout": { "rate": 0.5, "name": "dropout3" } },
-    { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
+    { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } },
+    { "Compiler": { "optimizer": "adam", "loss": "categorical_crossentropy", "metrics": ["accuracy"] } }
 ]

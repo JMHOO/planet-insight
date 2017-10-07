@@ -80,9 +80,20 @@ def test_json_build_from_string():
 
     converted_from_keras = '''[{"Convolution2D": {"dilation_rate": [1, 1], "activation": "relu", "dtype": "float32", "inputs": [null, 32, 32, 3], "kernel_regularizer": null, "bias_regularizer": null, "use_bias": true, "activity_regularizer": null, "trainable": true, "kernel_constraint": null, "kernel_initializer": {"VarianceScaling": {"seed": null, "distribution": "uniform", "mode": "fan_avg", "scale": 1}}, "padding": "valid", "name": "conv2d_1", "strides": [1, 1], "filters": 32, "kernel_size": [3, 3], "bias_constraint": null, "data_format": "channels_last"}}, {"Convolution2D": {"dilation_rate": [1, 1], "activation": "relu", "use_bias": true, "kernel_initializer": {"VarianceScaling": {"seed": null, "distribution": "uniform", "mode": "fan_avg", "scale": 1}}, "kernel_regularizer": null, "bias_regularizer": null, "activity_regularizer": null, "trainable": true, "kernel_constraint": null, "padding": "valid", "name": "conv2d_2", "strides": [1, 1], "filters": 64, "kernel_size": [3, 3], "bias_constraint": null, "data_format": "channels_last"}}, {"MaxPooling2D": {"trainable": true, "pool_size": [2, 2], "padding": "valid", "name": "max_pooling2d_1", "data_format": "channels_last", "strides": [2, 2]}}, {"Dropout": {"trainable": true, "name": "dropout_1", "rate": 0.25}}, {"Convolution2D": {"dilation_rate": [1, 1], "activation": "relu", "use_bias": true, "kernel_initializer": {"VarianceScaling": {"seed": null, "distribution": "uniform", "mode": "fan_avg", "scale": 1}}, "kernel_regularizer": null, "bias_regularizer": null, "activity_regularizer": null, "trainable": true, "kernel_constraint": null, "padding": "valid", "name": "conv2d_3", "strides": [1, 1], "filters": 256, "kernel_size": [3, 3], "bias_constraint": null, "data_format": "channels_last"}}, {"MaxPooling2D": {"trainable": true, "pool_size": [2, 2], "padding": "valid", "name": "max_pooling2d_2", "data_format": "channels_last", "strides": [2, 2]}}, {"Convolution2D": {"dilation_rate": [1, 1], "activation": "relu", "use_bias": true, "kernel_initializer": {"VarianceScaling": {"seed": null, "distribution": "uniform", "mode": "fan_avg", "scale": 1}}, "kernel_regularizer": null, "bias_regularizer": null, "activity_regularizer": null, "trainable": true, "kernel_constraint": null, "padding": "valid", "name": "conv2d_4", "strides": [1, 1], "filters": 128, "kernel_size": [3, 3], "bias_constraint": null, "data_format": "channels_last"}}, {"MaxPooling2D": {"trainable": true, "pool_size": [2, 2], "padding": "valid", "name": "max_pooling2d_3", "data_format": "channels_last", "strides": [2, 2]}}, {"Dropout": {"trainable": true, "name": "dropout_2", "rate": 0.25}}, {"Flatten": {"trainable": true, "name": "flatten_1"}}, {"Dense": {"activation": "relu", "use_bias": true, "kernel_initializer": {"VarianceScaling": {"seed": null, "distribution": "uniform", "mode": "fan_avg", "scale": 1}}, "bias_regularizer": null, "activity_regularizer": null, "units": 1024, "trainable": true, "kernel_constraint": null, "name": "dense_1", "kernel_regularizer": null, "bias_constraint": null}}, {"Dropout": {"trainable": true, "name": "dropout_3", "rate": 0.5}}, {"Dense": {"activation": "softmax", "use_bias": true, "kernel_initializer": {"VarianceScaling": {"seed": null, "distribution": "uniform", "mode": "fan_avg", "scale": 1}}, "bias_regularizer": null, "activity_regularizer": null, "units": 10, "trainable": true, "kernel_constraint": null, "name": "dense_2", "kernel_regularizer": null, "bias_constraint": null}}]'''
 
+    optimizer_json = '''
+    [
+        { "From": "example" },
+        {
+            "input": "softmax1",
+            "Compiler": { "optimizer": "sgd", "loss": "categorical_crossentropy", "metrics": ["accuracy"] }
+        }
+    ]
+    '''
+
     c = Convert()
-    keras_model = c.parser(example_json)
-    #keras_model = c.parser(cut_json, example_json)
+    #keras_model = c.parser(example_json)
+    keras_model = c.parser(cut_json, example_json)
+    #keras_model = c.parser(optimizer_json, example_json)
     print(keras_model)
 
     return keras_model

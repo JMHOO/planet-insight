@@ -26,7 +26,13 @@ app.JSONModelView = Backbone.View.extend({
             if (layer_config.hasOwnProperty('name')) {
                 name_val = " (" + layer_config['name'] + ") - ";
             }
+
             var properties = "";
+            if (first_key == "input") {
+                secondary_key = Object.keys(json_obj)[1];
+                properties += " " + layer_config + ", " + secondary_key + ": ";
+                layer_config = json_obj[secondary_key];
+            }
             if (typeof(layer_config) == "object") {
                 $.each(layer_config, function(key, val) {
                     if (key != "name") {

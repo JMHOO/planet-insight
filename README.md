@@ -108,7 +108,9 @@ sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
     docker build -t insight/tworker -f Dockerfile.worker .
 ```
 
-3). Export Environment variable for Training instance(temporary)
+3). Export Environment variable in Training instance(temporary)
+
+Add following environment variables with your AWS keys to ~/.bashrc
 ``` bash
 export AWS_ACCESS_KEY_ID={ACCESS_KEY}
 export AWS_SECRET_ACCESS_KEY={SECRET_KEY}
@@ -120,7 +122,7 @@ export AWS_DEFAULT_REGION={REGION}
 nvidia-docker run --rm -it --name insight --hostname {YOUR INSTANCE NAME} -v /var/run/docker.sock:/var/run/docker.sock -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} insight/tworker
 ```
 
-### Final step
+### C. Final step
 Access the system through:
 
     http://[YOUR IP or DOMAIN where running restful service]

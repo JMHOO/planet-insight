@@ -11,11 +11,11 @@ DynamoDB_TABLE = {
 }
 
 DOCKER = {
-    'IMAGE': 'hjiaming/insight-worker',
+    'IMAGE': 'insight/tworker',
     'VERSION': 'latest'
 }
 
 MONITOR = {
-    'HOST': 'http://demo.umx.io',
+    'HOST': 'http://demo.example.com',
     'PATH': '/monitor'
 }

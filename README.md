@@ -56,15 +56,14 @@ This package provides a solution of automated training system for Deep Learning.
 Two kinds of services need to be deployed:
 
     A. Restful service (ONLY need one)
-    B. Training instance (Not limited, the more the better)
+    B. Training instances (Not limited, the more the better)
 
 ### Prerequisite
 
 #### Docker
 Both restful service and training instance require Docker:
 
-Here is the tutorial for intalling Docker on Ubuntu:
-https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
+Here is the tutorial for installing Docker on Ubuntu: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
 
 #### GPU ready(training instance only)
 The training instance require:Nvidia driver, CUDA8.0 and nvidia-docker
@@ -87,7 +86,7 @@ sudo nvidia-docker run --rm nvidia/cuda nvidia-smi
 ```
 
 ### A. Restful service
-It's highly recommend to run restful service on AWS which will have short latence on accessing DynamoDB and S3, but it still can be deployed to your local machine.
+It's highly recommend to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine.
 
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
@@ -146,6 +145,15 @@ Access the system through:
 
 Set the AWS credentials by clicking the `setting` on the left:
 ![aws](media/aws_setting.png)
+
+AWS regions:
+
+| Region name  | Region |
+| ------------- | ------------- |
+| US East (Ohio)  | us-east-2  |
+| US East (N.Virginia)  | us-east-1  |
+| US West (N.California) |	us-west-1 |
+| US West (Oregon) | us-west-2 |
 
 
 ## Screenshot

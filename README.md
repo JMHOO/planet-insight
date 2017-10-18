@@ -86,7 +86,7 @@ sudo nvidia-docker run --rm nvidia/cuda nvidia-smi
 ```
 
 ### A. Restful service
-It's highly recommend to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine.
+It's highly recommend to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine (make sure that machine can be accessed through internet otherwise the logs come from training instance will be lost).
 
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 

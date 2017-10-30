@@ -5,7 +5,7 @@ if [ ! -d ${aws_config} ]; then
 fi
 
 # setting file inside the container
-setting_file=/home/root/insight/package/insight/applications/
+setting_file=/home/root/insight/package/insight/applications/settings.py
 
 # external port
 ext_port=80

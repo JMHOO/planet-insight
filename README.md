@@ -90,9 +90,9 @@ It's highly recommend to run restful service on AWS which will have short latenc
 
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
-1). Clone https://github.com/JMHOO/planet-insight to where you want to deploy restful service
+1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy restful service
 
-2). Change the `Monitor Service` and `Docker Image of Worker` in `planet-insight/settings.py`
+2). Change the `Monitor Service` and `Docker Image of Worker` in `hypr-ai/settings.py`
 ```Python
 DOCKER = {
     'IMAGE': 'insight/tworker',
@@ -117,7 +117,7 @@ MONITOR = {
 ### B. Training instance
 The training instance can be depolyed to anywhere as long as the machine contains nvidia GPU and running Linux. It's NOT necessary to keep the training instance running all the time. You can add tasks to system first, then start one or more training instances to run these tasks.
 
-1). Clone https://github.com/JMHOO/planet-insight to where you want to deploy training instance
+1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy training instance
 
 2). Build the `worker` docker image
 ``` docker

@@ -21,7 +21,7 @@ class LocalDockerRunner():
         self.environments = environments
         self.containerId = ""
         self._t = None
-        self.volumes = {"nvidia_driver_375.82": "/usr/local/nvidia"}
+        self.volumes = {"nvidia_driver_384.98": "/usr/local/nvidia"}
         self._reportor = DBWorker()
 
     def start(self):

@@ -164,5 +164,6 @@ AWS regions:
 ## Authors
 
 -   Ryan Reece  <ryan.reece@cern.ch>
--   Jiaming "Jimmy" Hu  <huj22@uw.edu>
+-   Jiaming "Jimmy" Hu  <https://github.com/JMHOO/planet-insight>
+
 

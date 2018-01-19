@@ -1,4 +1,6 @@
-# An automatic training system for deep learning
+# HYPR.AI
+
+A cloud-based deep learning and hyperparameter optimization platform.
 
 This package provides a solution of automated training system for Deep Learning. It contains a restful service, dockerized training worker and an example WebUI build upon restful service.
 
@@ -8,6 +10,9 @@ This package provides a solution of automated training system for Deep Learning.
   * Support modular model to reduce the complicity of JSON on describing similar models
   * Pretrained model can be loaded into different network architecture
   * Training instances(dockerized container) can be deployed to anywhere
+
+![screen](media/main_screenshot.png)
+
 
 ## Structure of package
 
@@ -156,5 +161,8 @@ AWS regions:
 | US West (Oregon) | us-west-2 |
 
 
-## Screenshot
-![screen](media/main_screenshot.png)
+## Authors
+
+-   Ryan Reece  <ryan.reece@cern.ch>
+-   Jiaming "Jimmy" Hu  <huj22@uw.edu>
+

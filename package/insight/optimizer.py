@@ -22,13 +22,15 @@ def next_hyperparams(space, prev_hparams=None, prev_loss=None, n_workers=1):
         new_hparams = dict()
         for _key in _keys:
             _val = None
-            x1 = space[_key][0]
-            x2 = space[_key][1]
-            dx = space[_key][2]
-            if dx is None:
+            tp = space[_key][0]
+            x1 = space[_key][1]
+            x2 = space[_key][2]
+            if tp.lower() == 'f': # floats
                 _val = x1 + (x2 - x1)*np.random.rand()
-            elif isinstance(dx, int):
+            elif tp.lower() == 'i': # ints
                 _val = np.random.random_integers(x1, x2)
+            elif tp.lower() == 's': # list of strings
+                _val = np.random.choice(x1)
             else:
                 assert False
             new_hparams[_key] = _val
@@ -75,10 +77,10 @@ def calc_best_hyperparams(hparams_list, loss_list):
 #______________________________________________________________________________
 def main():
     space = {
-        'x' : (0, 1, None),
-        'y' : (0, 1, None),
+        'x' : ('f', 0, 1),
+        'y' : ('f', 0, 1),
         }
-    max_steps = 50
+    max_steps = 200
     keys = space.keys()
     keys.sort()
     prev_hparams = list()

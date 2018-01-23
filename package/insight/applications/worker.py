@@ -26,7 +26,7 @@ def start_pipeline():
     cmdParser.add_argument('-w', '--weights', dest='pretrained_model', help="pretrained model weights file of s3 bucket")
     cmdParser.add_argument('-d', '--dataset', dest='training_dataset', help="training dataset objetct of s3 bucket")
     cmdParser.add_argument('-s', '--service', dest='monitor_service', help="service that monitor training")
-    cmdParser.add_argument('-p', '--hparams', dest='hparams', help="hyperparameter dictionary", default='{"a":1,"b":2}')
+    cmdParser.add_argument('-p', '--hparams', dest='hparams', help="hyperparameter dictionary", default=None)
     args = cmdParser.parse_args()
     if args.instance_name is None or args.model_name is None or args.training_dataset is None or args.monitor_service is None:
         cmdParser.print_help()

@@ -249,6 +249,23 @@ class Convert(object):
 #        print(type(j))
 #        print(type(hps))
 #        print(hps)
+        assert isinstance(j, dict) or isinstance(j, list)
+        if isinstance(j, dict):
+            _j = [j]
+        hype_keys = hps.keys()
+        hype_keys.sort()
+
+        for hype_descr in hype_keys:
+            hype_split = os.path.split(hype_descr)
+            assert len(hype_split) == 2
+            hype_cname = hype_split[0]
+            hype_name = hype_split[1]
+            hype_val = hps[hype_descr]
+            for _json in _j:
+                if isinstance(_json, dict) and _json.has_key('name'):
+                    if _json['name'] == hype_cname:
+                        assert _json.has_key(hype_name)
+                        _json[hype_name] = hype_val # edit hyperparameter value!
         return j
         
 

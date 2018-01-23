@@ -246,6 +246,9 @@ class Convert(object):
         """
         TODO
         """
+        print(type(j))
+        print(type(hps))
+        print(hps)
         return j
         
 

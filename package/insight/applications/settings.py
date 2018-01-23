@@ -16,6 +16,7 @@ DOCKER = {
 }
 
 MONITOR = {
-    'HOST': 'http://54.153.38.250',
+#    'HOST': 'http://54.153.38.250',
+    'HOST': 'http://13.57.211.2',
     'PATH': '/monitor'
 }

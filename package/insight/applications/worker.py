@@ -79,7 +79,7 @@ def start_pipeline():
     if args.hparams:
         ## build hyperparams dictionary from argument string
         json_acceptable_string = str(args.hparams).replace("'", "\"")
-        hparams = json.loads(json_acceptable_string)
+        hparams = json.loads(json_acceptable_string) # hparams is now a dict
 
     if weights_file != 'NONE':
         keras_model = conv.parser(original_json, parent_json, weights_file=weights_file, hparams=hparams)

@@ -250,9 +250,11 @@ class Convert(object):
 #        print(type(hps))
 #        print(hps)
         assert isinstance(j, dict) or isinstance(j, list)
+        _j = j
         if isinstance(j, dict):
             _j = [j]
-        hype_keys = hps.keys()
+            
+        hype_keys = list(hps.keys())
         hype_keys.sort()
 
         for hype_descr in hype_keys:
@@ -262,9 +264,9 @@ class Convert(object):
             hype_name = hype_split[1]
             hype_val = hps[hype_descr]
             for _json in _j:
-                if isinstance(_json, dict) and _json.has_key('name'):
+                if isinstance(_json, dict) and 'name' in _json:
                     if _json['name'] == hype_cname:
-                        assert _json.has_key(hype_name)
+                        assert hype_name in _json
                         _json[hype_name] = hype_val # edit hyperparameter value!
         return j
         

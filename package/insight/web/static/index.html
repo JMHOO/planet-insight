@@ -145,9 +145,10 @@
                             <thead>
                                 <tr>
                                     <th width=40%>Name</th>
-                                    <th width=20%>Status</th>
-                                    <th width=20%>Last seen</th>
-                                    <th width=20%>Server Info</th>
+                                    <th width=15%>Status</th>
+                                    <th width=15%>Last seen</th>
+                                    <th width=15%>Server Info</th>
+                                    <th width=15%>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="cluster-table-body">
@@ -234,10 +235,13 @@
         <td>
             <%= system_info %>
         </td>
+        <td>
+            <button type="button" class="btn btn-outline-primary <%= current_status == 'offline' ? 'start-worker' : 'stop-worker'%> <%= remotely_controlled ? '' : 'disabled' %>"><%= current_status == 'offline' ? 'Start' : 'Stop'%></button>
+        </td>
     </script>
 
     <!-- Add JSON Modal -->
-    <div id="add-json-model" class="modal fade" rold="dialog">
+    <div id="add-json-model" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header login-header">

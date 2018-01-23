@@ -10,4 +10,10 @@ setting_file=/home/root/insight/package/insight/applications/settings.py
 # external port
 ext_port=80
 
-docker run --rm -d --name insight-restful -v ${aws_config}:/root/.aws -v ${PWD}/settings.py:${setting_file} -p ${ext_port}:9000 insight/kservice
+docker run --rm -d --name insight-restful \
+    -v ${aws_config}:/root/.aws \
+    -v ${PWD}/settings.py:${setting_file} \
+    -p ${ext_port}:9000 \
+    -e FLASK_DEBUG=1 \
+    -e PAPERSPACE_API_KEY=$PAPERSPACE_API_KEY \
+    insight/kservice

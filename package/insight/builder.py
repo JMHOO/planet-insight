@@ -242,13 +242,13 @@ class Convert(object):
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         return model
 
-    def _find_and_replace_dict(j, hps):
+    def _find_and_replace_dict(self, j, hps):
         """
         TODO
         """
-        print(type(j))
-        print(type(hps))
-        print(hps)
+#        print(type(j))
+#        print(type(hps))
+#        print(hps)
         return j
         
 

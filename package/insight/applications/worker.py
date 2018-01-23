@@ -26,6 +26,7 @@ def start_pipeline():
     cmdParser.add_argument('-w', '--weights', dest='pretrained_model', help="pretrained model weights file of s3 bucket")
     cmdParser.add_argument('-d', '--dataset', dest='training_dataset', help="training dataset objetct of s3 bucket")
     cmdParser.add_argument('-s', '--service', dest='monitor_service', help="service that monitor training")
+    cmdParser.add_argument('-p', '--hparams', dest='hparams', help="hyperparameter dictionary", default=None)
     args = cmdParser.parse_args()
     if args.instance_name is None or args.model_name is None or args.training_dataset is None or args.monitor_service is None:
         cmdParser.print_help()
@@ -74,10 +75,16 @@ def start_pipeline():
         remote_log.append('info', 'retrieving parent model: {}'.format(parent_json))
         parent_json = db_model.get(parent_json)
 
+    hparams = None
+    if args.hparams:
+        ## build hyperparams dictionary from argument string
+        json_acceptable_string = str(args.hparams).replace("'", "\"")
+        hparams = json.loads(json_acceptable_string)
+
     if weights_file != 'NONE':
-        keras_model = conv.parser(original_json, parent_json, weights_file=weights_file)
+        keras_model = conv.parser(original_json, parent_json, weights_file=weights_file, hparams=hparams)
     else:
-        keras_model = conv.parser(original_json, parent_json)
+        keras_model = conv.parser(original_json, parent_json, hparams=hparams)
     
     remote_log.append('info', keras_model.summary())
 

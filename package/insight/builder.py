@@ -10,10 +10,12 @@ class Convert(object):
         self._json_file = None
         self._inherit_from = None
 
-    def parser(self, json_or_file, inherit_from=None, weights_file=None):
+    def parser(self, json_or_file, inherit_from=None, weights_file=None, hparams=None):
         keras_model = None
         j = self._load_json(json_or_file)
         if j:
+            if hparams:
+                self._find_and_replace_dict(j, hparams)
             keras_model = self._parser_keras(j, inherit_from, weights_file=weights_file)
             # use adam for test now
             #keras_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0001, decay=1e-6), metrics=['accuracy'])
@@ -239,6 +241,12 @@ class Convert(object):
 
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         return model
+
+    def _find_and_replace_dict(j, hps):
+        """
+        TODO
+        """
+        return j
         
 
 class KerasObject(object):

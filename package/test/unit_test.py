@@ -96,7 +96,7 @@ def test_json_build_from_string():
     c = Convert()
     #keras_model = c.parser(example_json)
     #keras_model = c.parser(cut_json, example_json)
-    keras_model = c.parser(cut_json, example_json, hparams={"a":1,"b":2})
+    keras_model = c.parser(cut_json, example_json, hparams={"conv2/filters":32})
     #keras_model = c.parser(optimizer_json, example_json)
     print(keras_model)
 

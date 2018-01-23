@@ -14,9 +14,7 @@ class Convert(object):
         keras_model = None
         j = self._load_json(json_or_file)
         if j:
-            if hparams:
-                self._find_and_replace_dict(j, hparams)
-            keras_model = self._parser_keras(j, inherit_from, weights_file=weights_file)
+            keras_model = self._parser_keras(j, inherit_from, weights_file=weights_file, hparams=hparams)
             # use adam for test now
             #keras_model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.0001, decay=1e-6), metrics=['accuracy'])
         return keras_model
@@ -91,7 +89,7 @@ class Convert(object):
 
         return layer_json
 
-    def _parser_keras(self, j, inherit_from=None, weights_file=None):
+    def _parser_keras(self, j, inherit_from=None, weights_file=None, hparams=None):
         model = None
         optimizer = None
         # inherit json
@@ -117,6 +115,8 @@ class Convert(object):
             # determine cut parent network or just override
             if cut_from:
                 # initialize parent model first, then load weights, then cut network
+                if hparams:
+                    self._find_and_replace_dict(self._inherit_from, hparams)
                 model_parent, parent_compiler = self._to_keras_json_model(self._inherit_from)
                 model_parent = model_from_json(model_parent)
                 if weights_file is not None:
@@ -128,20 +128,23 @@ class Convert(object):
                 point_layer = model_parent.get_layer(cut_from)
                 model, sub_compiler = self._join_model(model_parent, point_layer, j)
                 compiler = sub_compiler if sub_compiler else parent_compiler
-                model = self._compile_model(model, compiler)
             else:
                 # merge two json files, then create model from json directly
                 j = self._merge_keras_json(self._inherit_from, j)
+                if hparams:
+                    self._find_and_replace_dict(j, hparams)
                 model, compiler = self._to_keras_json_model(j)
                 model = model_from_json(j)
-                model = self._compile_model(model, compiler)
         else:
+            if hparams:
+                self._find_and_replace_dict(j, hparams)
             model, compiler = self._to_keras_json_model(j)
             model = model_from_json(model)
             if weights_file is not None:
                 model.load_weights(weights_file, by_name=True)
                 print('Loaded pretrained model: {}'.format(weights_file))
-            model = self._compile_model(model, compiler)
+
+        model = self._compile_model(model, compiler)
         return model
 
     def _join_model(self, model_parent, point_layer, additional_json):
@@ -246,9 +249,6 @@ class Convert(object):
         """
         TODO
         """
-#        print(type(j))
-#        print(type(hps))
-#        print(hps)
         assert isinstance(j, dict) or isinstance(j, list)
         _j = j
         if isinstance(j, dict):
@@ -264,10 +264,15 @@ class Convert(object):
             hype_name = hype_split[1]
             hype_val = hps[hype_descr]
             for _json in _j:
-                if isinstance(_json, dict) and 'name' in _json:
-                    if _json['name'] == hype_cname:
+                if isinstance(_json, dict):
+                    if 'name' in _json and _json['name'] == hype_cname:
+                        print('Replacing hyperparameter %s/%s with %s' % (hype_cname, hype_name, hype_val))
                         assert hype_name in _json
                         _json[hype_name] = hype_val # edit hyperparameter value!
+                    for _k, _v in _json.items():
+                        if isinstance(_v, dict):
+                            self._find_and_replace_dict(_v, hps)
+
         return j
         
 

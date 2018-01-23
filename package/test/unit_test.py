@@ -11,7 +11,10 @@ from keras.optimizers import *
 
 
 def TestMain():
-    keras_model = test_json_build_from_string() # test_json_build_from_file()
+    # test_json_build_from_file()
+    keras_model = test_json_build_from_string()
+    # print(type(keras_model))
+    print(keras_model.summary())
     # test_keras_model_build(keras_json)
 
     #test_json_build_from_file()

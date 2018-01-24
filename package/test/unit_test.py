@@ -140,12 +140,12 @@ def test_dynamodb():
 
     jobInstances = DBJobInstance()
     jobInstances.new_job({
-        'instance_name': 'reece-test-06',
+        'instance_name': 'reece-test-10',
         'dataset_name': 'dataset/cifar-10',
-        'epochs': 10,
+        'epochs': '10',
         'pretrain': 'NONE',
         'model_name': 'CNN-Transfer',
-#        'status': 'initial'
+        'job_status': 'initial'
     })
     # jobInstances.new_job({
     #     'name': 'cnn1-cifar-10-gen1',

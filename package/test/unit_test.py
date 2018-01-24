@@ -140,7 +140,7 @@ def test_dynamodb():
 
     jobInstances = DBJobInstance()
     jobInstances.new_job({
-        'instance_name': 'reece-test-10',
+        'instance_name': 'reece-test-11',
         'dataset_name': 'dataset/cifar-10',
         'epochs': '10',
         'pretrain': 'NONE',
@@ -153,7 +153,7 @@ def test_dynamodb():
     #     'pretrain': 'models/cnn1-base.h5df',
     #     'status': 'training'
     # })
-    jobInstances.check_new_job()
+    #jobInstances.check_new_job()
 
     # log test
     log = DBInstanceLog('reece-test-05')

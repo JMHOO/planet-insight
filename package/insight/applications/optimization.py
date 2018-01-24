@@ -35,16 +35,16 @@ dir_of_this_file = os.path.dirname(os.path.abspath( __file__ ))
 
 #______________________________________________________________________________
 def options():
-    cmdParser = argparse.ArgumentParser(description='')
-    cmdParser.add_argument('-i', '--instance', dest='instance_name', help="Job instance name")
-    cmdParser.add_argument('-m', '--model', dest='model_name', help='Model defination')
-    cmdParser.add_argument('-w', '--weights', dest='pretrained_model', help="pretrained model weights file of s3 bucket")
-    cmdParser.add_argument('-d', '--dataset', dest='training_dataset', help="training dataset objetct of s3 bucket")
-    cmdParser.add_argument('-s', '--service', dest='monitor_service', help="service that monitor training")
-    cmdParser.add_argument('-p', '--hparams', dest='hparams', help="hyperparameter dictionary", default=None)
-    args = cmdParser.parse_args()
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('-i', '--instance', dest='instance_name', help="Job instance name")
+#    parser.add_argument('-m', '--model', dest='model_name', help='Model defination')
+#    parser.add_argument('-w', '--weights', dest='pretrained_model', help="pretrained model weights file of s3 bucket")
+#    parser.add_argument('-d', '--dataset', dest='training_dataset', help="training dataset objetct of s3 bucket")
+#    parser.add_argument('-s', '--service', dest='monitor_service', help="service that monitor training")
+    parser.add_argument('-p', '--hparams', dest='hparams', help="hyperparameter dictionary", default=None)
+    args = parser.parse_args()
 #    if args.instance_name is None or args.model_name is None or args.training_dataset is None or args.monitor_service is None:
-#        cmdParser.print_help()
+#        parser.print_help()
 #        exit()
     return args
 
@@ -104,6 +104,7 @@ def optimize(name, space, max_jobs=99):
     prev_hparams = list()
     prev_loss = list()
     for i_job, hps in enumerate(next_hyperparams(space, prev_hparams, prev_loss)):
+        i_job = i_job+1 # start counting from 1 instead of 0
         print('step %i' % i_job) # DEBUG
         for k in keys:
             v = hps[k]
@@ -118,16 +119,16 @@ def optimize(name, space, max_jobs=99):
             'job_status': 'initial' }
         ## TODO: add hyperparams to submit pass. understand the control of this loop!!!
         submit_job(job_ops)
-        wait_for_job_to_finish(job_name) # TODO
+        wait_for_job_to_finish(name) # HACK: waiting for all jobs to finish!!
         loss = get_loss(job_name)
-        print('loss %5g' % loss) # DEBUG
+        print('loss = %5g' % loss) # DEBUG
         prev_hparams.append(hps)
         prev_loss.append(loss)
         if i_job >= max_jobs-1:
             break
 
     best_hparams, best_loss = calc_best_hyperparams(prev_hparams, prev_loss)
-    keys = best_hparams.keys()
+    keys = list(best_hparams.keys())
     keys.sort()
     print('best_hparams :') # DEBUG
     for k in keys:
@@ -154,7 +155,7 @@ def next_hyperparams(space, prev_hparams=None, prev_loss=None, n_workers=1):
             elif ts.lower() == 'i': # ints
                 _val = np.random.random_integers(xi[0], xi[1])
             elif ts.lower() == 's': # list of strings or any "choice"
-                _val = np.random.choice(xi[0])
+                _val = np.random.choice(xi)
             else:
                 assert False
             new_hparams[_key] = _val
@@ -182,20 +183,27 @@ def wait_for_job_to_finish(job_prefix):
     """
     TODO
     """
-    print('wait_for_job_to_finish') # DEBUG
+#    print('wait_for_job_to_finish') # DEBUG
     job_inst_db = DBJobInstance()
-    job_instances = job_inst_db.list()
     all_done = False
     while not all_done:
-        for job in job_instances:
-            if job['instance_name'].startswith(job_prefix):
-                if job['job_status'] != 'completed':
-                    break
+        time.sleep(3)
+        job_instances = job_inst_db.list()
+        if job_instances:
+            incomplete = False
+            for job in job_instances:
+                if job['instance_name'].startswith(job_prefix):
+#                    print(job['instance_name']) # DEBUG
+                    if job['job_status'] != 'completed':
+                        incomplete = True
+#                        print('incomplete') # DEBUG
+#                        print(job) # DEBUG
+                        break
+            all_done = not incomplete
         else:
             all_done = True
-        time.sleep(3)
     
-    print('all done') # DEBUG
+#    print('all done') # DEBUG
 #    print(job_instances)
 #    print(job_instances[0]['job_status'])
 

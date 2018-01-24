@@ -160,7 +160,7 @@ class AgentService(threading.Thread):
                 # since we already in a thread, call block function instead of start another thread
                 runner.run_container()
 
-            # sleep random seconds between 5 ~ 30
+            # sleep random seconds between 3 ~ 10
             print('INFO::No job, waiting {} seconds'.format(random_sleep))
             self._reportor.report(platform.node(), system_info="{}", status='idle')
 

@@ -2,6 +2,7 @@ import argparse
 import os
 import json
 from simple_settings import LazySettings
+import subprocess
 
 #import pickle
 #from urllib.parse import urlparse
@@ -13,6 +14,10 @@ from insight.storage import DBJobInstance, DBInsightModels, DBInstanceLog, S3DB
 from insight.builder import Convert
 
 settings = LazySettings('insight.applications.settings')
+
+path_of_this_file = os.path.abspath( __file__ )
+dir_of_this_file = os.path.dirname(os.path.abspath( __file__ ))
+
 
 #______________________________________________________________________________
 def options():
@@ -37,6 +42,26 @@ def main():
     remote_log = DBInstanceLog(args.instance_name)
     log = remote_log.fetch(True)
     print(log)
+
+    new_job = dict()
+    new_job['instance_name'] = 'reece-test-06'
+    new_job['model_name']    = 'CNN-Transfer'
+    new_job['dataset_name']  = 'dataset/cifar-10'
+
+    pretrain_weights = 'NONE'
+
+    monitor_service = settings.MONITOR['HOST'] + settings.MONITOR['PATH']
+    cmd = '{}/../../../run_worker.sh -i {} -m {} -w {} -d {} -s {}'.format(
+            dir_of_this_file,
+            new_job['instance_name'],
+            new_job['model_name'],
+            pretrain_weights, 
+            new_job['dataset_name'],
+            monitor_service
+            )
+
+    out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+    print(out)
 
 
 if __name__ == "__main__":

@@ -138,20 +138,22 @@ def test_dynamodb():
     # json_db.put('example', example_json)
     # print(db_model.get('example'))
 
-    #jobInstances = DBJobInstance()
-    # jobInstances.new_job({
-    #     'name': 'cnn1-cifar-10-base',
-    #     'dataset': 'dataset/cifar-10.tar.gz',
-    #     'pretrain': 'NONE',
-    #     'status': 'initial'
-    # })
+    jobInstances = DBJobInstance()
+    jobInstances.new_job({
+        'instance_name': 'reece-test-06',
+        'dataset_name': 'dataset/cifar-10',
+        'epochs': 10,
+        'pretrain': 'NONE',
+        'model_name': 'CNN-Transfer',
+#        'status': 'initial'
+    })
     # jobInstances.new_job({
     #     'name': 'cnn1-cifar-10-gen1',
     #     'dataset': 'dataset/cifar-10.tar.gz',
     #     'pretrain': 'models/cnn1-base.h5df',
     #     'status': 'training'
     # })
-    #jobInstances.check_new_job()
+    jobInstances.check_new_job()
 
     # log test
     log = DBInstanceLog('reece-test-05')

@@ -18,7 +18,7 @@ RUN pip3 --no-cache-dir install --upgrade setuptools numpy scipy
 RUN pip3 --no-cache-dir install --upgrade \
         sklearn matplotlib pandas pygments \
         tensorflow-gpu \
-        keras h5py pydot docker Flask Flask-API Flask-HTTPAuth boto3 awscli
+        keras h5py pydot docker Flask Flask-API Flask-HTTPAuth boto3 awscli requests
 
 # AWS credential env
 ENV AWS_ACCESS_KEY_ID ""

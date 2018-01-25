@@ -6,6 +6,9 @@ var app = app || {};
     app.WeightsCollection = Backbone.Collection.extend({
         // Reference to this collection's model.
         model: app.WeightsModel,
-        url: '/insight/api/v1.0/weights'
+        url: '/insight/api/v1.0/weights',
+        comparator: function(item) {
+            return item.get('name');
+        }
     });
 })();

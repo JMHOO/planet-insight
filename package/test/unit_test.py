@@ -113,50 +113,53 @@ def test_keras_model_build(keras_json):
 
 def test_dynamodb():
     
-    # db_model = DBInsightModels()
+    db_model = DBInsightModels()
 
-#    example_json = '''[{
-#        "Convolution2D": {"inputs": [null, 32, 32, 3],"filters": 32, "kernel_size": [3, 3],"strides": [1, 1],"activation": "relu","padding": "valid",
-#            "kernel_initializer": {
-#                "VarianceScaling": {"scale": 1,"mode": "fan_avg","distribution": "uniform"}
-#            },"name": "conv1"}
-#        },
-#        { "Convolution2D": { "filters": 64, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv2" } },
-#        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool1" } },
-#        { "Dropout": { "rate": 0.25, "name": "dropout1" } },
-#        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv3" } },
-#        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool2" } },
-#        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv4" } },
-#        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool3" } },
-#        { "Dropout": { "rate": 0.25, "name": "dropout2" } },
-#        { "Flatten": {} },
-#        { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
-#        { "Dropout": { "rate": 0.5, "name": "dropout3" } },
-#        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
-#    ]'''
+    example_json = '''[{
+        "Convolution2D": {"inputs": [null, 32, 32, 3],"filters": 32, "kernel_size": [3, 3],"strides": [1, 1],"activation": "relu","padding": "valid",
+            "kernel_initializer": {
+                "VarianceScaling": {"scale": 1,"mode": "fan_avg","distribution": "uniform"}
+            },"name": "conv1"}
+        },
+        { "Convolution2D": { "filters": 64, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv2" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool1" } },
+        { "Dropout": { "rate": 0.25, "name": "dropout1" } },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv3" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool2" } },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv4" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool3" } },
+        { "Dropout": { "rate": 0.25, "name": "dropout2" } },
+        { "Flatten": {} },
+        { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
+        { "Dropout": { "rate": 0.5, "name": "dropout3" } },
+        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
+    ]'''
 
-    # json_db.put('example', example_json)
-    # print(db_model.get('example'))
+    db_model.put('example', example_json)
+    json_str = db_model.get('example')
+    j = json.loads(json_str)
+    print(j)
+    print(type(j))
 
-    jobInstances = DBJobInstance()
-    jobInstances.new_job({
-        'instance_name': 'reece-test-11',
-        'dataset_name': 'dataset/cifar-10',
-        'epochs': '10',
-        'pretrain': 'NONE',
-        'model_name': 'CNN-Transfer',
-        'job_status': 'initial'
-    })
+    # jobInstances = DBJobInstance()
+    # jobInstances.new_job({
+    # 'instance_name': 'reece-test-11',
+    #     'dataset_name': 'dataset/cifar-10',
+    #     'epochs': '10',
+    #     'pretrain': 'NONE',
+    #     'model_name': 'CNN-Transfer',
+    #     'job_status': 'initial'
+    # })
     # jobInstances.new_job({
     #     'name': 'cnn1-cifar-10-gen1',
     #     'dataset': 'dataset/cifar-10.tar.gz',
     #     'pretrain': 'models/cnn1-base.h5df',
     #     'status': 'training'
     # })
-    #jobInstances.check_new_job()
+    # jobInstances.check_new_job()
 
     # log test
-    log = DBInstanceLog('reece-test-05')
+    # log = DBInstanceLog('reece-test-05')
     # log.append('info', 'abc')
     # log.append('training', '{"epoch": 0, "val_loss": 0.993394958114624, "val_acc": 0.6555, "loss": 1.0491512520599364, "acc": 0.6309600000190735}')
 
@@ -165,7 +168,7 @@ def test_dynamodb():
     #    log.append('info', 'msg.{}'.format(i + 1))
 
     # test fetch
-    print(log.fetch(fetch_all=True))
+    # print(log.fetch(fetch_all=True))
 
 def test_s3():
     #s3 = S3DB('insight-results')

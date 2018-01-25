@@ -8,4 +8,9 @@ var app = app || {};
         model: app.Task,
         url: '/insight/api/v1.0/jobs'
     });
+
+    console.log(app.TaskCollection)
+    app.TaskCollection.sort()
+    console.log(app.TaskCollection)
+
 })();

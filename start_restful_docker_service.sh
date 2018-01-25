@@ -4,6 +4,10 @@ if [ ! -d ${aws_config} ]; then
   mkdir ${aws_config}
 fi
 
+if [[ "$(docker images -q insight/kservice 2> /dev/null)" == "" ]]; then
+    docker build -t insight/kservice -f Dockerfile.service .
+fi
+
 # setting file inside the container
 setting_file=/home/root/insight/package/insight/applications/settings.py
 

@@ -56,12 +56,12 @@ def main():
     # TODO
     space = {
         'conv2/filters' : ('ci', [16, 32, 64]),
-#        'conv4/filters' : ('s', [64, 128, 256]),
-#        'dropout2/rate' : ('s', [0.25, 0.50]),
-#        'dense1/units' :  ('s', [256, 512, 1024]),
-#        'dropout3/rate' : ('s', [0.25, 0.50]),
+        'conv4/filters' : ('ci', [64, 128, 256]),
+        'dropout2/rate' : ('cf', [0.25, 0.50]),
+        'dense1/units' :  ('ci', [256, 512, 1024]),
+        'dropout3/rate' : ('cf', [0.25, 0.50]),
         }
-    optimize(name='reece-test-alpha', space=space, model_name='CNN-Base', epochs=5, max_jobs=3)
+    optimize(name='reece-test-alpha', space=space, model_name='CNN-Base', epochs=20, max_jobs=30)
 
 
 #______________________________________________________________________________
@@ -138,6 +138,8 @@ def next_hyperparams_random_search(space, prev_hparams=None, prev_loss=None, n_w
                 _val = np.random.random_integers(xi[0], xi[1])
             elif ts.lower() == 'ci': # list of integers "choice"
                 _val = int(np.random.choice(xi))
+            elif ts.lower() == 'cf': # list of floats "choice"
+                _val = float(np.random.choice(xi))
             else:
                 assert False
             new_hparams[_key] = _val

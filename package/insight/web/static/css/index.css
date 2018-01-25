@@ -488,7 +488,8 @@ div.table .file-row:nth-child(odd) {
 
 .layer-title {
     /*background-color: #1063b6*/
-    background-color: #6b4e9e;
+    /*background-color: #6b4e9e;*/
+    background-color: #000080;
 }
 
 .layer-item-btn {
@@ -498,3 +499,4 @@ div.table .file-row:nth-child(odd) {
 .tooltip-inner {
     min-width: 400px;
 }
+

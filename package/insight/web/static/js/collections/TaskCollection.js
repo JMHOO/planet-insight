@@ -6,11 +6,12 @@ var app = app || {};
     app.TaskCollection = Backbone.Collection.extend({
         // Reference to this collection's model.
         model: app.Task,
-        url: '/insight/api/v1.0/jobs'
+        url: '/insight/api/v1.0/jobs',
+        comparator: function(item) {
+            return item.get('Name');
+            }
     });
 
-    console.log(app.TaskCollection)
-    app.TaskCollection.sort()
-    console.log(app.TaskCollection)
+//    app.TaskCollection.sort();
 
 })();

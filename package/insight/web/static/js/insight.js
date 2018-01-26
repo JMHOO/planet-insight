@@ -173,6 +173,10 @@ $(document).ready(function() {
     $("#btnRefreshTask").click(function(e) {
         app.tasklist.refresh();
     });
+     
+    $("#btnRefreshResults").click(function(e) {
+        app.tasklist.refresh();
+    });
 
     // load local json file
     $("#fileLocalJSON").on('change', function(e) {

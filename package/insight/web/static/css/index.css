@@ -49,7 +49,6 @@ a:focus {
     left: 0;
     height: 100vh;
     z-index: 999;
-    /*background: #563f7a;*/
     background: #00B2EA;
     color: #fff;
     transition: all 0.3s;
@@ -61,7 +60,6 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    /*background: #7758A8;*/
     background: #00B2EA;
 }
 
@@ -71,7 +69,6 @@ a:focus {
 
 #sidebar ul.components {
     padding: 20px 0;
-    /*border-bottom: 1px solid #9F78DD;*/
     display: block;
 }
 
@@ -94,7 +91,6 @@ a:focus {
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    /*background: #674C92;*/
     background: #000080;
 }
 
@@ -119,7 +115,6 @@ a[aria-expanded="true"]::before {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    /*background: #674C92;*/
     background: #000080;
 }
 
@@ -138,7 +133,6 @@ ul.additional a {
 a.settings,
 a.settings:hover {
     background: #000080 !important;
-    /*background: #5c4387 !important;*/
     color: #fff !important;
 }
 
@@ -167,7 +161,6 @@ a.settings:hover {
 .login-header {
     display: inline-block;
     width: 100%;
-    /*background: #563f7a;*/
     background: #00B2EA;
 }
 
@@ -491,8 +484,6 @@ div.table .file-row:nth-child(odd) {
 }
 
 .layer-title {
-    /*background-color: #1063b6*/
-    /*background-color: #6b4e9e;*/
     background-color: #000080;
 }
 

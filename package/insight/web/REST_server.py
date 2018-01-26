@@ -216,7 +216,7 @@ def create_hyper_job():
        'model_name' not in request.json or \
        'dataset_name' not in request.json or \
        'epochs' not in request.json or \
-       'hparams' not in request.json:
+       'hspace' not in request.json:
         abort(400)
 
     if 'pretrain' in request.json:
@@ -227,13 +227,13 @@ def create_hyper_job():
     name = request.json["instance_name"]
     model_name = request.json["model_name"]
     epochs = int(request.json["epochs"])
-    hparams = request.json["hparams"]
+    hspace = request.json["hspace"]
     ## build hyperparams dictionary from argument string
-    json_acceptable_string = str(args.hparams).replace("'", "\"")
-    hparams = json.loads(json_acceptable_string) # hparams is now a dict
+    json_acceptable_string = str(args.hspace).replace("'", "\"")
+    hspace = json.loads(json_acceptable_string) # hspace is now a dict
     max_jobs = 3 # TODO HACK
-    optimize(name=name, space=hparams, model_name=model_name, epochs=epochs, max_jobs=max_jobs)
-    return hparams, 201
+    optimize(name=name, space=hspace, model_name=model_name, epochs=epochs, max_jobs=max_jobs)
+    return hspace, 201
 
 
 #______________________________________________________________________________

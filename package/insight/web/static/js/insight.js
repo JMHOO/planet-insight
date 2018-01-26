@@ -60,7 +60,7 @@ $(document).ready(function() {
 
     $("#btnNewHyperTask").click(function() {
         // load dataset list
-        $('#selectDataset').html('');
+        $('#hyper-selectDataset').html('');
         $.ajax({
                 url: '/insight/api/v1.0/dataset-paired',
                 type: 'GET',
@@ -71,10 +71,10 @@ $(document).ready(function() {
                 $.each(data, function(index, el) {
                     output += '<option value="' + el.name + '">' + el.name + '</option>';
                 });
-                $('#selectDataset').append(output)
+                $('#hyper-selectDataset').append(output)
             });
         // load json model list
-        $('#selectJsonModel').html('');
+        $('#hyper-selectJsonModel').html('');
         $.ajax({
                 url: '/insight/api/v1.0/models',
                 type: 'GET',
@@ -85,11 +85,11 @@ $(document).ready(function() {
                 $.each(data, function(index, el) {
                     output += '<option value="' + el.model_name + '">' + el.model_name + '</option>';
                 });
-                $('#selectJsonModel').append(output)
+                $('#hyper-selectJsonModel').append(output)
             });
         // load weights list
-        $('#selectWeights').html('');
-        $('#selectWeights').append('<option value="NONE">NONE</option>');
+        $('#hyper-selectWeights').html('');
+        $('#hyper-selectWeights').append('<option value="NONE">NONE</option>');
         $.ajax({
                 url: '/insight/api/v1.0/weights',
                 type: 'GET',
@@ -100,7 +100,7 @@ $(document).ready(function() {
                 $.each(data, function(index, el) {
                     output += '<option value="' + el.name + '">' + el.name + '</option>';
                 });
-                $('#selectWeights').append(output)
+                $('#hyper-selectWeights').append(output)
             });
         $('#add-hyper-task-model').modal();
     });
@@ -129,12 +129,12 @@ $(document).ready(function() {
     $('#addNewHyperTask').click(function(e) {
         e.preventDefault();
         var formData = {};
-        formData['instance_name'] = $('#instance-name').val();
-        formData['model_name'] = $('#selectJsonModel').val();
-        formData['dataset_name'] = $('#selectDataset').val();
-        formData['hparams'] = $('#hparams').val();
-        formData['pretrain'] = $('#selectWeights').val();
-        formData['epochs'] = $('#maximum-epoch').val();
+        formData['instance_name'] = $('#hyper-instance-name').val();
+        formData['model_name'] = $('#hyper-selectJsonModel').val();
+        formData['dataset_name'] = $('#hyper-selectDataset').val();
+        formData['hspace'] = $('#hyperparams').val();
+        formData['pretrain'] = $('#hyper-selectWeights').val();
+        formData['epochs'] = $('#hyper-maximum-epoch').val();
         ajax_new_hyper_task(formData);
     });
 

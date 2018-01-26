@@ -148,7 +148,7 @@ a.settings:hover {
 ----------------------------------------------------- */
 
 #content {
-    width: calc(100% - 250px);
+    width: calc(100% - 256px);
     min-height: 100vh;
     transition: all 0.3s;
     position: absolute;

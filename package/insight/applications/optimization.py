@@ -57,11 +57,11 @@ def main():
     space = {
         'conv2/filters' : ('ci', [16, 32, 64]),
         'conv4/filters' : ('ci', [64, 128, 256]),
-        'dropout2/rate' : ('cf', [0.25, 0.50]),
-        'dense1/units' :  ('ci', [256, 512, 1024]),
-        'dropout3/rate' : ('cf', [0.25, 0.50]),
+#        'dropout2/rate' : ('cf', [0.25, 0.50]),
+#        'dense1/units' :  ('ci', [256, 512, 1024]),
+#        'dropout3/rate' : ('cf', [0.25, 0.50]),
         }
-    optimize(name='reece-test-alpha', space=space, model_name='CNN-Base', epochs=20, max_jobs=30)
+    optimize(name='reece-test-beta', space=space, model_name='CNN-Base', epochs=5, max_jobs=3)
 
 
 #______________________________________________________________________________
@@ -152,11 +152,11 @@ def create_hyper_model(model_name, hparams, new_model_name):
     db_model = DBInsightModels()
     json_str = db_model.get(model_name)
     assert json_str
-    print(json_str) # DEBUG
+#    print(json_str) # DEBUG
     j = json.loads(json_str)
     find_and_replace_dict(j, hparams)
     json_str = json.dumps(j)
-    print(json_str) # DEBUG
+#    print(json_str) # DEBUG
     db_model.put(new_model_name, json_str)
 
 
@@ -173,22 +173,22 @@ def find_and_replace_dict(j, hparams):
     hype_keys = list(hparams.keys())
     hype_keys.sort()
 
-    for hype_descr in hype_keys:
-        hype_split = os.path.split(hype_descr)
-        assert len(hype_split) == 2
-        hype_cname = hype_split[0]
-        hype_name = hype_split[1]
-        hype_val = hparams[hype_descr]
-        for _json in _j:
-            if isinstance(_json, dict):
+    for _json in _j:
+        if isinstance(_json, dict):
+            for hype_descr in hype_keys:
+                hype_split = os.path.split(hype_descr)
+                assert len(hype_split) == 2
+                hype_cname = hype_split[0]
+                hype_name = hype_split[1]
+                hype_val = hparams[hype_descr]
                 if 'name' in _json and _json['name'] == hype_cname:
                     print('Replacing hyperparameter %s/%s with %s' % (hype_cname, hype_name, hype_val))
                     assert hype_name in _json
                     _json[hype_name] = hype_val # edit hyperparameter value!
-                for _k, _v in _json.items():
-                    if isinstance(_v, dict):
-                        find_and_replace_dict(_v, hparams)
-
+                    print(_json)
+            for _k, _v in _json.items():
+                if isinstance(_v, dict):
+                    find_and_replace_dict(_v, hparams)
     return j
 
 #______________________________________________________________________________

@@ -229,7 +229,7 @@ def create_hyper_job():
     epochs = int(request.json["epochs"])
     hspace = request.json["hspace"]
     ## build hyperparams dictionary from argument string
-    json_acceptable_string = str(hspace).replace("'", "\"")
+    json_acceptable_string =  str(hspace).replace("'", "\"")
     hspace = json.loads(json_acceptable_string) # hspace is now a dict
     max_jobs = 3 # TODO HACK
     optimize(name=name, space=hspace, model_name=model_name, epochs=epochs, max_jobs=max_jobs)

@@ -56,22 +56,22 @@ def optimize(name, space, model_name, epochs=5, max_jobs=99):
             'model_name': new_model_name,
             'job_status': 'initial' }
         submit_job(job_ops)
-        wait_for_job_to_finish(name) # HACK: waiting for all jobs to finish!!
-        loss = get_loss(job_name)
-        print('loss = %5g' % loss) # DEBUG
-        prev_hparams.append(hparams)
-        prev_loss.append(loss)
+#        wait_for_job_to_finish(name) # HACK: waiting for all jobs to finish!!
+#        loss = get_loss(job_name)
+#        print('loss = %5g' % loss) # DEBUG
+#        prev_hparams.append(hparams)
+#        prev_loss.append(loss)
         if i_job >= max_jobs: # max_jobs-1:
             break
 
-    best_hparams, best_loss = calc_best_hyperparams(prev_hparams, prev_loss)
-    keys = list(best_hparams.keys())
-    keys.sort()
-    print('best_hparams :') # DEBUG
-    for k in keys:
-        v = best_hparams[k]
-        print('%s = %5g' % (k, v)) # DEBUG
-    print('best_loss = %g' % best_loss) # DEBUG
+#    best_hparams, best_loss = calc_best_hyperparams(prev_hparams, prev_loss)
+#    keys = list(best_hparams.keys())
+#    keys.sort()
+#    print('best_hparams :') # DEBUG
+#    for k in keys:
+#        v = best_hparams[k]
+#        print('%s = %5g' % (k, v)) # DEBUG
+#    print('best_loss = %g' % best_loss) # DEBUG
 
 
 #______________________________________________________________________________

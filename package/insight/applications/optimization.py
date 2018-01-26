@@ -10,7 +10,6 @@ created: Jan 23, 2018
 import argparse
 import os
 import json
-from simple_settings import LazySettings
 import subprocess
 import math
 import time
@@ -26,11 +25,6 @@ np.random.seed(777) # for DEBUG
 
 from insight.storage import DBJobInstance, DBInsightModels, DBInstanceLog, S3DB
 from insight.builder import Convert
-
-settings = LazySettings('insight.applications.settings')
-
-path_of_this_file = os.path.abspath( __file__ )
-dir_of_this_file = os.path.dirname(os.path.abspath( __file__ ))
 
 
 #______________________________________________________________________________

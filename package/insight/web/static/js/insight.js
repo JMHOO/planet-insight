@@ -58,6 +58,53 @@ $(document).ready(function() {
         $('#add-task-model').modal();
     });
 
+    $("#btnNewHyperTask").click(function() {
+        // load dataset list
+        $('#selectDataset').html('');
+        $.ajax({
+                url: '/insight/api/v1.0/dataset-paired',
+                type: 'GET',
+                dataType: 'json',
+            })
+            .done(function(data) {
+                var output = '';
+                $.each(data, function(index, el) {
+                    output += '<option value="' + el.name + '">' + el.name + '</option>';
+                });
+                $('#selectDataset').append(output)
+            });
+        // load json model list
+        $('#selectJsonModel').html('');
+        $.ajax({
+                url: '/insight/api/v1.0/models',
+                type: 'GET',
+                dataType: 'json',
+            })
+            .done(function(data) {
+                var output = '';
+                $.each(data, function(index, el) {
+                    output += '<option value="' + el.model_name + '">' + el.model_name + '</option>';
+                });
+                $('#selectJsonModel').append(output)
+            });
+        // load weights list
+        $('#selectWeights').html('');
+        $('#selectWeights').append('<option value="NONE">NONE</option>');
+        $.ajax({
+                url: '/insight/api/v1.0/weights',
+                type: 'GET',
+                dataType: 'json',
+            })
+            .done(function(data) {
+                var output = '';
+                $.each(data, function(index, el) {
+                    output += '<option value="' + el.name + '">' + el.name + '</option>';
+                });
+                $('#selectWeights').append(output)
+            });
+        $('#add-hyper-task-model').modal();
+    });
+
     $("#addNewModel").click(function(e) {
         e.preventDefault();
         var formData = {};
@@ -77,6 +124,18 @@ $(document).ready(function() {
         formData['epochs'] = $('#maximum-epoch').val();
 
         ajax_new_task(formData);
+    });
+
+    $('#addNewHyperTask').click(function(e) {
+        e.preventDefault();
+        var formData = {};
+        formData['instance_name'] = $('#instance-name').val();
+        formData['model_name'] = $('#selectJsonModel').val();
+        formData['dataset_name'] = $('#selectDataset').val();
+        formData['hparams'] = $('#hparams').val();
+        formData['pretrain'] = $('#selectWeights').val();
+        formData['epochs'] = $('#maximum-epoch').val();
+        ajax_new_hyper_task(formData);
     });
 
     $('#btnSettings').click(function(e) {
@@ -166,6 +225,22 @@ function ajax_new_task(options) {
         success: function(data, status, jqXHR) {
             app.tasklist.collection.add(data);
         },
+        error: function(jqXHR, status) {
+            console.log(jqXHR);
+        }
+    });
+};
+
+function ajax_new_hyper_task(options) {
+    $.ajax({
+        type: "POST",
+        url: "/insight/api/v1.0/hyperjobs",
+        data: JSON.stringify(options),
+        contentType: "application/json;",
+        dataType: "json",
+//        success: function(data, status, jqXHR) {
+//            app.tasklist.collection.add(data);
+//        },
         error: function(jqXHR, status) {
             console.log(jqXHR);
         }

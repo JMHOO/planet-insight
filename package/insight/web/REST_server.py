@@ -9,6 +9,7 @@ from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
 from insight.storage import AWSResource, DBInstanceLog
 from insight.builder import Convert
+from insight.optimizer import optimize
 
 
 # global AWS resource
@@ -204,6 +205,44 @@ def fetch_job_logs(instance_name):
 
 
 '''
+POST    /insight/api/v1.0/hyperjobs
+'''
+
+@app.route('/insight/api/v1.0/hyperjobs', methods=['POST'])
+@checkAWS
+def create_hyper_job():
+    if not request.json or \
+       'instance_name' not in request.json or \
+       'model_name' not in request.json or \
+       'dataset_name' not in request.json or \
+       'epochs' not in request.json or \
+       'hparams' not in request.json:
+        abort(400)
+
+    if 'pretrain' in request.json:
+        weights = request.json["pretrain"]
+    else:
+        weights = "NONE"
+
+    name = request.json["instance_name"]
+    model_name = request.json["model_name"]
+    epochs = int(request.json["epochs"])
+    hparams = request.json["hparams"]
+    ## build hyperparams dictionary from argument string
+    json_acceptable_string = str(args.hparams).replace("'", "\"")
+    hparams = json.loads(json_acceptable_string) # hparams is now a dict
+    max_jobs = 3 # TODO HACK
+    optimize(name=name, space=hparams, model_name=model_name, epochs=epochs, max_jobs=max_jobs)
+    return hparams, 201
+
+
+#______________________________________________________________________________
+if __name__ == "__main__":
+    test()
+    return internal_json, 201
+
+
+'''
 GET	    /insight/api/v1.0/datasets	                    Retrieve list of datasets
 POST    /insight/api/v1.0/datasets/upload                 Upload a dataset
 DELETE  /insight/api/v1.0/datasets/[dataset_name]	        Delete a dataset
@@ -213,7 +252,6 @@ POST    /insight/api/v1.0/weights/upload                  Upload a dataset
 DELETE  /insight/api/v1.0/weights/[weights_file]          Delete a trained models
 GET     /insight/api/v1.0/weights/[weights_file]          Download a trained models
 '''
-
 
 
 @app.route('/insight/api/v1.0/datasets', methods=["GET"])

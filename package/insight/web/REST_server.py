@@ -235,13 +235,6 @@ def create_hyper_job():
     optimize(name=name, space=hspace, model_name=model_name, epochs=epochs, max_jobs=max_jobs)
     return hspace, 201
 
-
-#______________________________________________________________________________
-if __name__ == "__main__":
-    test()
-    return internal_json, 201
-
-
 '''
 GET	    /insight/api/v1.0/datasets	                    Retrieve list of datasets
 POST    /insight/api/v1.0/datasets/upload                 Upload a dataset

@@ -103,8 +103,8 @@ $(document).ready(function() {
                 $('#hyper-selectWeights').append(output)
             });
         // default hyperparameters
-        $('#hyper-selectWeights').html('');
-        $('#hyper-selectWeights').append('{"conv2/filters" : ["ci", [16, 32, 64]], "dropout2/rate" : ["cf", [0.25, 0.50]]}');
+        $('#hyperparams').html('');
+        $('#hyperparams').append('{"conv2/filters" : ["ci", [16, 32, 64]], "dropout2/rate" : ["cf", [0.25, 0.50]]}');
         $('#add-hyper-task-model').modal();
     });
 

@@ -81,6 +81,13 @@ $(document).ready(function() {
                 dataType: 'json',
             })
             .done(function(data) {
+                data.sort(function(a, b) {
+                    if ( a.model_name < b.model_name )
+                        return -1;
+                    if ( a.model_name > b.model_name )
+                        return 1;
+                    return 0;
+                });
                 var output = '';
                 $.each(data, function(index, el) {
                     output += '<option value="' + el.model_name + '">' + el.model_name + '</option>';

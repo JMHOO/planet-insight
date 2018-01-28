@@ -54,9 +54,11 @@ a:focus {
     transition: all 0.3s;
 }
 
+/*
 #sidebar.active {
     margin-left: -250px;
 }
+*/
 
 #sidebar .sidebar-header {
     padding: 20px;
@@ -81,6 +83,7 @@ a:focus {
     padding: 10px;
     font-size: 1.1em;
     display: block;
+    background: #000080;
 }
 
 #sidebar ul li a:hover {
@@ -88,11 +91,13 @@ a:focus {
     background: #fff;
 }
 
+/*
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
     background: #000080;
 }
+*/
 
 a[data-toggle="collapse"] {
     position: relative;

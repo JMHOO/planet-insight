@@ -61,7 +61,7 @@ a:focus {
 */
 
 #sidebar .sidebar-header {
-    padding: 20px;
+    padding: 10px 20px;
     background: #00B2EA;
 }
 
@@ -70,7 +70,7 @@ a:focus {
 }
 
 #sidebar ul.components {
-    padding: 20px 0;
+    padding: 10px 0;
     display: block;
 }
 
@@ -124,7 +124,7 @@ ul ul a {
 }
 
 ul.additional {
-    padding: 20px;
+    padding: 10px 20px;
 }
 
 ul.additional a {
@@ -132,7 +132,6 @@ ul.additional a {
     font-size: 0.9em !important;
     display: block;
     border-radius: 5px;
-    margin-bottom: 5px;
 }
 
 a.settings,

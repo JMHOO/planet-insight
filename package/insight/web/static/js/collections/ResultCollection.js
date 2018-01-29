@@ -5,8 +5,8 @@ var app = app || {};
 
     app.ResultCollection = Backbone.Collection.extend({
         // Reference to this collection's model.
-        model: app.Task,
-        url: '/insight/api/v1.0/jobs',
+        model: app.Result,
+        url: '/insight/api/v1.0/results',
         comparator: function(item) {
 //            return item.get('instance_name');
             // HACK: "negate" strings to sort in reverse order

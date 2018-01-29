@@ -9,6 +9,7 @@ $(function() {
     //new app.AppView();
     app.jsonlist = new app.JSONModelsListView();
     app.tasklist = new app.TaskListView();
+    app.resultlist = new app.ResultListView();
     app.datasetlist = new app.DatasetListView();
     app.weightslist = new app.WeightsListView();
     app.clusterlist = new app.WorkerListView();

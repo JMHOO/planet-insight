@@ -6,13 +6,12 @@ $(document).ready(function() {
         $(this).tab('show');
     });
 
-
     $("#btnNewModel").click(function() {
         $('#add-json-model').modal();
     });
 
     $("#btnNewTask").click(function() {
-        // load dataset list
+        // load dataset list and sort by name
         $('#selectDataset').html('');
         $.ajax({
                 url: '/insight/api/v1.0/dataset-paired',
@@ -33,7 +32,7 @@ $(document).ready(function() {
                 });
                 $('#selectDataset').append(output)
             });
-        // load json model list
+        // load json model list and sort by name
         $('#selectJsonModel').html('');
         $.ajax({
                 url: '/insight/api/v1.0/models',
@@ -54,7 +53,7 @@ $(document).ready(function() {
                 });
                 $('#selectJsonModel').append(output)
             });
-        // load weights list
+        // load weights list and sort by name
         $('#selectWeights').html('');
         $('#selectWeights').append('<option value="NONE">NONE</option>');
         $.ajax({
@@ -80,7 +79,7 @@ $(document).ready(function() {
     });
 
     $("#btnNewHyperTask").click(function() {
-        // load dataset list
+        // load dataset list and sort by name
         $('#hyper-selectDataset').html('');
         $.ajax({
                 url: '/insight/api/v1.0/dataset-paired',
@@ -101,7 +100,7 @@ $(document).ready(function() {
                 });
                 $('#hyper-selectDataset').append(output)
             });
-        // load json model list
+        // load json model list and sort by name
         $('#hyper-selectJsonModel').html('');
         $.ajax({
                 url: '/insight/api/v1.0/models',
@@ -122,7 +121,7 @@ $(document).ready(function() {
                 });
                 $('#hyper-selectJsonModel').append(output)
             });
-        // load weights list
+        // load weights list and sort by name
         $('#hyper-selectWeights').html('');
         $('#hyper-selectWeights').append('<option value="NONE">NONE</option>');
         $.ajax({

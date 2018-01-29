@@ -5,7 +5,7 @@ var app = app || {};
 
     app.Result = Backbone.Model.extend({
 
-        urlRoot: '/insight/api/v1.0/jobs',
+        urlRoot: '/insight/api/v1.0/results',
         idAttribute: 'instance_name',
 
         defaults: {

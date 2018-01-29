@@ -235,6 +235,23 @@ def create_hyper_job():
     optimize(name=name, space=hspace, model_name=model_name, epochs=epochs, max_jobs=max_jobs)
     return hspace, 201
 
+
+'''
+GET     /insight/api/v1.0/results
+'''
+
+@app.route('/insight/api/v1.0/results', methods=['GET'])
+@checkAWS
+def get_results():
+    jobs = []
+    all_jobs = aws.tasks.list()
+    for item in all_jobs:
+        timestamp = datetime.fromtimestamp(float(item['created']))
+        timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
+        item['created'] = timestamp
+        jobs.append(item)
+    return jobs
+
 '''
 GET	    /insight/api/v1.0/datasets	                    Retrieve list of datasets
 POST    /insight/api/v1.0/datasets/upload                 Upload a dataset

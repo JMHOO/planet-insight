@@ -68,14 +68,12 @@ app.ResultView = Backbone.View.extend({
       	    data.addColumn('number', 'Training');
       	    data.addColumn('number', 'Testing');
 
-            var i = 0;
             that.log_collection.fetch({
                 success: function() {
                     that.log_collection.each(function(log) {
                         if (log.get('train')) {
                             var train_log = log.get('train');
                             data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
-                            i++;
                         }
                     }, that);
 
@@ -87,7 +85,7 @@ app.ResultView = Backbone.View.extend({
       		            title: 'Loss vs epoch',
       		            width: 600,
       		            height: 500,
-                        vAxis: { scaleType: 'log' }
+                        vAxis: {scaleType: 'log'}
       		        };
 
 //                var chart = new google.visualization.LineChart(document.getElementById('result_chart'));

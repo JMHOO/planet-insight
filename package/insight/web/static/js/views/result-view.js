@@ -129,7 +129,7 @@ app.ResultView = Backbone.View.extend({
       		  height: 500
       		};
 
-      		var chart = new google.charts.Line(document.getElementById('linechart_material'));
+      		var chart = new google.charts.Line(document.getElementById('result_chart'));
 
       		chart.draw(data, google.charts.Line.convertOptions(options));
         }

@@ -21,7 +21,7 @@ app.ResultView = Backbone.View.extend({
             status = "badge badge-pill badge-warning";
         } else if (status_val == "completed") {
             status = "badge badge-pill badge-success";
-        } else if (status_val == "preparing") {
+        } else if (status_val == "preparing" || status_val == "initial") {
             status = "badge badge-pill badge-secondary";
         }
         this.model.set("status_color", status);

@@ -254,22 +254,35 @@ def list_results():
         instance_name = item['instance_name']
         db_log = DBInstanceLog(instance_name)
         logs = db_log.fetch()
-        min_val_loss = 1e99
-        min_val_loss_epoch = -1
+        best_loss = 1e99
+        best_val_loss = 1e99
+        best_acc = -1.0
+        best_val_acc = -1.0
+        best_epoch = -1
         for log in logs:
             if 'train' in log:
                 metrics = log['train']
-                ## TODO: add accuracy
                 assert 'loss' in metrics
                 assert 'epoch' in metrics
                 loss  = metrics['loss']
                 val_loss  = metrics['val_loss']
+                acc = metrics['acc']
+                val_acc = metrics['val_acc']
                 epoch = metrics['epoch']
-                if val_loss < min_val_loss:
-                    min_val_loss = val_loss
-                    min_val_loss_epoch = epoch
-        item['best_val_loss'] = min_val_loss
-        item['best_epoch'] = min_val_loss_epoch
+                if val_loss < best_val_loss:
+                    best_val_loss = val_loss
+                    best_loss = loss
+                    best_acc = acc
+                    best_val_acc = val_acc
+                    best_epoch = epoch
+        item['best_epoch'] = best_epoch
+        item['best_loss']  = best_loss
+        item['best_acc']   = best_acc
+        item['best_val_loss']  = best_val_loss
+        item['best_val_acc']   = best_val_acc
+        item['best_epoch_str'] = '%i / %i' % (best_epoch, item['epochs'])
+        item['best_loss_str'] = '.5g / %.5g' % (loss, val_loss)
+        item['best_acc_str'] = '.5g / %.5g' % (acc, val_acc)
         jobs.append(item)
     return jobs
 

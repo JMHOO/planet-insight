@@ -55,28 +55,30 @@ app.ResultView = Backbone.View.extend({
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
-	    var data = new google.visualization.DataTable();
-
-      	data.addColumn('number', 'Epoch');
-      	data.addColumn('number', 'Training Loss');
-      	data.addColumn('number', 'Testing Loss');
 
         var that = this;
-        this.log_collection.fetch({
-            success: function() {
-                that.log_collection.each(function(log) {
-                    if (log.get('train')) {
-                        var train_log = log.get('train');
-                        data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
-                    }
-                }, that);
-            }
-        });
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
         // draws it.
         function drawChart(data) {
+	        var data = new google.visualization.DataTable();
+
+      	    data.addColumn('number', 'Epoch');
+      	    data.addColumn('number', 'Training Loss');
+      	    data.addColumn('number', 'Testing Loss');
+
+            that.log_collection.fetch({
+                success: function() {
+                    that.log_collection.each(function(log) {
+                        if (log.get('train')) {
+                            var train_log = log.get('train');
+                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
+                        }
+                    }, that);
+                }
+            });
+
       		var options = {
       		  chart: {
       		    title: 'Loss vs epoch',

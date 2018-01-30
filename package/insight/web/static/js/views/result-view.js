@@ -96,7 +96,7 @@ app.ResultView = Backbone.View.extend({
       		  width: 500,
       		  height: 500
       		};
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+            var chart = new google.visualization.LineChart(document.getElementById('result_chart'));
             chart.draw(data, options);
 
 //     		var chart = new google.charts.Line(document.getElementById('result_chart'));

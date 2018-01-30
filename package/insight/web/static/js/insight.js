@@ -216,7 +216,7 @@ $(document).ready(function() {
     });
      
     $("#btnRefreshResults").click(function(e) {
-        app.tasklist.refresh();
+        app.resultlist.refresh();
     });
 
     // load local json file

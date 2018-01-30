@@ -55,38 +55,6 @@ app.ResultView = Backbone.View.extend({
 
         this.log_collection = new app.TaskLogs(this.model.get('instance_name'));
 
-        var that = this;
-        this.log_collection.fetch({
-            success: function() {
-                var output = '';
-                that.log_collection.each(function(log) {
-                    //var item = $('<li/>').addClass('list-group-item');
-                    if (log.get('train')) {
-                        var train_log = log.get('train');
-                        var loss = '';
-                        if (train_log.loss) { loss = ', LOSS: ' + train_log.loss.toFixed(5); }
-                        var val_loss = '';
-                        if (train_log.val_loss) { val_loss = ', VAL LOSS: ' + train_log.val_loss.toFixed(5); }
-                        var acc = '';
-                        if (train_log.acc) { acc = ', ACC: ' + train_log.acc.toFixed(5); }
-                        var val_acc = '';
-                        if (train_log.val_acc) { val_acc = ', VAL ACC: ' + train_log.val_acc.toFixed(5); }
-                        var epoch = 'Epoch-' + String(train_log.epoch + 1);
-                        message = epoch + acc + val_acc + loss + val_loss;
-                        output += message;
-                        //item.text(message);
-                        //item.addClass('list-group-item-light');
-                    } else if (log.get('info')) {
-                        output += log.get('info');
-                        //item.text(log.get('info'));
-                        //item.addClass('list-group-item-info');
-                    }
-                    output += '\n';
-                }, that);
-                result_logs_group.append(output);
-            }
-        });
-
         // Load the Visualization API and the corechart package.
         google.charts.load('current', {'packages':['line']});
 
@@ -97,35 +65,35 @@ app.ResultView = Backbone.View.extend({
         // instantiates the pie chart, passes in the data and
         // draws it.
         function drawChart() {
-			var data = new google.visualization.DataTable();
-      		data.addColumn('number', 'Day');
-      		data.addColumn('number', 'Guardians of the Galaxy');
-      		data.addColumn('number', 'The Avengers');
-      		data.addColumn('number', 'Transformers: Age of Extinction');
 
-      		data.addRows([
-      		  [1,  37.8, 80.8, 41.8],
-      		  [2,  30.9, 69.5, 32.4],
-      		  [3,  25.4,   57, 25.7],
-      		  [4,  11.7, 18.8, 10.5],
-      		  [5,  11.9, 17.6, 10.4],
-      		  [6,   8.8, 13.6,  7.7],
-      		  [7,   7.6, 12.3,  9.6],
-      		  [8,  12.3, 29.2, 10.6],
-      		  [9,  16.9, 42.9, 14.8],
-      		  [10, 12.8, 30.9, 11.6],
-      		  [11,  5.3,  7.9,  4.7],
-      		  [12,  6.6,  8.4,  5.2],
-      		  [13,  4.8,  6.3,  3.6],
-      		  [14,  4.2,  6.2,  3.4]
-      		]);
+			var data = new google.visualization.DataTable();
+      		data.addColumn('number', 'Epoch');
+      		data.addColumn('number', 'Training Loss');
+      		data.addColumn('number', 'Testing Loss');
+
+            var that = this;
+            this.log_collection.fetch({
+                success: function() {
+                    var output = '';
+                    that.log_collection.each(function(log) {
+                        if (log.get('train')) {
+                            var train_log = log.get('train');
+                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
+                        } else if (log.get('info')) {
+                            output += log.get('info');
+                        }
+                        output += '\n';
+                    }, that);
+                    result_logs_group.append(output);
+                }
+            });
 
       		var options = {
       		  chart: {
-      		    title: 'Box Office Earnings in First Two Weeks of Opening',
-      		    subtitle: 'in millions of dollars (USD)'
+      		    title: 'Loss vs epoch',
+//      		    subtitle: 'in millions of dollars (USD)'
       		  },
-      		  width: 900,
+      		  width: 500,
       		  height: 500
       		};
 

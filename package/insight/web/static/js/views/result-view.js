@@ -86,8 +86,8 @@ app.ResultView = Backbone.View.extend({
 //      		          },
       		            title: 'Loss vs epoch',
       		            width: 600,
-      		            height: 500,
-                        vAxis: { logscale: true }
+      		            height: 500
+//                        vAxis: { logscale: true }
                         }
       		        };
 

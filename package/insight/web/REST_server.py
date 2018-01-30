@@ -262,7 +262,7 @@ def list_results():
             print(type(log))
             dlogs = json.load(log)
             print(type(dlogs))
-            print(dlogs)
+#            print(dlogs)
     return jobs
 
 '''

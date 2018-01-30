@@ -108,11 +108,10 @@
                                 <thead>
                                     <tr>
                                         <th width=6%>#</th>
-                                        <th width=20%>Name</th>
-                                        <th width=20%>Loss (train/test)</th>
-                                        <th width=21%>Accuracy (train/test)</th>
+                                        <th width=22%>Name</th>
+                                        <th width=25%>Loss (train/test)</th>
+                                        <th width=25%>Accuracy (train/test)</th>
                                         <th width=10% align="center">Best Epoch</th>
-                                        <th width=10%>Status</th>
                                         <th width=15%>Created</th>
                                     </tr>
                                 </thead>
@@ -239,7 +238,9 @@
         <td>
         </td>
         <td>
+            <div class="<%= status_color%>">
             <%= model_name %>
+            </div>
         </td>
         <td>
             <%= best_loss_str %>
@@ -249,11 +250,6 @@
         </td>
         <td>
             <%= best_epoch_str %>
-        </td>
-        <td>
-            <div class="<%= status_color%>">
-                <%= job_status %>
-            </div>
         </td>
         <td>
             <%= created %>

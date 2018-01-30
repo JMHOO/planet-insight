@@ -250,18 +250,27 @@ def list_results():
         timestamp = datetime.fromtimestamp(float(item['created']))
         timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
         item['created'] = timestamp
-        jobs.append(item)
-        ## add job log
+        ## add log metrics to job dict
         instance_name = item['instance_name']
         db_log = DBInstanceLog(instance_name)
         logs = db_log.fetch()
-        print(instance_name)
-        print('logs = ')
+        min_val_loss = 1e99
+        min_val_loss_epoch = -1
         for log in logs:
-            ## HERE
-            print(type(log))
-#            dlogs = json.load(log)
-#            print(type(dlogs))
+            if 'train' in log:
+                metrics = log['train']
+                ## TODO: add accuracy
+                assert 'loss' in metrics
+                assert 'epoch' in metrics
+                loss  = metrics['loss']
+                val_loss  = metrics['val_loss']
+                epoch = metrics['epoch']
+                if val_loss < min_val_loss:
+                    min_val_loss = val_loss
+                    min_val_loss_epoch = epoch
+        item['best_val_loss'] = min_val_loss
+        item['best_epoch'] = min_val_loss_epoch
+        jobs.append(item)
     return jobs
 
 '''

@@ -281,8 +281,8 @@ def list_results():
         item['best_val_loss']  = best_val_loss
         item['best_val_acc']   = best_val_acc
         item['best_epoch_str'] = '%i / %i' % (best_epoch, int(item['epochs']))
-        item['best_loss_str'] = '.5g / %.5g' % (loss, val_loss)
-        item['best_acc_str'] = '.5g / %.5g' % (acc, val_acc)
+        item['best_loss_str'] = '%.5g / %.5g' % (loss, val_loss)
+        item['best_acc_str'] = '%.5g / %.5g' % (acc, val_acc)
         jobs.append(item)
     return jobs
 

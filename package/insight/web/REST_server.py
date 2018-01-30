@@ -254,6 +254,7 @@ def list_results():
         instance_name = item['instance_name']
         db_log = DBInstanceLog(instance_name)
         logs = db_log.fetch()
+        loss = None
         best_loss = 1e99
         best_val_loss = 1e99
         best_acc = -1.0
@@ -276,14 +277,24 @@ def list_results():
                     best_acc = acc
                     best_val_acc = val_acc
                     best_epoch = last_epoch
-        item['best_epoch'] = best_epoch
-        item['best_loss']  = best_loss
-        item['best_acc']   = best_acc
-        item['best_val_loss']  = best_val_loss
-        item['best_val_acc']   = best_val_acc
-        item['best_epoch_str'] = '%i / %i' % (best_epoch, last_epoch)
-        item['best_loss_str'] = '%.5g / %.5g' % (loss, val_loss)
-        item['best_acc_str'] = '%.5g / %.5g' % (acc, val_acc)
+        if loss is not None:
+            item['best_epoch'] = best_epoch
+            item['best_loss']  = best_loss
+            item['best_acc']   = best_acc
+            item['best_val_loss']  = best_val_loss
+            item['best_val_acc']   = best_val_acc
+            item['best_epoch_str'] = '%i / %i' % (best_epoch, last_epoch)
+            item['best_loss_str'] = '%.5g / %.5g' % (loss, val_loss)
+            item['best_acc_str'] = '%.5g / %.5g' % (acc, val_acc)
+        else:
+            item['best_epoch'] = 0
+            item['best_loss']  = 0
+            item['best_acc']   = 0
+            item['best_val_loss']  = 0
+            item['best_val_acc']   = 0
+            item['best_epoch_str'] = ''
+            item['best_loss_str'] = ''
+            item['best_acc_str'] = ''
         jobs.append(item)
     return jobs
 

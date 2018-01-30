@@ -259,6 +259,7 @@ def list_results():
         best_acc = -1.0
         best_val_acc = -1.0
         best_epoch = -1
+        last_epoch = -1
         for log in logs:
             if 'train' in log:
                 metrics = log['train']
@@ -268,19 +269,19 @@ def list_results():
                 val_loss  = metrics['val_loss']
                 acc = metrics['acc']
                 val_acc = metrics['val_acc']
-                epoch = metrics['epoch']
+                last_epoch = metrics['epoch'] + 1 # switch from 0-first to 1-first numbering
                 if val_loss < best_val_loss:
                     best_val_loss = val_loss
                     best_loss = loss
                     best_acc = acc
                     best_val_acc = val_acc
-                    best_epoch = epoch
+                    best_epoch = last_epoch
         item['best_epoch'] = best_epoch
         item['best_loss']  = best_loss
         item['best_acc']   = best_acc
         item['best_val_loss']  = best_val_loss
         item['best_val_acc']   = best_val_acc
-        item['best_epoch_str'] = '%i / %i' % (best_epoch, int(item['epochs']))
+        item['best_epoch_str'] = '%i / %i' % (best_epoch, last_epoch)
         item['best_loss_str'] = '%.5g / %.5g' % (loss, val_loss)
         item['best_acc_str'] = '%.5g / %.5g' % (acc, val_acc)
         jobs.append(item)

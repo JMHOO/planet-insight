@@ -55,48 +55,81 @@ app.ResultView = Backbone.View.extend({
 
         this.log_collection = new app.TaskLogs(this.model.get('instance_name'));
 
+//        // Load the Visualization API and the corechart package.
+//        google.charts.load('current', {'packages':['line']});
+//
+//        // Set a callback to run when the Google Visualization API is loaded.
+//        google.charts.setOnLoadCallback(drawChart);
+//	    var data = new google.visualization.DataTable();
+//
+//      	data.addColumn('number', 'Epoch');
+//      	data.addColumn('number', 'Training Loss');
+//      	data.addColumn('number', 'Testing Loss');
+//
+//        var that = this;
+//        this.log_collection.fetch({
+//            success: function() {
+//                var output = '';
+//                that.log_collection.each(function(log) {
+//                    if (log.get('train')) {
+//                        var train_log = log.get('train');
+//                        data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
+//                    } else if (log.get('info')) {
+//                        output += log.get('info');
+//                    }
+//                    output += '\n';
+//                }, that);
+//                result_logs_group.append(output);
+//            }
+//        });
+
+//        // Callback that creates and populates a data table,
+//        // instantiates the pie chart, passes in the data and
+//        // draws it.
+//        function drawChart(data) {
+//      		var options = {
+//      		  chart: {
+//      		    title: 'Loss vs epoch',
+////      		    subtitle: 'in millions of dollars (USD)'
+//      		  },
+//      		  width: 500,
+//      		  height: 500
+//      		};
+//      		var chart = new google.charts.Line(document.getElementById('result_chart'));
+//      		chart.draw(data, google.charts.Line.convertOptions(options));
+//        }
+
         // Load the Visualization API and the corechart package.
-        google.charts.load('current', {'packages':['line']});
+        google.charts.load('current', {'packages':['corechart']});
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
-	    var data = new google.visualization.DataTable();
-
-      	data.addColumn('number', 'Epoch');
-      	data.addColumn('number', 'Training Loss');
-      	data.addColumn('number', 'Testing Loss');
-
-        var that = this;
-        this.log_collection.fetch({
-            success: function() {
-                var output = '';
-                that.log_collection.each(function(log) {
-                    if (log.get('train')) {
-                        var train_log = log.get('train');
-                        data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
-                    } else if (log.get('info')) {
-                        output += log.get('info');
-                    }
-                    output += '\n';
-                }, that);
-                result_logs_group.append(output);
-            }
-        });
 
         // Callback that creates and populates a data table,
         // instantiates the pie chart, passes in the data and
         // draws it.
-        function drawChart(data) {
-      		var options = {
-      		  chart: {
-      		    title: 'Loss vs epoch',
-//      		    subtitle: 'in millions of dollars (USD)'
-      		  },
-      		  width: 500,
-      		  height: 500
-      		};
-      		var chart = new google.charts.Line(document.getElementById('result_chart'));
-      		chart.draw(data, google.charts.Line.convertOptions(options));
+        function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 3],
+          ['Onions', 1],
+          ['Olives', 1],
+          ['Zucchini', 1],
+          ['Pepperoni', 2]
+        ]);
+
+        // Set chart options
+        var options = {'title':'How Much Pizza I Ate Last Night',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
         }
 
         $('#view-result-dialog').modal();

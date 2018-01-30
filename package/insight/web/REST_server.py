@@ -255,10 +255,16 @@ def list_results():
         instance_name = item['instance_name']
         db_log = DBInstanceLog(instance_name)
         logs = db_log.fetch()
+        for log in logs:
+            
         ## HERE
         print(instance_name)
         print('logs = ')
+        print(type(logs))
         print(logs)
+        dlogs = json.loads(logs)
+        print(type(dlogs))
+        print(dlogs)
     return jobs
 
 '''

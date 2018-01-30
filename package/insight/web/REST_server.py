@@ -242,7 +242,7 @@ GET     /insight/api/v1.0/results
 
 @app.route('/insight/api/v1.0/results', methods=['GET'])
 @checkAWS
-def get_results():
+def list_results():
     jobs = []
     all_jobs = aws.tasks.list()
     for item in all_jobs:
@@ -314,7 +314,7 @@ def list_paired_datasets():
 @app.route('/insight/api/v1.0/weights', methods=["GET"])
 #@auth.login_required
 @checkAWS
-def list_results():
+def list_weights():
     files = []
     all_file = aws.results.list()
     for f in all_file:

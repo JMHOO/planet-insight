@@ -4,7 +4,6 @@ var app = app || {};
     'use strict';
 
     app.Result = Backbone.Model.extend({
-
         urlRoot: '/insight/api/v1.0/results',
         idAttribute: 'instance_name',
 

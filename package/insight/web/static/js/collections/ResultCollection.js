@@ -17,7 +17,7 @@ var app = app || {};
             str = _.map(str, function(letter) { 
                 return String.fromCharCode(-(letter.charCodeAt(0)));
             });
-            return str;
+            return str + item.get('instance_name');
         }
     });
 })();

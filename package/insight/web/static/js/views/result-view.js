@@ -6,7 +6,7 @@ app.ResultView = Backbone.View.extend({
 
     events: {
         'click .viewresult': 'viewResult',
-        'click .remove-result': 'removeResult'
+//        'click .remove-result': 'removeResult'
     },
 
     initialize: function() {

@@ -50,8 +50,8 @@ app.ResultView = Backbone.View.extend({
         this.log_collection = new app.TaskLogs(this.model.get('instance_name'));
 
         // Load the Visualization API and the corechart package.
-        google.charts.load('current', {'packages':['corechart']});
-//      google.charts.load('current', {'packages':['line']});
+//      google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {'packages':['line']});
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.charts.setOnLoadCallback(drawChart);
@@ -65,8 +65,8 @@ app.ResultView = Backbone.View.extend({
 	        var data = new google.visualization.DataTable();
 
       	    data.addColumn('number', 'Epoch');
-      	    data.addColumn('number', 'Training Loss');
-      	    data.addColumn('number', 'Testing Loss');
+      	    data.addColumn('number', 'Training');
+      	    data.addColumn('number', 'Testing');
 
             var i = 0;
             that.log_collection.fetch({
@@ -74,9 +74,7 @@ app.ResultView = Backbone.View.extend({
                     that.log_collection.each(function(log) {
                         if (log.get('train')) {
                             var train_log = log.get('train');
-//                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
-                            data.addRow([i, 0.5, i*0.4]);
-//                            data.addRow([i, 0.5, 0.4]);
+                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
                             i++;
                         }
                     }, that);
@@ -89,11 +87,12 @@ app.ResultView = Backbone.View.extend({
       		          width: 600,
       		          height: 500
       		        };
-                    var chart = new google.visualization.LineChart(document.getElementById('result_chart'));
-                    chart.draw(data, options);
 
-//                  var chart = new google.charts.Line(document.getElementById('result_chart'));
-//                  chart.draw(data, google.charts.Line.convertOptions(options));
+//                var chart = new google.visualization.LineChart(document.getElementById('result_chart'));
+//                chart.draw(data, options);
+
+                  var chart = new google.charts.Line(document.getElementById('result_chart'));
+                  chart.draw(data, google.charts.Line.convertOptions(options));
                 }
             });
         }

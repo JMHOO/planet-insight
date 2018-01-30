@@ -46,7 +46,7 @@ def optimize(name, space, model_name, epochs=5, max_jobs=99):
             v = hparams[k]
             print('%s = %5g' % (k, v)) # DEBUG
         job_name = '%s-%03i' % (name, i_job)
-        new_model_name = '%s-hypr-%03i' % (model_name, i_job)
+        new_model_name = '%s-%s-hypr-%03i' % (model_name, name, i_job)
         create_hyper_model(model_name, hparams, new_model_name)
         job_ops = {
             'instance_name': job_name,
@@ -63,6 +63,7 @@ def optimize(name, space, model_name, epochs=5, max_jobs=99):
 #        prev_loss.append(loss)
         if i_job >= max_jobs: # max_jobs-1:
             break
+        time.sleep(1)
 
 #    best_hparams, best_loss = calc_best_hyperparams(prev_hparams, prev_loss)
 #    keys = list(best_hparams.keys())

@@ -14,7 +14,9 @@ var app = app || {};
             epochs: '',
             job_status: '',
             created: '',
-            status_color: ''
+            status_color: '',
+            best_epoch: '',
+            best_val_loss: ''
         },
 
         save: function() {

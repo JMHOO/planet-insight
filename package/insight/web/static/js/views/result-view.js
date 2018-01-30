@@ -80,12 +80,16 @@ app.ResultView = Backbone.View.extend({
                     }, that);
 
       		        var options = {
-      		          chart: {
-      		            title: 'Loss vs epoch',
+//      		          chart: {
+//      		            title: 'Loss vs epoch',
 //      	        	    subtitle: 'in millions of dollars (USD)'
-      		          },
-      		          width: 600,
-      		          height: 500
+//      		          },
+      		            title: 'Loss vs epoch',
+      		            width: 600,
+      		            height: 500,
+                        vAxis: {
+                            scaleType: 'log'
+                        }
       		        };
 
 //                var chart = new google.visualization.LineChart(document.getElementById('result_chart'));

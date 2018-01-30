@@ -87,7 +87,7 @@ app.ResultView = Backbone.View.extend({
       		            title: 'Loss vs epoch',
       		            width: 600,
       		            height: 500,
-                        vAxis: { logscale: true }
+                        vAxis: { scaleType: 'log' }
       		        };
 
 //                var chart = new google.visualization.LineChart(document.getElementById('result_chart'));

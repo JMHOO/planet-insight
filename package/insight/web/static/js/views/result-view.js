@@ -46,12 +46,6 @@ app.ResultView = Backbone.View.extend({
                     '<br/>' + 'Dataset: ' + this.model.get('dataset_name') +
                     '<br/>' + 'Status: ' + this.model.get('job_status')
                 )));
-        //.append($('<p/>').text('Dataset: ' + this.model.get('dataset_name')))
-        //.append($('<p/>').text('Status: ' + this.model.get('job_status'))));
-        var result_logs = $('#result-logs').html('');
-        //var result_logs_group = $('<ul/>').addClass('list-group');
-        var result_logs_group = $('<pre/>'); //.addClass('list-group');
-        result_logs.append(result_logs_group);
 
         this.log_collection = new app.TaskLogs(this.model.get('instance_name'));
 
@@ -70,17 +64,13 @@ app.ResultView = Backbone.View.extend({
         var that = this;
         this.log_collection.fetch({
             success: function() {
-                var output = '';
                 that.log_collection.each(function(log) {
                     if (log.get('train')) {
                         var train_log = log.get('train');
                         data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
-                    } else if (log.get('info')) {
-                        output += log.get('info');
                     }
                     output += '\n';
                 }, that);
-                result_logs_group.append(output);
             }
         });
 

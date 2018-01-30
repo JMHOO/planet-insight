@@ -68,12 +68,15 @@ app.ResultView = Backbone.View.extend({
       	    data.addColumn('number', 'Training Loss');
       	    data.addColumn('number', 'Testing Loss');
 
+            var i = 0;
             that.log_collection.fetch({
                 success: function() {
                     that.log_collection.each(function(log) {
                         if (log.get('train')) {
                             var train_log = log.get('train');
-                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
+//                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
+                            data.addRow([i, 0.5, 0.4]);
+                            i++;
                         }
                     }, that);
                 }
@@ -84,8 +87,8 @@ app.ResultView = Backbone.View.extend({
       		    title: 'Loss vs epoch',
 //      		    subtitle: 'in millions of dollars (USD)'
       		  },
-      		  width: 800,
-      		  height: 600
+      		  width: 600,
+      		  height: 500
       		};
             var chart = new google.visualization.LineChart(document.getElementById('result_chart'));
             chart.draw(data, options);

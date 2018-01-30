@@ -255,7 +255,7 @@ def list_results():
         instance_name = item['instance_name']
         db_log = DBInstanceLog(instance_name)
         logs = db_log.fetch()
-        for log in logs:
+#        for log in logs:
             
         ## HERE
         print(instance_name)

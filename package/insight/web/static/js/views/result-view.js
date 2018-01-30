@@ -128,7 +128,7 @@ app.ResultView = Backbone.View.extend({
                        'height':300};
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.PieChart(document.getElementById('result_chart'));
         chart.draw(data, options);
         }
 

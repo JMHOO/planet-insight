@@ -246,10 +246,19 @@ def list_results():
     jobs = []
     all_jobs = aws.tasks.list()
     for item in all_jobs:
+        ## fix created timestamp
         timestamp = datetime.fromtimestamp(float(item['created']))
         timestamp = timestamp.strftime('%Y-%m-%d %H:%M')
         item['created'] = timestamp
         jobs.append(item)
+        ## add job log
+        instance_name = item['instance_name']
+        db_log = DBInstanceLog(instance_name)
+        logs = db_log.fetch()
+        ## HERE
+        print(instance_name)
+        print('logs = ')
+        print(logs)
     return jobs
 
 '''

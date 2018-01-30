@@ -238,9 +238,11 @@
         <td>
         </td>
         <td>
-            <div class="<%= status_color%>">
-            <%= model_name %>
-            </div>
+            <h5>
+                <a class="viewresult badge badge-primary" href="javascript:void(0)">
+                    <%= instance_name %>
+                </a>
+            </h5>
         </td>
         <td>
             <%= best_loss_str %>
@@ -252,7 +254,9 @@
             <%= best_epoch_str %>
         </td>
         <td>
+            <div class="<%= status_color%>">
             <%= created %>
+            </div>
         </td>
     </script>
 

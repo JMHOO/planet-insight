@@ -260,9 +260,8 @@ def list_results():
         for log in logs:
             ## HERE
             print(type(log))
-            dlogs = json.load(log)
-            print(type(dlogs))
-#            print(dlogs)
+#            dlogs = json.load(log)
+#            print(type(dlogs))
     return jobs
 
 '''

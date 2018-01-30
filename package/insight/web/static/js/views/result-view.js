@@ -75,7 +75,7 @@ app.ResultView = Backbone.View.extend({
                         if (log.get('train')) {
                             var train_log = log.get('train');
 //                            data.addRow([train_log.epoch, train_log.loss, train_log.val_loss]);
-                            data.addRow([i, 0.5, 0.4]);
+                            data.addRow(i, 0.5, 0.4);
                             i++;
                         }
                     }, that);

@@ -407,11 +407,7 @@ def upload_weights():
 @app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["GET"])
 @checkAWS
 def get_dataset(dataset_name):
-#    return {"file": dataset_name}
-    dataset_name = 'dataset/%s' % dataset_name
     url = aws.datasets.presigned_url(dataset_name)
-    print('get_dataset') # DEBUG
-    print(url)
     return redirect(url)
 
 

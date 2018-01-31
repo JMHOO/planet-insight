@@ -404,25 +404,33 @@ def upload_weights():
     return _upload_to_s3(request.files, aws.results)
 
 
-@app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["GET", "DELETE"])
+@app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["GET"])
+@checkAWS
+def get_dataset(dataset_name):
+#    return {"file": dataset_name}
+    url = aws.results.presigned_url(dataset_name)
+    return redirect(url)
+
+
+@app.route('/insight/api/v1.0/datasets/<dataset_name>', methods=["DELETE"])
 @checkAWS
 def delete_dataset(dataset_name):
-    if request.method == "DELETE":
-        aws.datasets.delete(dataset_name)
-        return {"result": True}
-    elif request.method == "GET":
-        return {"file": dataset_name}
+    aws.datasets.delete(dataset_name)
+    return {"result": True}
 
 
-@app.route('/insight/api/v1.0/weights/<weights_file>', methods=["GET", "DELETE"])
+@app.route('/insight/api/v1.0/weights/<weights_file>', methods=["GET"])
+@checkAWS
+def get_weights_file(weights_file):
+    url = aws.results.presigned_url(weights_file)
+    return redirect(url)
+
+
+@app.route('/insight/api/v1.0/weights/<weights_file>', methods=["DELETE"])
 @checkAWS
 def delete_weights_file(weights_file):
-    if request.method == "DELETE":
-        aws.results.delete(weights_file)
-        return {"result": True}
-    elif request.method == "GET":
-        url = aws.results.presigned_url(weights_file)
-        return redirect(url)
+    aws.results.delete(weights_file)
+    return {"result": True}
 
 
 '''

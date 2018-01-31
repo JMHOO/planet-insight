@@ -409,6 +409,8 @@ def upload_weights():
 def get_dataset(dataset_name):
 #    return {"file": dataset_name}
     url = aws.datasets.presigned_url(dataset_name)
+    print('get_dataset') # DEBUG
+    print(url)
     return redirect(url)
 
 

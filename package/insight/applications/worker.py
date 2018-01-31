@@ -116,13 +116,12 @@ def start_pipeline():
         x_test = x_test.transpose(0, 2, 3, 1)
 
     # training
-    #model_file = './' + args.instance_name + '-{epoch:02d}.h5df'
-    model_file = './' + args.instance_name + '.h5df'
+    model_file = args.instance_name + '.h5df'
 
     cbMonitor = RemoteMonitor(root=monitor_host, path=monitor_path, field='data', headers=None)
     cbEarlyStop = EarlyStopping(min_delta=0.001, patience=3)
     cbModelsCheckpoint = ModelCheckpoint(
-        model_file,
+        './' + model_file,
         monitor='val_loss',
         verbose=1,
         save_best_only=True,
@@ -145,7 +144,7 @@ def start_pipeline():
     # upload models
     remote_log.append('info', 'uploading trained model to s3')
     s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
-    s3_models.upload(args.instance_name, model_file)
+    s3_models.upload(model_file, model_file)
 
     
     job_instance.update_status(args.instance_name, from_='training', to_='completed')

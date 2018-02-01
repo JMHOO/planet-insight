@@ -39,6 +39,21 @@ def base_root():
     return app.send_static_file('base.html')
 
 
+@app.route('/slides')
+def slides():
+    return redirect("https://docs.google.com/presentation/d/1GN00stPnvaWol_g2n2b39-NJRXoTFTdEcS82-fFpL14/edit?usp=sharing", code=302)
+
+
+@app.route('/github')
+def slides():
+    return redirect("https://github.com/rreece/hypr-ai", code=302)
+
+
+@app.route('/ryan')
+def slides():
+    return redirect("http://rreece.github.io/", code=302)
+
+
 @app.route('/js/<path:path>')
 def send_js(path):
     return send_from_directory('static/js', path)

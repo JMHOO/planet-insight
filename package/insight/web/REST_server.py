@@ -39,9 +39,9 @@ def base_root():
     return app.send_static_file('base.html')
 
 
-@app.route('/about')
+@app.route('/aboutme')
 def about():
-    return app.send_static_file('about.html')
+    return app.send_static_file('https://about.me/ryan.reece')
 
 
 @app.route('/slides')
@@ -54,7 +54,7 @@ def github():
     return redirect("https://github.com/rreece/hypr-ai", code=302)
 
 
-@app.route('/ryan')
+@app.route('/rreece')
 def ryan():
     return redirect("http://rreece.github.io/", code=302)
 

@@ -49,6 +49,11 @@ def slides():
     return redirect("https://docs.google.com/presentation/d/1GN00stPnvaWol_g2n2b39-NJRXoTFTdEcS82-fFpL14/edit?usp=sharing", code=302)
 
 
+@app.route('/slidespdf')
+def slidespdf():
+    return app.send_static_file("/media/HYPR-AI-Ryan-Reece.pdf")
+
+
 @app.route('/github')
 def github():
     return redirect("https://github.com/rreece/hypr-ai", code=302)

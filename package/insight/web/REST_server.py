@@ -40,8 +40,8 @@ def base_root():
 
 
 @app.route('/aboutme')
-def about():
-    return app.send_static_file('https://about.me/ryan.reece')
+def aboutme():
+    return redirect("https://about.me/ryan.reece", code=302)
 
 
 @app.route('/slides')

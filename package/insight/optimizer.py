@@ -28,7 +28,7 @@ from insight.builder import Convert
 
 
 #______________________________________________________________________________
-def optimize(name, space, model_name, epochs=5, max_jobs=99):
+def optimize(name, space, model_name, dataset_name, epochs=5, max_jobs=99):
     assert isinstance(name, str)
     assert isinstance(space, dict)
     assert isinstance(model_name, str)
@@ -50,7 +50,7 @@ def optimize(name, space, model_name, epochs=5, max_jobs=99):
         create_hyper_model(model_name, hparams, new_model_name)
         job_ops = {
             'instance_name': job_name,
-            'dataset_name': 'dataset/cifar-10',
+            'dataset_name': dataset_name,
             'epochs': str(epochs),
             'pretrain': 'NONE',
             'model_name': new_model_name,

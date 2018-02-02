@@ -51,7 +51,7 @@ def slides():
 
 @app.route('/slidespdf')
 def slidespdf():
-    return app.send_static_file("static/media/HYPR-AI-Ryan-Reece.pdf")
+    return app.send_static_file("media/HYPR-AI-Ryan-Reece.pdf")
 
 
 @app.route('/github')

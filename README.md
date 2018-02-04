@@ -29,74 +29,76 @@ This package provides a solution of automated training system for deep learning.
 
 Two kinds of services need to be deployed:
 
-A.  Restful service (ONLY need one)
-B.  Training instances (Not limited, the more the better)
+A.  Restful service (only need one)
+B.  Training instances (not limited, the more the better)
 
 
 ### Prerequisite
 
 #### Docker
 
-Both restful service and training instance require Docker:
-
-Here is the tutorial for installing Docker on Ubuntu: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
-
-#### GPU ready(training instance only)
-
-The training instance require:Nvidia driver, CUDA8.0 and nvidia-docker
-
-Example bash script for GPU ready(Ubuntu):
-
-``` bash
-# install nvidia driver and cuda
-sudo add-apt-repository ppa:graphics-drivers/ppa -y
-sudo apt update
-sudo apt install nvidia-375 -y
-wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
-sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
-sudo apt-get update
-sudo apt-get install cuda -y
-# Install nvidia-docker
-wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
-sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
-# Test nvidia-docker
-sudo nvidia-docker run --rm nvidia/cuda nvidia-smi
-```
 
 ### A. Restful service
+
 It's highly recommend to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine (make sure that machine can be accessed through internet otherwise the logs come from training instance will be lost).
 
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
-1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy restful service
+1.  Setup: 
+    The training instance require:Nvidia driver, CUDA8.0 and nvidia-docker.
+    Both restful service and training instance require Docker:
+    Here is the tutorial for installing Docker on Ubuntu: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
 
-2). Change the `Monitor Service` and `Docker Image of Worker` in `hypr-ai/settings.py`
+    Example bash script for GPU ready (Ubuntu):
 
-```Python
-DOCKER = {
-    'IMAGE': 'insight/tworker',
-    'VERSION': 'latest'
-}
-MONITOR = {
-    'HOST': 'http://[YOUR IP or DOMAIN where running restful service]',
-    'PATH': '/monitor'
-}
-```
+    ``` bash
+    # install nvidia driver and cuda
+    sudo add-apt-repository ppa:graphics-drivers/ppa -y
+    sudo apt update
+    sudo apt install nvidia-375 -y
+    wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
+    sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
+    sudo apt-get update
+    sudo apt-get install cuda -y
+    # Install nvidia-docker
+    wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
+    sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
+    # Test nvidia-docker
+    sudo nvidia-docker run --rm nvidia/cuda nvidia-smi
+    ```
 
-3). Build the `service` docker image
+2.  Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy restful service
 
-``` docker
-    docker build -t insight/kservice -f Dockerfile.service .
-``` 
+3.  Change the `Monitor Service` and `Docker Image of Worker` in `hypr-ai/settings.py`:
 
-4). Start the service
+    ```Python
+    DOCKER = {
+        'IMAGE': 'insight/tworker',
+        'VERSION': 'latest'
+    }
+    MONITOR = {
+        'HOST': 'http://[YOUR IP or DOMAIN where running restful service]',
+        'PATH': '/monitor'
+    }
+    ```
 
-```bash
-    ./start_restful_docker_service.sh
-```
+4.  Build the `service` docker image
+
+    ``` docker
+        docker build -t insight/kservice -f Dockerfile.service .
+    ``` 
+
+5.  Start the service
+
+    ```bash
+        ./start_restful_docker_service.sh
+    ```
 
 ### B. Training instance
-The training instance can be depolyed to anywhere as long as the machine contains nvidia GPU and running Linux. It's NOT necessary to keep the training instance running all the time. You can add tasks to system first, then start one or more training instances to run these tasks.
+
+The training instance can be depolyed to anywhere as long as the machine contains nvidia GPU and running Linux.
+It is not necessary to keep the training instance running all the time.
+You can add tasks to system first, then start one or more training instances to run these tasks.
 
 1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy training instance
 

@@ -7,51 +7,14 @@ This package provides a solution of automated training system for deep learning.
 
 ### Features:
 
--   Use predefined file(JSON) to define deep learning network architeture
--   Support modular model to reduce the complicity of JSON on describing similar models
--   Pretrained model can be loaded into different network architecture
--   Training instances(dockerized container) can be deployed to anywhere
+-   Use predefined JSON file to define deep learning network architetures
+-   Support modular models to reduce the complexity of building similar models
+-   Pretrained model can be loaded into extended network architectures
+-   Training instances (dockerized container) can be deployed to anywhere
+-   In a "hypr task", the user specifies hyperparameters to explore, creating multiple trainings
 
 
 ![screen](media/main_screenshot.png)
-
-
-## Structure of package
-
-    Dockerfile.service      Docker file for Restful service
-    Dockerfile.worker       Docker file for Training instance
-    cli.sh                  bash script redirect to cli.py
-    - package               Python package main folder
-        - insight
-            - __init__.py
-            - agent.py
-            - applications
-                - AgentService.py       Agent service entrance
-                - RESTservice.py        Restfull service entrace
-                - cli.py                A command-line based client
-                - settings.py           general settings
-                - worker.py             Worker entity run inside docker
-            - builder.py                Model builder
-            - optimizer.py              NULL
-            - storage.py                Manipulate AWS DynamoDB and S3
-            - web                       All Web related code
-                REST_server.py          Back-end, Restful service
-                - static                Front-end
-                    css
-                    fonts
-                    images
-                    index.html          Main html
-                    js
-        setup.py
-        - test
-            service_test.py
-            unit_test.py
-    run_agentservice.sh               Shortcut to start agent service
-    run_restservice.sh                Shortcut to start restful service
-    run_worker.sh                     Docker.worker entry point
-    settings.py                       Setting file refer by docker container
-    start_restful_docker_service.sh   bash script of starting docker container to run restful service
-    start_worker_docker_service.sh    bash script of starting docker container to run worker service
 
 
 ## Requirements  
@@ -176,6 +139,44 @@ AWS regions:
 | US East (N.Virginia)  | us-east-1  |
 | US West (N.California) |	us-west-1 |
 | US West (Oregon) | us-west-2 |
+
+
+## Structure of package
+
+    Dockerfile.service      Docker file for Restful service
+    Dockerfile.worker       Docker file for Training instance
+    cli.sh                  bash script redirect to cli.py
+    - package               Python package main folder
+        - insight
+            - __init__.py
+            - agent.py
+            - applications
+                - AgentService.py       Agent service entrance
+                - RESTservice.py        Restfull service entrace
+                - cli.py                A command-line based client
+                - settings.py           general settings
+                - worker.py             Worker entity run inside docker
+            - builder.py                Model builder
+            - optimizer.py              Generator for hyperparameter optimization
+            - storage.py                Manipulate AWS DynamoDB and S3
+            - web                       All Web related code
+                REST_server.py          Back-end, Restful service
+                - static                Front-end
+                    css
+                    fonts
+                    images
+                    index.html          Main html
+                    js
+        setup.py
+        - test
+            service_test.py
+            unit_test.py
+    run_agentservice.sh               Shortcut to start agent service
+    run_restservice.sh                Shortcut to start restful service
+    run_worker.sh                     Docker.worker entry point
+    settings.py                       Setting file refer by docker container
+    start_restful_docker_service.sh   bash script of starting docker container to run restful service
+    start_worker_docker_service.sh    bash script of starting docker container to run worker service
 
 
 ## Authors

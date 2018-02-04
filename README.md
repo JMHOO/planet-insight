@@ -29,13 +29,8 @@ This package provides a solution of automated training system for deep learning.
 
 Two kinds of services need to be deployed:
 
-A.  Restful service (only need one)
+A.  Restful service (only need one)             
 B.  Training instances (not limited, the more the better)
-
-
-### Prerequisite
-
-#### Docker
 
 
 ### A. Restful service
@@ -96,33 +91,35 @@ The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
 ### B. Training instance
 
-The training instance can be depolyed to anywhere as long as the machine contains nvidia GPU and running Linux.
+The training instance can be depolyed to anywhere as long as the machine contains nvidia GPU, running Linux, and docker.
 It is not necessary to keep the training instance running all the time.
 You can add tasks to system first, then start one or more training instances to run these tasks.
 
-1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy training instance
+1.  Clone hypr-ai to where you want to deploy training instance:
 
-2). Build the `worker` docker image
+    ```bash
+        git clone https://github.com/rreece/hypr-ai.git
+    ```
 
-``` docker
-    docker build -t insight/tworker -f Dockerfile.worker .
-```
+2.  Build the `worker` docker image:
 
-3). Export Environment variable in training instance(temporary)
+    ``` docker
+        docker build -t insight/tworker -f Dockerfile.worker .
+    ```
 
-Add following environment variables with your AWS keys to ~/.bashrc
+3.  Export Environment variable in training instance (or add to your `~/.bashrc`:
 
-``` bash
-export AWS_ACCESS_KEY_ID={ACCESS_KEY}
-export AWS_SECRET_ACCESS_KEY={SECRET_KEY}
-export AWS_DEFAULT_REGION={REGION}
-```
+    ``` bash
+    export AWS_ACCESS_KEY_ID={ACCESS_KEY}
+    export AWS_SECRET_ACCESS_KEY={SECRET_KEY}
+    export AWS_DEFAULT_REGION={REGION}
+    ```
 
-4). Start `Agent` service on training instance(each time when you start the training instance)
+4.  Start the Agent service on the training instance:
 
-``` bash
-nvidia-docker run --rm -it --name insight --hostname {YOUR INSTANCE NAME} -v /var/run/docker.sock:/var/run/docker.sock -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} insight/tworker
-```
+    ```bash
+        ./start_worker_docker_service.sh
+    ```
 
 ### C. Final step: AWS credentials
 

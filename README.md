@@ -29,8 +29,8 @@ This package provides a solution of automated training system for deep learning.
 
 Two kinds of services need to be deployed:
 
-A. Restful service (ONLY need one)
-B. Training instances (Not limited, the more the better)
+A.  Restful service (ONLY need one)
+B.  Training instances (Not limited, the more the better)
 
 
 ### Prerequisite

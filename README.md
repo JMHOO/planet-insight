@@ -40,29 +40,15 @@ It's highly recommend to run restful service on AWS which will have short latenc
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
 1.  Setup: 
-    The training instance require:Nvidia driver, CUDA8.0 and nvidia-docker.
     Both restful service and training instance require Docker:
-    Here is the tutorial for installing Docker on Ubuntu: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
+    Here is the tutorial for installing Docker on Ubuntu:    
+    <https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/>
 
-    Example bash script for GPU ready (Ubuntu):
+2.  Clone hypr-ai to where you want to deploy the restful service:
 
-    ``` bash
-    # install nvidia driver and cuda
-    sudo add-apt-repository ppa:graphics-drivers/ppa -y
-    sudo apt update
-    sudo apt install nvidia-375 -y
-    wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
-    sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
-    sudo apt-get update
-    sudo apt-get install cuda -y
-    # Install nvidia-docker
-    wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
-    sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
-    # Test nvidia-docker
-    sudo nvidia-docker run --rm nvidia/cuda nvidia-smi
+    ```bash
+        git clone https://github.com/rreece/hypr-ai.git
     ```
-
-2.  Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy restful service
 
 3.  Change the `Monitor Service` and `Docker Image of Worker` in `hypr-ai/settings.py`:
 
@@ -91,23 +77,46 @@ The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
 ### B. Training instance
 
-The training instance can be depolyed to anywhere as long as the machine contains nvidia GPU, running Linux, and docker.
+The training instance requires docker, same as the machine with the RESTful service, above. 
+The training instance can be depolyed to anywhere as long it has an Nvidia GPU, running Linux, and docker.
 It is not necessary to keep the training instance running all the time.
 You can add tasks to system first, then start one or more training instances to run these tasks.
 
-1.  Clone hypr-ai to where you want to deploy training instance:
+1.  Setup: 
+    The training instance requires docker, same as the : Nvidia driver, CUDA8.0 and nvidia-docker.
+    The training instance require: Nvidia driver, CUDA8.0 and nvidia-docker.
+
+    Example bash script for GPU ready (Ubuntu):
+
+    ``` bash
+    # install nvidia driver and cuda
+    sudo add-apt-repository ppa:graphics-drivers/ppa -y
+    sudo apt update
+    sudo apt install nvidia-375 -y
+    wget https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
+    sudo dpkg -i cuda-repo-ubuntu1604-8-0-local-ga2_8.0.61-1_amd64-deb
+    sudo apt-get update
+    sudo apt-get install cuda -y
+    # Install nvidia-docker
+    wget -P /tmp https://github.com/NVIDIA/nvidia-docker/releases/download/v1.0.1/nvidia-docker_1.0.1-1_amd64.deb
+    sudo dpkg -i /tmp/nvidia-docker*.deb && rm /tmp/nvidia-docker*.deb
+    # Test nvidia-docker
+    sudo nvidia-docker run --rm nvidia/cuda nvidia-smi
+    ```
+
+2.  Clone hypr-ai to where you want to deploy the training instance:
 
     ```bash
         git clone https://github.com/rreece/hypr-ai.git
     ```
 
-2.  Build the `worker` docker image:
+3.  Build the `worker` docker image:
 
     ``` docker
         docker build -t insight/tworker -f Dockerfile.worker .
     ```
 
-3.  Export Environment variable in training instance (or add to your `~/.bashrc`:
+4.  Export Environment variable in training instance (or add to your `~/.bashrc`:
 
     ``` bash
     export AWS_ACCESS_KEY_ID={ACCESS_KEY}
@@ -115,7 +124,7 @@ You can add tasks to system first, then start one or more training instances to 
     export AWS_DEFAULT_REGION={REGION}
     ```
 
-4.  Start the Agent service on the training instance:
+5.  Start the Agent service on the training instance:
 
     ```bash
         ./start_worker_docker_service.sh

@@ -2,14 +2,16 @@
 
 A cloud-based deep learning and hyperparameter optimization platform.
 
-This package provides a solution of automated training system for Deep Learning. It contains a restful service, dockerized training worker and an example WebUI build upon restful service.
+This package provides a solution of automated training system for deep learning. It contains a restful service, dockerized training worker and an example WebUI build upon restful service.
+
 
 ### Features:
 
-  * Use predefined file(JSON) to define Deep Learning network architeture
-  * Support modular model to reduce the complicity of JSON on describing similar models
-  * Pretrained model can be loaded into different network architecture
-  * Training instances(dockerized container) can be deployed to anywhere
+-   Use predefined file(JSON) to define deep learning network architeture
+-   Support modular model to reduce the complicity of JSON on describing similar models
+-   Pretrained model can be loaded into different network architecture
+-   Training instances(dockerized container) can be deployed to anywhere
+
 
 ![screen](media/main_screenshot.png)
 
@@ -49,31 +51,39 @@ This package provides a solution of automated training system for Deep Learning.
     run_worker.sh                     Docker.worker entry point
     settings.py                       Setting file refer by docker container
     start_restful_docker_service.sh   bash script of starting docker container to run restful service
+    start_worker_docker_service.sh    bash script of starting docker container to run worker service
+
 
 ## Requirements  
 
-- Docker 17.03 or above
-- AWS Access key with fullaccess of S3 and DynamoDB
-- Nvidia GPU (training instance)
+-   Python 3
+-   Docker 17.03 or above
+-   AWS Access key with fullaccess of S3 and DynamoDB
+-   Nvidia GPU (training instance)
 
 
 ## How to deploy
+
 Two kinds of services need to be deployed:
 
-    A. Restful service (ONLY need one)
-    B. Training instances (Not limited, the more the better)
+A. Restful service (ONLY need one)
+B. Training instances (Not limited, the more the better)
+
 
 ### Prerequisite
 
 #### Docker
+
 Both restful service and training instance require Docker:
 
 Here is the tutorial for installing Docker on Ubuntu: https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/
 
 #### GPU ready(training instance only)
+
 The training instance require:Nvidia driver, CUDA8.0 and nvidia-docker
 
 Example bash script for GPU ready(Ubuntu):
+
 ``` bash
 # install nvidia driver and cuda
 sudo add-apt-repository ppa:graphics-drivers/ppa -y
@@ -98,6 +108,7 @@ The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy restful service
 
 2). Change the `Monitor Service` and `Docker Image of Worker` in `hypr-ai/settings.py`
+
 ```Python
 DOCKER = {
     'IMAGE': 'insight/tworker',
@@ -110,11 +121,13 @@ MONITOR = {
 ```
 
 3). Build the `service` docker image
+
 ``` docker
     docker build -t insight/kservice -f Dockerfile.service .
 ``` 
 
 4). Start the service
+
 ```bash
     ./start_restful_docker_service.sh
 ```
@@ -125,6 +138,7 @@ The training instance can be depolyed to anywhere as long as the machine contain
 1). Clone `https://github.com/rreece/hypr-ai.git` to where you want to deploy training instance
 
 2). Build the `worker` docker image
+
 ``` docker
     docker build -t insight/tworker -f Dockerfile.worker .
 ```
@@ -132,6 +146,7 @@ The training instance can be depolyed to anywhere as long as the machine contain
 3). Export Environment variable in training instance(temporary)
 
 Add following environment variables with your AWS keys to ~/.bashrc
+
 ``` bash
 export AWS_ACCESS_KEY_ID={ACCESS_KEY}
 export AWS_SECRET_ACCESS_KEY={SECRET_KEY}
@@ -139,11 +154,13 @@ export AWS_DEFAULT_REGION={REGION}
 ```
 
 4). Start `Agent` service on training instance(each time when you start the training instance)
+
 ``` bash
 nvidia-docker run --rm -it --name insight --hostname {YOUR INSTANCE NAME} -v /var/run/docker.sock:/var/run/docker.sock -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} insight/tworker
 ```
 
-### C. Final step
+### C. Final step: AWS credentials
+
 Access the system through:
 
     http://[YOUR IP or DOMAIN where running restful service]

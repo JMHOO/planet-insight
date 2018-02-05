@@ -47,7 +47,7 @@ The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 2.  Clone hypr-ai to where you want to deploy the restful service:
 
     ```bash
-        git clone https://github.com/rreece/hypr-ai.git
+    git clone https://github.com/rreece/hypr-ai.git
     ```
 
 3.  Change the `Monitor Service` and `Docker Image of Worker` in `hypr-ai/settings.py`:
@@ -66,13 +66,13 @@ The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 4.  Build the `service` docker image
 
     ``` docker
-        docker build -t insight/kservice -f Dockerfile.service .
+    docker build -t insight/kservice -f Dockerfile.service .
     ``` 
 
 5.  Start the service
 
     ```bash
-        ./start_restful_docker_service.sh
+    ./start_restful_docker_service.sh
     ```
 
 ### B. Training instance
@@ -107,13 +107,13 @@ You can add tasks to system first, then start one or more training instances to 
 2.  Clone hypr-ai to where you want to deploy the training instance:
 
     ```bash
-        git clone https://github.com/rreece/hypr-ai.git
+    git clone https://github.com/rreece/hypr-ai.git
     ```
 
 3.  Build the `worker` docker image:
 
     ``` docker
-        docker build -t insight/tworker -f Dockerfile.worker .
+    docker build -t insight/tworker -f Dockerfile.worker .
     ```
 
 4.  Export Environment variable in training instance (or add to your `~/.bashrc`:
@@ -127,7 +127,7 @@ You can add tasks to system first, then start one or more training instances to 
 5.  Start the Agent service on the training instance:
 
     ```bash
-        ./start_worker_docker_service.sh
+    ./start_worker_docker_service.sh
     ```
 
 ### C. Final step: AWS credentials

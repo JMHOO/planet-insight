@@ -2,7 +2,7 @@
 
 A cloud-based deep learning and hyperparameter optimization platform.
 
-It contains a restful service, dockerized training worker, and a WebUI build upon restful service.
+It contains a RESTful service, dockerized training worker, and a WebUI build upon RESTful service.
 
 
 ### Features:
@@ -29,22 +29,22 @@ It contains a restful service, dockerized training worker, and a WebUI build upo
 
 Two kinds of services need to be deployed:
 
-A.  Restful service (only need one)             
+A.  RESTful service (only need one)             
 B.  Training instances (not limited, the more the better)
 
 
-### A. Restful service
+### A. RESTful service
 
-It is highly recommended to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine (make sure that machine can be accessed through internet otherwise the logs come from training instance will be lost).
+It is highly recommended to run RESTful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine (make sure that machine can be accessed through internet otherwise the logs come from training instance will be lost).
 
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
 1.  Setup: 
-    Both restful service and training instance require Docker:
+    Both the RESTful service and the training instance require Docker:
     Here is the tutorial for installing Docker on Ubuntu:    
     <https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/>
 
-2.  Clone hypr-ai to where you want to deploy the restful service:
+2.  Clone hypr-ai to where you want to deploy the RESTful service:
 
     ```bash
     git clone https://github.com/rreece/hypr-ai.git
@@ -58,7 +58,7 @@ The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
         'VERSION': 'latest'
     }
     MONITOR = {
-        'HOST': 'http://[YOUR IP or DOMAIN where running restful service]',
+        'HOST': 'http://[YOUR IP or DOMAIN where running RESTful service]',
         'PATH': '/monitor'
     }
     ```
@@ -134,7 +134,7 @@ You can add tasks to system first, then start one or more training instances to 
 
 Access the system through:
 
-    http://[YOUR IP or DOMAIN where running restful service]
+    http://[YOUR IP or DOMAIN where running RESTful service]
 
 Set the AWS credentials by clicking the `setting` on the left:
 ![aws](media/aws_setting.png)
@@ -151,7 +151,7 @@ AWS regions:
 
 ## Structure of package
 
-    Dockerfile.service      Docker file for Restful service
+    Dockerfile.service      Docker file for RESTful service
     Dockerfile.worker       Docker file for Training instance
     cli.sh                  bash script redirect to cli.py
     - package               Python package main folder
@@ -160,7 +160,7 @@ AWS regions:
             - agent.py
             - applications
                 - AgentService.py       Agent service entrance
-                - RESTservice.py        Restfull service entrace
+                - RESTservice.py        RESTfull service entrace
                 - cli.py                A command-line based client
                 - settings.py           general settings
                 - worker.py             Worker entity run inside docker
@@ -168,7 +168,7 @@ AWS regions:
             - optimizer.py              Generator for hyperparameter optimization
             - storage.py                Manipulate AWS DynamoDB and S3
             - web                       All Web related code
-                REST_server.py          Back-end, Restful service
+                REST_server.py          Back-end, RESTful service
                 - static                Front-end
                     css
                     fonts
@@ -180,10 +180,10 @@ AWS regions:
             service_test.py
             unit_test.py
     run_agentservice.sh               Shortcut to start agent service
-    run_restservice.sh                Shortcut to start restful service
+    run_restservice.sh                Shortcut to start RESTful service
     run_worker.sh                     Docker.worker entry point
     settings.py                       Setting file refer by docker container
-    start_restful_docker_service.sh   bash script of starting docker container to run restful service
+    start_restful_docker_service.sh   bash script of starting docker container to run RESTful service
     start_worker_docker_service.sh    bash script of starting docker container to run worker service
 
 

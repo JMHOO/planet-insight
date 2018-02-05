@@ -2,7 +2,7 @@
 
 A cloud-based deep learning and hyperparameter optimization platform.
 
-It contains a restful service, dockerized training worker and an example WebUI build upon restful service.
+It contains a restful service, dockerized training worker, and a WebUI build upon restful service.
 
 
 ### Features:

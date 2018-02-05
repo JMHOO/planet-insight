@@ -2,7 +2,7 @@
 
 A cloud-based deep learning and hyperparameter optimization platform.
 
-This package provides a solution of automated training system for deep learning. It contains a restful service, dockerized training worker and an example WebUI build upon restful service.
+It contains a restful service, dockerized training worker and an example WebUI build upon restful service.
 
 
 ### Features:
@@ -35,7 +35,7 @@ B.  Training instances (not limited, the more the better)
 
 ### A. Restful service
 
-It's highly recommend to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine (make sure that machine can be accessed through internet otherwise the logs come from training instance will be lost).
+It is highly recommended to run restful service on AWS which will have short latency on accessing DynamoDB and S3, but it still can be deployed to your local machine (make sure that machine can be accessed through internet otherwise the logs come from training instance will be lost).
 
 The recommended EC2 instance is at least: `t2.xlarge` or `m4.xlarge`
 
@@ -191,5 +191,6 @@ AWS regions:
 
 -   Ryan Reece  <ryan.reece@cern.ch>
 -   Jiaming "Jimmy" Hu  <https://github.com/JMHOO/planet-insight>
+
 
 

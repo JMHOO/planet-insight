@@ -101,11 +101,16 @@ def start_pipeline():
     s3_dataset.download(s3_train_file, './{}.tar.gz'.format(train_file))
     s3_dataset.download(s3_test_file, './{}.tar.gz'.format(test_file))
 
+    train_p_file = 'train.p'
+    test_p_file = 'test.p'
+
     # load dataset
     remote_log.append('info', 'loading dataset...')
-    with open(train_file, 'rb') as f:
+    with open(train_p_file, 'rb') as f:
+#        train_frame = pickle.load(f, encoding='bytes')
         train_frame = pickle.load(f)
-    with open(test_file, 'rb') as f:
+    with open(test_p_file, 'rb') as f:
+#        test_frame = pickle.load(f, encoding='bytes')
         test_frame = pickle.load(f)
     
     x_train, y_train = train_frame['data'], train_frame['labels']

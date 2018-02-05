@@ -10,8 +10,8 @@ It contains a RESTful service, dockerized training worker, and a WebUI build upo
 -   Use predefined JSON file to define deep learning network architetures
 -   Support modular models to reduce the complexity of building similar models
 -   Pretrained model can be loaded into extended network architectures
--   Training instances (dockerized container) can be deployed to anywhere
--   In a "hypr task", the user specifies hyperparameters to explore, creating multiple trainings
+-   Training instances (dockerized container) can be deployed anywhere
+-   In a "hypr task", the user specifies hyperparameters to explore, creating multiple trainings (currently using random search)
 
 
 ![screen](media/main_screenshot.png)

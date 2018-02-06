@@ -121,7 +121,7 @@ def start_pipeline():
 #        x_test = x_test.transpose(0, 2, 3, 1)
 
     # training
-    model_file = args.instance_name + '.h5df'
+    model_file = args.instance_name + '.hdf5'
 
     cbMonitor = RemoteMonitor(root=monitor_host, path=monitor_path, field='data', headers=None)
     cbEarlyStop = EarlyStopping(min_delta=0.001, patience=3)

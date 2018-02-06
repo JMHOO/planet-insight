@@ -107,18 +107,16 @@ def start_pipeline():
     # load dataset
     remote_log.append('info', 'loading dataset...')
     with open(train_p_file, 'rb') as f:
-#        train_frame = pickle.load(f, encoding='bytes')
         train_frame = pickle.load(f)
     with open(test_p_file, 'rb') as f:
-#        test_frame = pickle.load(f, encoding='bytes')
         test_frame = pickle.load(f)
     
     x_train, y_train = train_frame['data'], train_frame['labels']
     x_test, y_test = test_frame['data'], test_frame['labels']
 
-#    if K.image_data_format() == 'channels_last':
-#        x_train = x_train.transpose(0, 2, 3, 1)
-#        x_test = x_test.transpose(0, 2, 3, 1)
+    if K.image_data_format() == 'channels_last' and x_train.shape[1] <= 3:
+        x_train = x_train.transpose(0, 2, 3, 1)
+        x_test = x_test.transpose(0, 2, 3, 1)
 
     # training
     model_file = args.instance_name + '.h5df'

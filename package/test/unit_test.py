@@ -11,21 +11,21 @@ from keras.optimizers import *
 
 
 def TestMain():
-    # test_json_build_from_file()
-    # keras_model = test_json_build_from_string()
-    # print(type(keras_model))
-    # print(keras_model.summary())
-    # test_keras_model_build(keras_json)
+    #test_json_build_from_file()
+    #keras_model = test_json_build_from_string()
+    #print(type(keras_model))
+    #print(keras_model.summary())
+    #test_keras_model_build(keras_json)
 
     #test_json_build_from_file()
-    # test_keras_json_from_file()
-    # print(keras_model.summary())
-    # test_dynamodb()
-    test_s3()
-    # test_agent()
-    # test_worker_report()
+    #test_keras_json_from_file()
+    #print(keras_model.summary())
+    test_dynamodb()
+    #test_s3()
+    #test_agent()
+    #test_worker_report()
     #test_save_keras_model()
-    # test_optimizer_serizal()
+    #test_optimizer_serizal()
 
 
 def test_json_build_from_file():
@@ -182,8 +182,10 @@ def test_s3():
 #
 #        s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
 #        s3_dataset.download(new_job['dataset_name'], './{}.tar.gz'.format(new_job['instance_name']))
-    s3 = S3DB('insight-dataset')
-    s3.delete('dataset/cifar-10-test.tar.gz')
+#    s3 = S3DB('insight-dataset')
+#    s3.delete('dataset/cifar-10-test.tar.gz')
+#    s3.delete('dataset/cifar-10-train.tar.gz')
+    pass
 
 def test_agent():
     agent = AgentService()

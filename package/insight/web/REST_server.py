@@ -35,7 +35,7 @@ def root():
 
 
 @app.route('/about')
-def base_root():
+def about_root():
     return app.send_static_file('about.html')
 
 

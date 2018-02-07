@@ -87,7 +87,7 @@ a:focus {
 }
 
 #sidebar ul li a:hover {
-    color: #7386D5;
+    color: #000080;
     background: #fff;
 }
 
@@ -123,22 +123,33 @@ ul ul a {
     background: #000080;
 }
 
-ul.additional {
-    padding: 10px 30px;
+ul.settings {
+    padding: 10px 40px;
 }
 
-ul.additional a {
+ul.settings a {
     text-align: center;
     font-size: 0.9em !important;
     display: block;
     border-radius: 5px;
 }
 
+ul.additional {
+    padding: 10px 40px;
+    text-align: center;
+}
+
+ul.additional a:hover {
+    color: #FFE894;
+}
+
+/*
 a.settings,
 a.settings:hover {
     background: #000080 !important;
     color: #fff !important;
 }
+*/
 
 
 /* ---------------------------------------------------

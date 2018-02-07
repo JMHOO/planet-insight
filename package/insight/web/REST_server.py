@@ -34,6 +34,11 @@ def root():
     return app.send_static_file('index.html')
 
 
+@app.route('/about')
+def base_root():
+    return app.send_static_file('about.html')
+
+
 @app.route('/base')
 def base_root():
     return app.send_static_file('base.html')

@@ -20,8 +20,8 @@ def TestMain():
     #test_json_build_from_file()
     # test_keras_json_from_file()
     # print(keras_model.summary())
-    test_dynamodb()
-    # test_s3()
+    # test_dynamodb()
+    test_s3()
     # test_agent()
     # test_worker_report()
     #test_save_keras_model()
@@ -95,8 +95,8 @@ def test_json_build_from_string():
 
     c = Convert()
     #keras_model = c.parser(example_json)
-    #keras_model = c.parser(cut_json, example_json)
-    keras_model = c.parser(cut_json, example_json, hparams={"conv2/filters":32})
+    keras_model = c.parser(cut_json, example_json)
+    #keras_model = c.parser(cut_json, example_json, hparams={"conv2/filters":32})
     #keras_model = c.parser(optimizer_json, example_json)
     print(keras_model)
 
@@ -175,13 +175,15 @@ def test_s3():
     # s3.create_folder('abc')
     #s3.upload('abc/a.txt', '/Users/Jimmy/Developer/insight/planet-insight/model_rebuild.json')
     #s3.download('abc/a.txt', '/Users/Jimmy/Downloads/model1.json')
-    jobInstances = DBJobInstance()
-    new_job = jobInstances.check_new_job()
-    if new_job:
-        print(new_job['dataset_name'])
-
-        s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
-        s3_dataset.download(new_job['dataset_name'], './{}.tar.gz'.format(new_job['instance_name']))
+#    jobInstances = DBJobInstance()
+#    new_job = jobInstances.check_new_job()
+#    if new_job:
+#        print(new_job['dataset_name'])
+#
+#        s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
+#        s3_dataset.download(new_job['dataset_name'], './{}.tar.gz'.format(new_job['instance_name']))
+    s3 = S3DB('insight-dataset')
+    s3.delete('dataset/cifar-10-test.tar.gz')
 
 def test_agent():
     agent = AgentService()

@@ -2,7 +2,9 @@
 
 A cloud-based deep learning and hyperparameter optimization platform.
 
-It contains a RESTful service, dockerized training worker, and a WebUI build upon that RESTful service.
+HYPR.AI is a cloud-based deep learning and hyperparameter optimization platform.
+It contains a RESTful master service that serves this web-based UI and orchestrates user submissions.
+It also contains a worker service for training deep learning models on cloud-based services like AWS or Paperspace.
 
 
 ### Features:

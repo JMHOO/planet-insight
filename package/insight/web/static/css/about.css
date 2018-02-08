@@ -122,7 +122,7 @@ div#site_header {
     background: #00B2EA;
     font-size: 24px;
     font-weight: bold;
-    color: #CCCCCC;
+    color: #444444;
     /* set same as .block class bellow */
     display:block;
     clear: both;
@@ -135,13 +135,13 @@ div#site_header {
 
 div#site_header a {
     text-decoration: none;
-    color: #CCCCCC;
+    color: #444444;
 }
 
 div#site_footer {
     background: #00B2EA;
     font-size: 16px;
-    color: #CCCCCC;
+    color: #444444;
     /* set same as .block class bellow */
     display:block;
     clear: both;
@@ -218,7 +218,7 @@ h5 {
     font-style: italic;
 }
 h1, h2, h3 {
-    color: #000000;
+    color: #444444;
     font-weight: normal;
 }
 
@@ -387,10 +387,10 @@ div.nav ul li
 div.nav a
 {
     text-decoration: none;
-    color: #000080;
+    color: #444444;
 }
 div.nav a:visited {
-    color: #000080;
+    color: #444444;
 }
 div.nav a:hover {
     text-decoration: underline;

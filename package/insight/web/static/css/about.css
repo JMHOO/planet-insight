@@ -358,7 +358,7 @@ div.nav
     margin: 0;
     border: 0;
     padding: 5px 10px;
-    font-family: Consolas, Monaco, "Andale Mono", monospace;
+    font-family: Georgia, Palatino, serif;
     color: #cccccc;
     background: #00B2EA;
 }
@@ -368,7 +368,7 @@ div.nav ul
     margin: 0;
     border: 0;
     padding: 0;
-    font-size: 14px;
+    font-size: 18px;
     /*font-weight: bold;*/
     list-style-type: square;
 }

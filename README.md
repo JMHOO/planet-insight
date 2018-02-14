@@ -1,8 +1,9 @@
 # HYPR.AI
 
 HYPR.AI is a cloud-based deep learning and hyperparameter optimization platform.
-It contains a RESTful master service that serves this web-based UI and handles user submissions to the API.
-It also contains a worker service for training deep learning models on cloud-based services like AWS or Paperspace.
+It contains a master service that serves this web-based UI and handles user submissions through a RESTful API.
+It also contains a worker service (which can be spawned multiple times) for training deep learning models on
+cloud-based services like AWS or Paperspace.
 
 Ryan's running example is currently at [hypr.umx.io](http://hypr.umx.io/).
 

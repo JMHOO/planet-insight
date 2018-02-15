@@ -48,6 +48,8 @@ add_to_path()
 echo "  Setting up your PYTHONPATH."
 #add_to_python_path ${MY_PROJECT}
 add_to_python_path ${MY_PROJECT}/package
+#add_to_python_path ${MY_PROJECT}/../Spearmint
+#add_to_python_path ${MY_PROJECT}/../simple_spearmint
 echo "  done."
 
 

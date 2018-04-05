@@ -126,20 +126,19 @@ class Convert(object):
                 point_layer = model_parent.get_layer(cut_from)
                 model, sub_compiler = self._join_model(model_parent, point_layer, j)
                 compiler = sub_compiler if sub_compiler else parent_compiler
-                model = self._compile_model(model, compiler)
             else:
                 # merge two json files, then create model from json directly
                 j = self._merge_keras_json(self._inherit_from, j)
                 model, compiler = self._to_keras_json_model(j)
                 model = model_from_json(j)
-                model = self._compile_model(model, compiler)
         else:
             model, compiler = self._to_keras_json_model(j)
             model = model_from_json(model)
             if weights_file is not None:
                 model.load_weights(weights_file, by_name=True)
                 print('Loaded pretrained model: {}'.format(weights_file))
-            model = self._compile_model(model, compiler)
+
+        model = self._compile_model(model, compiler)
         return model
 
     def _join_model(self, model_parent, point_layer, additional_json):
@@ -239,7 +238,7 @@ class Convert(object):
 
         model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
         return model
-        
+
 
 class KerasObject(object):
     CLASS_NAME_TABLE = {

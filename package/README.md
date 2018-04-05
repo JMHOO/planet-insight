@@ -1,4 +1,0 @@
-# planet-insight
-
-## Installation
-The 

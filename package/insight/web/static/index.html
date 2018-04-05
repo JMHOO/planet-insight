@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Planet Insight</title>
+    <title>HYPR.AI</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
@@ -11,41 +11,45 @@
 </head>
 
 <body>
-    <!-- NAV BAR -->
     <div class="flex-column">
 
+        <!-- sidebar/navbar -->
         <nav id="sidebar" role="tablist">
             <div class="sidebar-header">
-                <image src="images/pi-logo.png" />
+                <image src="images/hypr-ai-logo-no-text.png" />
+                <h1>HYPR.AI</h1>
+                <p>Cloud-based AutoML</p>
             </div>
-
             <ul class="list-unstyled components">
-                <p>Automatic Training</p>
-                <li class="active"><a href="#tab-json" data-toggle="tab" role="tab"><i class="fa fa-file-code-o" aria-hidden="true"></i> JSON Models</a></li>
+                <li class="active"><a href="#tab-json" data-toggle="tab" role="tab"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> Models</a></li>
                 <li><a href="#tab-task" data-toggle="tab" role="tab"><i class="fa fa-list" aria-hidden="true"></i> Tasks</a></li>
-                <li><a href="#StorageSubmenu" data-toggle="collapse" aria-expanded="false"><i class="fa fa-cloud" aria-hidden="true"></i> Storage</a></li>
+                <li><a href="#tab-results" data-toggle="tab" role="tab"><i class="fa fa-line-chart" aria-hidden="true"></i> Results</a></li>
+                <li><a href="#StorageSubmenu" data-toggle="collapse" aria-expanded="false"><i class="fa fa-database" aria-hidden="true"></i> Storage</a></li>
                 <li>
                     <ul class="collapse list-unstyled" id="StorageSubmenu">
                         <li><a href="#tab-storage-dataset" data-toggle="tab" role="tab">Dataset</a></li>
                         <li><a href="#tab-storage-weights" data-toggle="tab" role="tab">Weights</a></li>
                     </ul>
                 </li>
-                <li> <a href="#tab-cluster" data-toggle="tab" role="tab"><i class="fa fa-server" aria-hidden="true"></i> Cluster</a></li>
+                <li> <a href="#tab-cluster" data-toggle="tab" role="tab"><i class="fa fa-cloud" aria-hidden="true"></i> Cluster</a></li>
+            </ul>
+            <ul class="list-unstyled settings">
+                <li><a href="#" id="btnSettings">Settings</a></li>
             </ul>
             <ul class="list-unstyled additional">
-                <li><a href="#" class="settings" id="btnSettings">Settings</a></li>
-            </ul>
-            <ul class="list-unstyled" style="text-align: center;">
-                <a href="https://www.linkedin.com/in/hujiaming/" target="_blank"><i class="fa fa-linkedin-square" style="font-size:48px;"></i></a>
-                <a href="https://github.com/jmhoo/planet-insight" target="_blank"><i class="fa fa-github" style="font-size:48px;"></i></a>
+                <a href="./about"><i class="fa fa-question-circle" style="font-size:42px;"></i></a> &nbsp;
+                <a href="https://www.linkedin.com/in/ryanreece" target="_blank"><i class="fa fa-linkedin-square" style="font-size:42px;"></i></a> &nbsp;
+                <a href="https://github.com/rreece/hypr-ai" target="_blank"><i class="fa fa-github" style="font-size:42px;"></i></a>
             </ul>
         </nav>
 
-
+        <!-- main content -->
         <div id="content" class="tab-content">
+
+            <!-- Models Page -->
             <div class="tab-pane fade show active" id="tab-json" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
-                    <h1 class="navbar-text">JSON Models</h1>
+                    <h1 class="navbar-text">Models</h1>
                 </nav>
                 <div class="col-sm-12">
                     <button class="navbar-text btn btn-outline-success" id="btnNewModel"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
@@ -55,6 +59,8 @@
                     </section>
                 </div>
             </div>
+
+            <!-- Tasks Page -->
             <div class="tab-pane fade" id="tab-task" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Tasks</h1>
@@ -62,6 +68,7 @@
                 <div class="col-sm-12">
                     <div class="btn-group" data-toggle="buttons">
                         <button class="navbar-text btn btn-outline-success" id="btnNewTask"><i class="fa fa-plus" aria-hidden="true"></i> New</button>
+                        <button class="navbar-text btn btn-outline-success" id="btnNewHyperTask"><i class="fa fa-plus" aria-hidden="true"></i> New HYPR</button>
                         <button class="btn btn-success" id="btnRefreshTask"><i class="fa fa-refresh" aria-hidden="true"></i></button>
                     </div>
                     <section id="job_instances">
@@ -69,12 +76,12 @@
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th width=6%>#</th>
+                                        <th width=5%>#</th>
                                         <th width=20%>Name</th>
-                                        <th width=18%>JSON Model</th>
-                                        <th width=25%>Dataset</th>
-                                        <th width=8% align="center">Epochs</th>
-                                        <th width=10%>Status</th>
+                                        <th width=27%>Model</th>
+                                        <th width=18%>Dataset</th>
+                                        <th width=6%>Epochs</th>
+                                        <th width=9%>Status</th>
                                         <th width=15%>Created</th>
                                     </tr>
                                 </thead>
@@ -85,14 +92,45 @@
                     </section>
                 </div>
             </div>
+
+            <!-- Results Page -->
+            <div class="tab-pane fade" id="tab-results" role="tabpanel">
+                <nav class="navbar navbar-light bg-light justify-content-between">
+                    <h1 class="navbar-text">Results</h1>
+                </nav>
+                <div class="col-sm-12">
+                    <div class="btn-group" data-toggle="buttons">
+                        <button class="btn btn-success" id="btnRefreshResults"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    </div>
+                    <section id="job_instances">
+                        <div id="list_job_instances" class="mt-2">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width=20%>Name</th>
+                                        <th width=25%>Loss (train/test)</th>
+                                        <th width=25%>Accuracy (train/test)</th>
+                                        <th width=10% align="center">Best Epoch</th>
+                                        <th width=15%>Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="results-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Datasets Page -->
             <div class="tab-pane fade" id="tab-storage-dataset" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
                     <h1 class="navbar-text">Datasets</h1>
                 </nav>
                 <div class="col-sm-10">
                     <div class="btn-group" data-toggle="buttons">
-                        <button class="btn btn-outline-primary" id="btnUploadDatasets"><i class="fa fa-upload"></i>Upload</button>
-                        <button class="btn btn-primary" id="btnRefreshDatasets"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-success" id="btnUploadDatasets"><i class="fa fa-upload"></i>Upload</button>
+                        <button class="btn btn-success" id="btnRefreshDatasets"><i class="fa fa-refresh" aria-hidden="true"></i></button>
                     </div>
                     <div id="storage-dataset" class="mt-2">
                         <table class="table table-striped table-hover">
@@ -110,14 +148,16 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Weights Page -->
             <div class="tab-pane fade" id="tab-storage-weights" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
-                    <h1 class="navbar-text">Trained model(weights)</h1>
+                    <h1 class="navbar-text">Weights (trained models)</h1>
                 </nav>
                 <div class="col-sm-10">
                     <div class="btn-group" data-toggle="buttons">
-                        <button class="btn btn-outline-primary" id="btnUploadWeights"><i class="fa fa-upload"></i>Upload</button>
-                        <button class="btn btn-primary" id="btnRefreshWeights"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-success" id="btnUploadWeights"><i class="fa fa-upload"></i>Upload</button>
+                        <button class="btn btn-success" id="btnRefreshWeights"><i class="fa fa-refresh" aria-hidden="true"></i></button>
                     </div>
                     <div id="storage-weights" class="mt-2">
                         <table class="table table-striped table-hover">
@@ -134,12 +174,14 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Cluster Page -->
             <div class="tab-pane fade" id="tab-cluster" role="tabpanel">
                 <nav class="navbar navbar-light bg-light justify-content-between">
-                    <h1 class="navbar-text">Cluster(Workers)</h1>
+                    <h1 class="navbar-text">Cluster (workers)</h1>
                 </nav>
                 <div class="col-sm-10">
-                    <button class="btn btn-outline-primary" id="btnRefreshCluster"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+                    <button class="btn btn-success" id="btnRefreshCluster"><i class="fa fa-refresh" aria-hidden="true"></i></button>
                     <div id="list-cluster" class="mt-2">
                         <table class="table table-striped table-hover">
                             <thead>
@@ -158,10 +200,9 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 
+    <!-- task-template for table -->
     <script id="task-template" type="text/template">
         <td>
             <a class="btn btn-danger layer-item-btn remove-task" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
@@ -188,22 +229,56 @@
             </div>
         </td>
         <td>
-            <%= created %>
+            <div class="<%= status_color%>">
+                <%= created %>
+            </div>
         </td>
     </script>
 
+    <!-- result-template for table -->
+    <script id="result-template" type="text/template">
+        <td>
+            <h5>
+                <a class="viewresult badge badge-primary" href="javascript:void(0)">
+                    <%= instance_name %>
+                </a>
+            </h5>
+        </td>
+        <td>
+            <%= best_loss_str %>
+        </td>
+        <td>
+            <%= best_acc_str %>
+        </td>
+        <td>
+            <%= best_epoch_str %>
+        </td>
+        <td>
+            <div class="<%= status_color%>">
+                <%= created %>
+            </div>
+        </td>
+    </script>
+
+    <!-- dataset-template for table -->
+    <!-- <a class="btn btn-danger layer-item-btn remove-dataset" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a> -->
     <script id="dataset-template" type="text/template">
         <td>
             <a class="btn btn-danger layer-item-btn remove-dataset" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
         </td>
         <td>
-            <%= name %>
+            <h5>
+                <a href="/insight/api/v1.0/datasets/<%= name%>" class="badge badge-info">
+                    <%= name %>
+                </a>
+            </h5>
         </td>
         <td>
             <%= size %>
         </td>
     </script>
 
+    <!-- weights-template for table -->
     <script id="weights-template" type="text/template">
         <td>
             <a class="btn btn-danger layer-item-btn remove-dataset" href="javascript:void(0)"><i class="fa fa-trash" aria-hidden="true"></i></a>
@@ -220,6 +295,7 @@
         </td>
     </script>
 
+    <!-- worker-template for table -->
     <script id="worker-template" type="text/template ">
         <td>
             <%= worker_name %>
@@ -240,15 +316,14 @@
         </td>
     </script>
 
-    <!-- Add JSON Modal -->
-    <div id="add-json-model" class="modal fade" role="dialog">
+    <!-- Add Model Dialog -->
+    <div id="add-json-model" class="modal fade" rold="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header login-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
                     <h4 class="modal-title">Add new model</h4>
                 </div>
-
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
@@ -263,7 +338,6 @@
                         </div>
                         <div class="form-group">
                             <!-- <button type="button" class="btn btn-warning" id="fileLocalJSON">Load from file</button> -->
-
                         </div>
                     </form>
                 </div>
@@ -275,7 +349,7 @@
         </div>
     </div>
 
-    <!-- Add Task Modal -->
+    <!-- Add Task Dialog -->
     <div id="add-task-model" class="modal fade" rold="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -283,17 +357,16 @@
                     <button type="button" class="close" data-dismiss="modal">×</button>
                     <h4 class="modal-title">Add new task</h4>
                 </div>
-
                 <div class="modal-body">
                     <form>
                         <div class="form-row">
                             <div class="form-group col-md-8">
                                 <label for="instance-name" class="form-control-label">Task Name</label>
-                                <input type="text" class="form-control" id="instance-name"></input>
+                                <input type="text" class="form-control" id="instance-name" placeholder="my-task"></input>
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="maximum-epoch" class="form-control-label">Maximum Epoch</label>
-                                <input type="text" class="form-control" id="maximum-epoch"></input>
+                                <label for="maximum-epoch" class="form-control-label">Max Epoch</label>
+                                <input type="text" class="form-control" id="maximum-epoch" placeholder="20"></input>
                             </div>
                         </div>
                         <div class="form-row">
@@ -303,15 +376,14 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="task-dataset" class="form-control-label">Dataset</label>
-                                <select class="form-control" id="selectDataset">Choose weights</select>
+                                <select class="form-control" id="selectDataset">Choose dataset</select>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="selectWeights" class="col-form-label">Weights(Pretrained model)</label>
+                                <label for="selectWeights" class="col-form-label">Weights (pretrained model)</label>
                                 <select class="form-control" id="selectWeights">Choose weights</select>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -323,7 +395,59 @@
         </div>
     </div>
 
-    <!-- View Task Modal -->
+    <!-- Add Hyper Task Dialog -->
+    <div id="add-hyper-task-model" class="modal fade" rold="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header login-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add new hyper task</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <label for="instance-name" class="form-control-label">Task Name</label>
+                                <input type="text" class="form-control" id="hyper-instance-name" placeholder="my-task"></input>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="maximum-epoch" class="form-control-label">Max Epoch</label>
+                                <input type="text" class="form-control" id="hyper-maximum-epoch" placeholder="20"></input>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="task-model" class="form-control-label">JSON model</label>
+                                <select class="form-control" id="hyper-selectJsonModel">Choose model</select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="task-dataset" class="form-control-label">Dataset</label>
+                                <select class="form-control" id="hyper-selectDataset">Choose dataset</select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="hparams" class="form-control-label">Hyperparameters</label>
+                                <input type="text" class="form-control" id="hyperparams" placeholder="{'conv2/filters' : ['ci', [32, 64, 128]], 'dropout2/rate' : ['cf', [0.25, 0.50]]}"></input>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="selectWeights" class="col-form-label">Weights (pretrained model)</label>
+                                <select class="form-control" id="hyper-selectWeights">Choose weights</select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addNewHyperTask">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Task Dialog -->
     <div id="view-task-dialog" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->
@@ -346,11 +470,36 @@
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- File upload Modal -->
+    <!-- View Result Dialog -->
+    <div id="view-result-dialog" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header login-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Result Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body" id="result-body">
+                    </div>
+                    <hr>
+                    <div id="result_chart"></div>
+                    <div id="result-logs">
+                        <ul class="list-group">
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Upload Modal -->
     <div id="file-upload-dialog" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -382,7 +531,6 @@
                             </span>
                         </div>
                     </div>
-
                     <div class="table table-striped files" id="previews">
                         <div id="template" class="file-row">
                             <!-- This is used as the file preview template -->
@@ -409,7 +557,6 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -427,7 +574,6 @@
                     <button type="button" class="close" data-dismiss="modal">×</button>
                     <h4 class="modal-title">AWS configure</h4>
                 </div>
-
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
@@ -452,6 +598,7 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="js/lib/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
@@ -460,6 +607,7 @@
     <script src="js/lib/backbone-min.js"></script>
     <script src="js/models/json_model.js"></script>
     <script src="js/models/task.js"></script>
+    <script src="js/models/result.js"></script>
     <script src="js/models/log.js"></script>
     <script src="js/models/dataset.js"></script>
     <script src="js/models/weights.js"></script>
@@ -467,6 +615,7 @@
     <script src="js/collections/JSONCollection.js"></script>
     <script src="js/collections/TaskCollection.js"></script>
     <script src="js/collections/TaskLogs.js"></script>
+    <script src="js/collections/ResultCollection.js"></script>
     <script src="js/collections/DatasetCollection.js"></script>
     <script src="js/collections/WeightsCollection.js"></script>
     <script src="js/collections/WorkerCollection.js"></script>
@@ -474,6 +623,8 @@
     <script src="js/views/JSONModelView.js"></script>
     <script src="js/views/task-view.js"></script>
     <script src="js/views/TaskListView.js"></script>
+    <script src="js/views/result-view.js"></script>
+    <script src="js/views/ResultListView.js"></script>
     <script src="js/views/dataset-view.js"></script>
     <script src="js/views/dataset-listview.js"></script>
     <script src="js/views/weights-view.js"></script>

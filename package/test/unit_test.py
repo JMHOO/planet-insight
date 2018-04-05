@@ -11,18 +11,23 @@ from keras.optimizers import *
 
 
 def TestMain():
-    keras_model = test_json_build_from_string() # test_json_build_from_file()
-    # test_keras_model_build(keras_json)
+    #test_json_build_from_file()
+    #test_keras_model_build(keras_json)
 
     #test_json_build_from_file()
-    # test_keras_json_from_file()
-    # print(keras_model.summary())
-    # test_dynamodb()
-    # test_s3()
-    # test_agent()
-    # test_worker_report()
+    #test_keras_json_from_file()
+    #print(keras_model.summary())
+
+    #keras_model = test_json_build_from_string()
+    #print(type(keras_model))
+    #print(keras_model.summary())
+
+    test_dynamodb()
+    #test_s3()
+    #test_agent()
+    #test_worker_report()
     #test_save_keras_model()
-    # test_optimizer_serizal()
+    #test_optimizer_serizal()
 
 
 def test_json_build_from_file():
@@ -90,10 +95,27 @@ def test_json_build_from_string():
     ]
     '''
 
+    cifar100_json = '''[
+        { "From": "CNN-Base" },
+        { "Dense": { "units": 100, "activation": "softmax", "name": "softmax1" }, "input": "dropout3" },
+        { "Compiler": { "optimizer": { "adam": {"lr": 0.0001} }, "loss": "categorical_crossentropy", "metrics": ["accuracy"] } } 
+    ]
+    '''
+
+    cifar100_coarse_json = '''[
+        { "From": "CNN-Base" },
+        { "Dense": { "units": 20, "activation": "softmax", "name": "softmax1" }, "input": "dropout3" },
+        { "Compiler": { "optimizer": { "adam": {"lr": 0.0001} }, "loss": "categorical_crossentropy", "metrics": ["accuracy"] } } 
+    ]
+    '''
+
     c = Convert()
     #keras_model = c.parser(example_json)
-    keras_model = c.parser(cut_json, example_json)
+    #keras_model = c.parser(cut_json, example_json)
+    #keras_model = c.parser(cut_json, example_json, hparams={"conv2/filters":32})
     #keras_model = c.parser(optimizer_json, example_json)
+    #keras_model = c.parser(cifar100_json, example_json)
+    keras_model = c.parser(cifar100_coarse_json, example_json)
     print(keras_model)
 
     return keras_model
@@ -128,18 +150,90 @@ def test_dynamodb():
         { "Flatten": {} },
         { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
         { "Dropout": { "rate": 0.5, "name": "dropout3" } },
+        { "Dense": { "units": 100, "activation": "softmax", "name": "softmax1" } }
+    ]'''
+
+    cifar100_json = '''[
+        { "From": "CNN-Base" },
+        { "Dense": { "units": 100, "activation": "softmax", "name": "softmax1" }, "input": "dropout3" },
+        { "Compiler": { "optimizer": { "adam": {"lr": 0.0001} }, "loss": "categorical_crossentropy", "metrics": ["accuracy"] } } 
+    ]
+    '''
+
+    cifar100_coarse_json = '''[
+        { "From": "CNN-Base" },
+        { "Dense": { "units": 20, "activation": "softmax", "name": "softmax1" }, "input": "dropout3" },
+        { "Compiler": { "optimizer": { "adam": {"lr": 0.0001} }, "loss": "categorical_crossentropy", "metrics": ["accuracy"] } } 
+    ]
+    '''
+
+    ryan_json = '''[{
+        "Convolution2D": {"inputs": [null, 32, 32, 3],"filters": 64, "kernel_size": [3, 3],"strides": [1, 1],"activation": "relu","padding": "valid",
+            "kernel_initializer": {
+                "VarianceScaling": {"scale": 1,"mode": "fan_avg","distribution": "uniform"}
+            },"name": "conv1"}
+        },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv2" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool1" } },
+        { "Dropout": { "rate": 0.25, "name": "dropout1" } },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv3" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool2" } },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv4" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool3" } },
+        { "Dropout": { "rate": 0.25, "name": "dropout2" } },
+        { "Flatten": {} },
+        { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
+        { "Dropout": { "rate": 0.5, "name": "dropout3" } },
         { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
     ]'''
 
-    # json_db.put('example', example_json)
-    print(db_model.get('example'))
+    ryan100_json = '''[
+        { "From": "CNN-Ryan" },
+        { "Dense": { "units": 100, "activation": "softmax", "name": "softmax1" }, "input": "dropout3" },
+        { "Compiler": { "optimizer": { "adam": {"lr": 0.0001} }, "loss": "categorical_crossentropy", "metrics": ["accuracy"] } } 
+    ]
+    '''
 
-    #jobInstances = DBJobInstance()
+    mnist_json = '''[{
+        "Convolution2D": {"inputs": [null, 28, 28, 1],"filters": 32, "kernel_size": [3, 3],"strides": [1, 1],"activation": "relu","padding": "valid",
+            "kernel_initializer": {
+                "VarianceScaling": {"scale": 1,"mode": "fan_avg","distribution": "uniform"}
+            },"name": "conv1"}
+        },
+        { "Convolution2D": { "filters": 64, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv2" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool1" } },
+        { "Dropout": { "rate": 0.25, "name": "dropout1" } },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv3" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool2" } },
+        { "Convolution2D": { "filters": 128, "kernel_size": [3, 3], "strides": [1, 1], "activation": "relu", "padding": "valid", "name": "conv4" } },
+        { "MaxPooling2D": { "pool_size": [2, 2], "strides": [2, 2], "padding": "valid", "name": "pool3" } },
+        { "Dropout": { "rate": 0.25, "name": "dropout2" } },
+        { "Flatten": {} },
+        { "Dense": { "units": 1024, "activation": "relu", "name": "dense1" } },
+        { "Dropout": { "rate": 0.5, "name": "dropout3" } },
+        { "Dense": { "units": 10, "activation": "softmax", "name": "softmax1" } }
+    ]'''
+
+    db_model.put('CNN-MNIST', mnist_json)
+    json_str = db_model.get('CNN-MNIST')
+    j = json.loads(json_str)
+    print(j)
+    print(type(j))
+
+#    db_model.put('CNN-Ryan-100', ryan100_json)
+#    json_str = db_model.get('CNN-Ryan-100')
+#    j = json.loads(json_str)
+#    print(j)
+#    print(type(j))
+
+    # jobInstances = DBJobInstance()
     # jobInstances.new_job({
-    #     'name': 'cnn1-cifar-10-base',
-    #     'dataset': 'dataset/cifar-10.tar.gz',
+    # 'instance_name': 'reece-test-11',
+    #     'dataset_name': 'dataset/cifar-10',
+    #     'epochs': '10',
     #     'pretrain': 'NONE',
-    #     'status': 'initial'
+    #     'model_name': 'CNN-Transfer',
+    #     'job_status': 'initial'
     # })
     # jobInstances.new_job({
     #     'name': 'cnn1-cifar-10-gen1',
@@ -147,10 +241,10 @@ def test_dynamodb():
     #     'pretrain': 'models/cnn1-base.h5df',
     #     'status': 'training'
     # })
-    #jobInstances.check_new_job()
+    # jobInstances.check_new_job()
 
     # log test
-    # log = DBInstanceLog('cnn1-cifar-10-base')
+    # log = DBInstanceLog('reece-test-05')
     # log.append('info', 'abc')
     # log.append('training', '{"epoch": 0, "val_loss": 0.993394958114624, "val_acc": 0.6555, "loss": 1.0491512520599364, "acc": 0.6309600000190735}')
 
@@ -166,13 +260,17 @@ def test_s3():
     # s3.create_folder('abc')
     #s3.upload('abc/a.txt', '/Users/Jimmy/Developer/insight/planet-insight/model_rebuild.json')
     #s3.download('abc/a.txt', '/Users/Jimmy/Downloads/model1.json')
-    jobInstances = DBJobInstance()
-    new_job = jobInstances.check_new_job()
-    if new_job:
-        print(new_job['dataset_name'])
-
-        s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
-        s3_dataset.download(new_job['dataset_name'], './{}.tar.gz'.format(new_job['instance_name']))
+#    jobInstances = DBJobInstance()
+#    new_job = jobInstances.check_new_job()
+#    if new_job:
+#        print(new_job['dataset_name'])
+#
+#        s3_dataset = S3DB(bucket_name=settings.S3_BUCKET['DATASET'])
+#        s3_dataset.download(new_job['dataset_name'], './{}.tar.gz'.format(new_job['instance_name']))
+#    s3 = S3DB('insight-dataset')
+#    s3.delete('dataset/cifar-10-test.tar.gz')
+#    s3.delete('dataset/cifar-10-train.tar.gz')
+    pass
 
 def test_agent():
     agent = AgentService()

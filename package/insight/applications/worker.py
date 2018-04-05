@@ -94,28 +94,30 @@ def start_pipeline():
     s3_dataset.download(s3_train_file, './{}.tar.gz'.format(train_file))
     s3_dataset.download(s3_test_file, './{}.tar.gz'.format(test_file))
 
+    train_p_file = 'train.p'
+    test_p_file = 'test.p'
+
     # load dataset
     remote_log.append('info', 'loading dataset...')
-    with open(train_file, 'rb') as f:
+    with open(train_p_file, 'rb') as f:
         train_frame = pickle.load(f)
-    with open(test_file, 'rb') as f:
+    with open(test_p_file, 'rb') as f:
         test_frame = pickle.load(f)
     
     x_train, y_train = train_frame['data'], train_frame['labels']
     x_test, y_test = test_frame['data'], test_frame['labels']
 
-    if K.image_data_format() == 'channels_last':
+    if K.image_data_format() == 'channels_last' and x_train.shape[1] <= 3:
         x_train = x_train.transpose(0, 2, 3, 1)
         x_test = x_test.transpose(0, 2, 3, 1)
 
     # training
-    #model_file = './' + args.instance_name + '-{epoch:02d}.h5df'
-    model_file = './' + args.instance_name + '.h5df'
+    model_file = args.instance_name + '.hdf5'
 
     cbMonitor = RemoteMonitor(root=monitor_host, path=monitor_path, field='data', headers=None)
     cbEarlyStop = EarlyStopping(min_delta=0.001, patience=3)
     cbModelsCheckpoint = ModelCheckpoint(
-        model_file,
+        './' + model_file,
         monitor='val_loss',
         verbose=1,
         save_best_only=True,
@@ -138,7 +140,7 @@ def start_pipeline():
     # upload models
     remote_log.append('info', 'uploading trained model to s3')
     s3_models = S3DB(bucket_name=settings.S3_BUCKET['RESULTS'])
-    s3_models.upload(args.instance_name, model_file)
+    s3_models.upload(model_file, model_file)
 
     
     job_instance.update_status(args.instance_name, from_='training', to_='completed')

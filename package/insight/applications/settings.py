@@ -16,6 +16,6 @@ DOCKER = {
 }
 
 MONITOR = {
-    'HOST': 'http://demo.example.com',
+    'HOST': 'http://hypr.umx.io',
     'PATH': '/monitor'
 }

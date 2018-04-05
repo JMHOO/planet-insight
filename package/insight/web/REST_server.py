@@ -9,11 +9,15 @@ from flask_api import FlaskAPI
 from flask_httpauth import HTTPBasicAuth
 from insight.storage import AWSResource, DBInstanceLog
 from insight.builder import Convert
+from insight.paperspace import Paperspace
 from insight.optimizer import optimize
 
 
 # global AWS resource
 aws = AWSResource()
+
+# global Paperspace resource
+paperspace = Paperspace()
 
 # flask application
 app = FlaskAPI(__name__, static_folder='static')
@@ -464,8 +468,10 @@ def delete_weights_file(weights_file):
 
 
 '''
-GET	    /insight/api/v1.0/workers             Retrieve list of active instances
-POST    /insight/api/v1.0/workers/report      report a worker's status
+GET	    /insight/api/v1.0/workers                       Retrieve list of active instances
+POST    /insight/api/v1.0/workers/report                report a worker's status
+POST    /insight/api/v1.0/workers/paperspace_start      start paperspace worker
+POST    /insight/api/v1.0/workers/paperspace_stop       stop paperspace worker
 '''
 
 
@@ -510,6 +516,26 @@ def report_worker():
     }
     aws.workers.report(internal_json['name'], system_info, internal_json['status'])
     return {"result": True}
+
+
+@app.route('/insight/api/v1.0/workers/paperspace_start', methods=["POST"])
+def start_paperspace_worker():
+    if not request.json or 'machineId' not in request.json:
+        abort(400, 'missing parameter: machineId')
+
+    machine_id = request.json['machineId']
+    response = Paperspace.start_machine(machine_id)
+    return response
+
+
+@app.route('/insight/api/v1.0/workers/paperspace_stop', methods=["POST"])
+def stop_paperspace_worker():
+    if not request.json or 'machineId' not in request.json:
+        abort(400, 'missing parameter: machineId')
+
+    machine_id = request.json['machineId']
+    response = Paperspace.stop_machine(machine_id)
+    return response
 
 
 '''
